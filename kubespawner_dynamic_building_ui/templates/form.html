@@ -2,51 +2,6 @@
 {# FIXME: This should use the hub base_url properly somehow #}
 <script src="/hub/kubespawner-dynamic-building-ui/static/form.js" defer>
 </script>
-<div class="form-group" id="kubespawner-profiles-list">
-  {%- for profile in profile_list %}
-    <div for="profile-item-{{ profile.slug }}" class="profile">
-      <div style="width: 100%">
-        <h4>Image</h4>
-        <p>Use a mybinder.org compatible repository to build the environment</p>
-        <div class="option">
-          <label>Repo</label>
-          <input class="form-control" type="text">
-        </input>
-      </div>
-      <div class="option">
-        <label>Ref</label>
-        <input class="form-control" type="text">
-      </input>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">Build Logs</div>
-      <div class="panel-body">
-        <div id="terminal"></div>
-      </div>
-    </div>
-    <div class="option" style="float: right">
-      <input type="button" id="submit" class="btn btn-jupyter" value="Build image">
-    </input>
-    </div>
 
-    <br />
-    <br />
-  <h4>Resources</h4>
-  {%- if profile.profile_options %}
-    <div>
-      {%- for k, option in profile.profile_options.items() %}
-        <div class="option">
-          <label for="profile-option-{{ profile.slug }}-{{ k }}">{{ option.display_name }}</label>
-          <select name="profile-option-{{ profile.slug }}-{{ k }}" class="form-control">
-            {%- for k, choice in option['choices'].items() %}
-              <option value="{{ k }}" {% if choice.default %}selected{% endif %}>{{ choice.display_name }}</option>
-            {%- endfor %}
-          </select>
-        </div>
-      {%- endfor %}
-    </div>
-  {%- endif %}
-</div>
-</div>
-{%- endfor %}
+<div id="form">
 </div>

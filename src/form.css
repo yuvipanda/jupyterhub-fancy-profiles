@@ -1,0 +1,15 @@
+input[type="text"] {
+    /* Make sure everyone knows this is a prototype */
+    background-color: purple;
+    color: white;
+}
+
+#build-image-panel {
+    margin-top: 12px;
+}
+
+#build-image-panel-title {
+    display: inline-block;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
