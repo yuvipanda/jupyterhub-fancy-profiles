@@ -1,1 +1,1 @@
-# kubespawner-dynamic-building-ui
+# prototype-kubespawner-dynamic-building-ui
