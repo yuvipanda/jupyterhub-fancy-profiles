@@ -15,6 +15,9 @@ questions:
 3. How to package assets in such a way that admins can install these complex
    UIs without needing changes to JupyterHub or KubeSpawner?
 
+4. How to best use custom jinja2 templates in KubeSpawner's profile_list,
+   as enabled by [this PR](https://github.com/jupyterhub/kubespawner/pull/724)
+
 We could answer other questions in the future, but this is what is needed
 right now.
 
