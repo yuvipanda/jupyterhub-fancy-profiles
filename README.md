@@ -54,4 +54,17 @@ time to start using a framework. Lesson learnt from that is we should use a
 *very lightweight* framework right from the start, something mainstream that
 can attract frontend devs without being so fancy that nobody else can work on
 it. Given the size and complexity of this - a complex UI but only a single page -
-plain react without typescript seems the correct choice.
+plain react without typescript seems the correct choice. We will *not* make
+this into a super-heavy, complex application - just a fairly simple one that
+uses react. 
+
+## Where this fits in
+
+This project puts UI in the KubeSpawner's 'profile_list' page, which allows
+users to select options they want to spawn their server with. As such, it
+is *injected* into the pre-existing HTML of that page. As of JupyterHub 4.0,
+that page uses [Bootstrap 3](https://getbootstrap.com/docs/3.3/) for styling,
+so that is what is available to us. We should [upgrade to Bootstrap 5](https://github.com/jupyterhub/jupyterhub/issues/4437)
+at some point - until then, we have to use Bootstrap 3. Since this package and
+JupyterHub are both versioned, we can easily transition once JupyterHub releases
+a version with Bootstrap 5.
