@@ -71,3 +71,12 @@ so that is what is available to us. We should [upgrade to Bootstrap 5](https://g
 at some point - until then, we have to use Bootstrap 3. Since this package and
 JupyterHub are both versioned, we can easily transition once JupyterHub releases
 a version with Bootstrap 5.
+
+## Current state
+
+This is how the app looks *right now*, to show how the user flow might be. Note
+that we aren't quite at a stage to do proper UX yet, so **hold your UX thoughts
+for now**. We're currently trying to figure out the technical parts of building
+and deploying this sustainably, and figuring out UX will definitely be next!
+
+![screenshot](screenshot.png)
