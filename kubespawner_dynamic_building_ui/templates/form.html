@@ -1,8 +1,7 @@
 <style>{% include 'style.css' %}</style>
 <div class="form-group" id="kubespawner-profiles-list">
   {%- for profile in profile_list %}
-    {#- Wrap everything in a label tag so clicking anywhere selects the option #}
-    <label for="profile-item-{{ profile.slug }}" class="profile">
+    <div for="profile-item-{{ profile.slug }}" class="profile">
       <div style="width: 100%">
         <h4>Image</h4>
         <p>Use a mybinder.org compatible repository to build the environment</p>
@@ -45,7 +44,7 @@
     </div>
   {%- endif %}
 </div>
-</label>
+</div>
 {%- endfor %}
 </div>
 <link rel="stylesheet" href="https://unpkg.com/xterm@5.0.0/css/xterm.css" />
