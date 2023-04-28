@@ -21,6 +21,9 @@ Once installed, you can have kubespawner use the templates shipped
 with this package to provide appropriate UI.
 
 ```python
-from kubespawner_dynamic_building_ui import TEMPLATE_PATHS
+from kubespawner_dynamic_building_ui import TEMPLATE_PATHS, STATIC_HANDLER_TUPLE
 c.KubeSpawner.additional_profile_form_template_paths = TEMPLATE_PATHS
+
+# Add extra handler to serve JS & CSS assets
+c.JupyterHub.extra_handlers.append(STATIC_HANDLER_TUPLE)
 ```
