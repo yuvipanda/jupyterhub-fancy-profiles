@@ -1,7 +1,7 @@
 
 import { Terminal } from 'xterm';
 import { useEffect, useState } from 'react';
-import { BinderImage } from 'binderhub-client';
+import { BinderImage } from '@jupyterhub/binderhub-client';
 
 function buildImage(repo, ref, term) {
     const providerSpec = "gh/" + repo + "/" + ref;

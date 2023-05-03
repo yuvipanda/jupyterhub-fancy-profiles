@@ -10,7 +10,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
-    "binderhub-client": "^0.3.0",
+    "@jupyterhub/binderhub-client": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "xterm": "^5.1.0"
