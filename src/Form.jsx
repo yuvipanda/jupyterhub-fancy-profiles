@@ -46,37 +46,50 @@ function ImageBuilder() {
     </div>
 }
 
-// FIXME: This should come *dynamically* from profile_list
-function ResourceSelector() {
-    return <div className="panel panel-default">
-        <div className='panel-heading'>Resources</div>
-        <div className='panel-body form-horizontal'>
-            <div className='form-group'>
-                <label className='col-sm-2 control-label'>Memory</label>
-                <div className='col-sm-10'>
-                    <select className='form-control'>
-                        <option>2G</option>
-                        <option>4G</option>
-                        <option>8G</option>
-                    </select>
-                </div>
-            </div>
+function ProfileOption({ profileSlug, optionName, displayName, choices }) {
+    const formControlName = "profile-option-" + profileSlug + "-" + optionName;
+    const defaultChoiceName = Object.keys(choices).find(choiceName => choices[choiceName].default) || Object.keys(choices)[0];
 
-            <div className='form-group'>
-                <label className='col-sm-2 control-label'>CPU</label>
-                <div className='col-sm-10'>
-                    <select className='form-control'>
-                        <option>2</option>
-                        <option>4</option>
-                        <option>8</option>
-                    </select>
-                </div>
-            </div>
+    return <div className='form-group'>
+        <label className='col-sm-2 control-label' htmlFor={formControlName}>{displayName} </label>
+        <div className='col-sm-10'>
+            <select name={formControlName} className="form-control" defaultValue={defaultChoiceName}>
+                {Object.keys(choices).map(choiceName => {
+                    const choiceBody = choices[choiceName];
+                    return <option key={choiceName} value={choiceName}>{choiceBody.display_name}</option>
+
+                })}
+            </select>
+        </div>
+    </div>
+
+}
+function ResourceSelector({ profile }) {
+    const options = profile.profile_options;
+    console.log(options);
+    return <div className="panel panel-default">
+        <div className='panel-heading'>Resolsjdafhakdhfsohjfurces</div>
+        <div className='panel-body form-horizontal'>
+            {Object.keys(options).map(optionName => {
+                const optionBody = options[optionName];
+                return <ProfileOption key={optionName} optionName={optionName} displayName={optionBody.display_name}
+                    profileSlug={profile.slug} choices={optionBody.choices}
+                />
+            })}
         </div>
     </div>;
 }
 
+/**
+ * Generates the *contents* of the form shown in the profile selection page
+ *
+ * A <form> tag and a submit button are already included by JupyterHub, and should not
+ * be generated here.
+ */
 function Form() {
+    const profileList = window.profileList;
+    const profile = profileList[0];
+
     return (
         <>
             <h1>THIS IS A NON-WORKING PROTOTYPE</h1>
@@ -88,11 +101,16 @@ function Form() {
                 of how close any specific project is towards completion.
             </p>
 
-            <form>
-                <ImageBuilder />
+            {/* We only support a single profile, and it must be marked as selected */}
+            <input type="radio" className='hidden'
+                name="profile"
+                value={profile.slug}
+                checked readOnly
+            />
 
-                <ResourceSelector />
-            </form>
+            <ImageBuilder />
+
+            <ResourceSelector profile={profile} />
         </>
     );
 }
