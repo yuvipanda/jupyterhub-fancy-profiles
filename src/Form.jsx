@@ -1,50 +1,10 @@
-import { Terminal } from 'xterm';
 import { createRoot } from 'react-dom/client';
-import { useEffect } from 'react';
+import { ImageBuilder } from './ImageBuilder';
 
 import '../node_modules/xterm/css/xterm.css';
 
 import "./form.css";
 
-function ImageBuilder() {
-    useEffect(function () {
-        const term = new Terminal();
-        term.open(document.getElementById('terminal'));
-        term.write('Build logs will be \x1B[1;3;31smtreamed\x1B[0m here ');
-    }, []);
-
-    return <div className="panel panel-default">
-        <div className='panel-heading'>User Environment</div>
-        <div className='panel-body'>
-            <p>Use a mybinder.org compatible repository to build the environment</p>
-
-            <div className='row'>
-                <div className='col-md-8'>
-                    <label>Repo</label>
-                    <input className="form-control" type="text">
-                    </input>
-                </div>
-                <div className='col-md-4'>
-                    <label>Ref</label>
-                    <input className="form-control" type="text">
-                    </input>
-                </div>
-            </div>
-
-            <div className="panel panel-default" id="build-image-panel">
-                <div className="panel-heading" id="build-image-panel-header">
-                    <span id='build-image-panel-title'>Build Logs</span>
-                    <input type="button" id="build-image" className="btn btn-jupyter pull-right" value="Build image">
-                    </input>
-                </div>
-                <div className="panel-body">
-                    <div id="terminal"></div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-}
 
 function ProfileOption({ profileSlug, optionName, displayName, choices }) {
     const formControlName = "profile-option-" + profileSlug + "-" + optionName;
@@ -68,7 +28,7 @@ function ResourceSelector({ profile }) {
     const options = profile.profile_options;
     console.log(options);
     return <div className="panel panel-default">
-        <div className='panel-heading'>Resolsjdafhakdhfsohjfurces</div>
+        <div className='panel-heading'>Resources</div>
         <div className='panel-body form-horizontal'>
             {Object.keys(options).map(optionName => {
                 const optionBody = options[optionName];
