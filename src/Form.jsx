@@ -39,7 +39,11 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
         <div className='form-group'>
             <label className='col-sm-2 control-label' htmlFor={formControlName}>{displayName} </label>
             <div className='col-sm-10'>
-                <select name={formControlName} className="form-control" defaultValue={defaultChoiceName}
+                {/* When we send an explicit image with unlisted choice, we should *not* send a value for the image field itself
+                    This will confuse KubeSpawner and give us a 5xx. So we render the name attribute *only* if we are sending an
+                    image option from the listed choices, and let it be empty if not.
+                    */}
+                <select name={!(showImageSpecifier || showImageBuilder) && formControlName} className="form-control" defaultValue={defaultChoiceName}
                     onChange={(ev) => {
                         setShowImageBuilder(ev.target.value === buildImageKey);
                         setShowImageSpecifier(ev.target.value === specifyImageKey)
@@ -50,7 +54,7 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
                         return <option key={choiceName} value={choiceName}>{choiceBody.display_name}</option>
 
                     })}
-                    <option key={specifyImageKey} value={specifyImageKey}>Specify your own pre-built docker image</option>
+                    <option key={specifyImageKey} value={specifyImageKey}>Specify your own image</option>
                     <option key={buildImageKey} value={buildImageKey}>Build your own image (from a GitHub repository)</option>
                 </select>
             </div>
@@ -64,7 +68,7 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
                 <input name={unlistedImageFormInputName}
                     defaultValue={specifiedImage}
                     className="form-control" onChange={ev => setSpecifiedImage(ev.target.value)}
-                    />
+                />
 
             </div>
 
