@@ -30,7 +30,6 @@ export function ImageBuilder() {
     }, []);
 
     return <div className="panel panel-default">
-        <div className='panel-heading'>User Environment</div>
         <div className='panel-body'>
             <p>Use a mybinder.org compatible repository to build the environment</p>
 
