@@ -1,0 +1,3 @@
+[submodule "binderhub"]
+	path = binderhub
+	url = https://github.com/yuvipanda/binderhub.git

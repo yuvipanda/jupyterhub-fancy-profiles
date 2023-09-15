@@ -1,11 +1,14 @@
 
 import { Terminal } from 'xterm';
 import { useEffect, useState } from 'react';
-import BinderImage  from '@jupyterhub/binderhub-client';
+import { BinderRepository }  from '@jupyterhub/binderhub-client';
 
 function buildImage(repo, ref, term) {
     const providerSpec = "gh/" + repo + "/" + ref;
-    const image = new BinderImage(providerSpec, "https://mybinder.org/")
+    // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
+    let binderUrl = new URL(window.location.origin);
+    binderUrl.pathname = '/services/binder/';
+    const image = new BinderRepository(providerSpec, binderUrl.toString(), null, true)
     image.onStateChange('*', (oldState, newState, data) => {
         term.write(data.message);
     })
