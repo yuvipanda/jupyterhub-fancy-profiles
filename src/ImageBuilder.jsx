@@ -15,7 +15,7 @@ function buildImage(repo, ref, term) {
     image.fetch();
 }
 
-export function ImageBuilder() {
+export function ImageBuilder({inputName}) {
     const [repo, setRepo] = useState("");
     const [ref, setRef] = useState("HEAD");
     const [term, setTerm] = useState(null);
@@ -58,6 +58,9 @@ export function ImageBuilder() {
                     <div id="terminal"></div>
                 </div>
             </div>
+
+            {/* Hidden input that has the actual name of the image to launch */}
+            <input name={inputName} className='hidden' type="hidden" />
 
         </div>
     </div>
