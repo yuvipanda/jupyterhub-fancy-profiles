@@ -10,8 +10,17 @@ function buildImage(repo, ref, term) {
     binderUrl.pathname = '/services/binder/';
     const image = new BinderRepository(providerSpec, binderUrl.toString(), null, true)
     image.onStateChange('*', (oldState, newState, data) => {
+        // Write out all messages to the terminal!
         term.write(data.message);
     })
+    image.onStateChange('ready', (oldState, newState, data) => {
+        // Close the EventStream when the image has been built
+        image.close();
+    });
+    image.onStateChange('failed', (oldState, newState, data) => {
+        // Close the image stream when stuff has failed
+        image.close();
+    });
     image.fetch();
 }
 
