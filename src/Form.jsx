@@ -74,7 +74,7 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
 
         </div>
         }
-        {showImageBuilder && <ImageBuilder />}
+        {showImageBuilder && <ImageBuilder inputName={unlistedImageFormInputName} />}
     </>
 }
 function ResourceSelector({ profile }) {
@@ -107,15 +107,6 @@ function Form() {
 
     return (
         <>
-            <h1>THIS IS A NON-WORKING PROTOTYPE</h1>
-            <p>
-                The funky colors and large text are here to communicate that this is a <b>prototype</b>.
-                It exists to help figure out how we can build complex UIs like this for the KubeSpawner
-                profile selector page that are sustainable both for the kubespawner project as well as the
-                people building the UI. These textboxes do nothing, and should not be taken as an indicator
-                of how close any specific project is towards completion.
-            </p>
-
             {/* We only support a single profile, and it must be marked as selected */}
             <input type="radio" className='hidden'
                 name="profile"

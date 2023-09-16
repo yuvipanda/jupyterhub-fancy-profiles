@@ -1,11 +1,9 @@
-input[type="text"] {
-    /* Make sure everyone knows this is a prototype */
-    background-color: purple;
-    color: white;
-}
-
 #build-image-panel {
     margin-top: 12px;
+}
+
+#logs-hide-toggle a {
+    color: darkgrey;
 }
 
 #build-image-panel-title {
