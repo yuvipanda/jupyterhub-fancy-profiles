@@ -1,17 +1,17 @@
 #build-image-panel {
-    margin-top: 12px;
+  margin-top: 12px;
 }
 
 #build-image-panel .panel-body {
-    background-color: black;
+  background-color: black;
 }
 
 #logs-hide-toggle a {
-    color: darkgrey;
+  color: darkgrey;
 }
 
 #build-image-panel-title {
-    display: inline-block;
-    margin-top: 8px;
-    margin-bottom: 8px;
+  display: inline-block;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }

@@ -48,29 +48,29 @@ The primary contents are:
    that are composed together using all of jinja2's composition features (like `include`)
 2. `src/` contains JS and CSS that are packaged via standard frontend bundling
    tools (`webpack` and `babel`), outputing assets into `kubespawner-dynamic-building-ui/static/`.
-   This allows us to use *standard* frontend tooling to write JS & CSS - for
+   This allows us to use _standard_ frontend tooling to write JS & CSS - for
    example, [xterm.js](http://xtermjs.org/) can be used without many complications.
-   
+
 ## Why React?
 
-> /* If this file gets over 200 lines of code long (not counting docs / comments), start using a framework
+> /\* If this file gets over 200 lines of code long (not counting docs / comments), start using a framework
 
 (from the [BinderHub JS Source Code](https://github.com/jupyterhub/binderhub/blob/036877ffdf0abfde7e84f3972c7d0478cf4f7cb2/binderhub/static/js/index.js#L1))
 
-Dear Reader, the file *did* get more than 200 lines long, but alas there was no
+Dear Reader, the file _did_ get more than 200 lines long, but alas there was no
 time to start using a framework. Lesson learnt from that is we should use a
-*very lightweight* framework right from the start, something mainstream that
+_very lightweight_ framework right from the start, something mainstream that
 can attract frontend devs without being so fancy that nobody else can work on
 it. Given the size and complexity of this - a complex UI but only a single page -
-plain react without typescript seems the correct choice. We will *not* make
+plain react without typescript seems the correct choice. We will _not_ make
 this into a super-heavy, complex application - just a fairly simple one that
-uses react. 
+uses react.
 
 ## Where this fits in
 
-This project puts UI in the KubeSpawner's 'profile_list' page, which allows
+This project puts UI in the KubeSpawner's 'profile*list' page, which allows
 users to select options they want to spawn their server with. As such, it
-is *injected* into the pre-existing HTML of that page. As of JupyterHub 4.0,
+is \_injected* into the pre-existing HTML of that page. As of JupyterHub 4.0,
 that page uses [Bootstrap 3](https://getbootstrap.com/docs/3.3/) for styling,
 so that is what is available to us. We should [upgrade to Bootstrap 5](https://github.com/jupyterhub/jupyterhub/issues/4437)
 at some point - until then, we have to use Bootstrap 3. Since this package and
@@ -79,7 +79,7 @@ a version with Bootstrap 5.
 
 ## Current state
 
-This is how the app looks *right now*, to show how the user flow might be. Note
+This is how the app looks _right now_, to show how the user flow might be. Note
 that we aren't quite at a stage to do proper UX yet, so **hold your UX thoughts
 for now**. We're currently trying to figure out the technical parts of building
 and deploying this sustainably, and figuring out UX will definitely be next!

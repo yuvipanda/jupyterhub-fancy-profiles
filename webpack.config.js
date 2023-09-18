@@ -14,7 +14,7 @@ module.exports = {
       {
         test: /\.(css)/,
         use: ["style-loader", "css-loader"],
-      }
+      },
     ],
   },
   output: {
@@ -24,5 +24,5 @@ module.exports = {
   },
   resolve: {
     extensions: [".css", ".js", ".jsx"],
-  }
+  },
 };
