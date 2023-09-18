@@ -1,9 +1,10 @@
 
 import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
 import { useEffect, useState } from 'react';
 import { BinderRepository } from '@jupyterhub/binderhub-client';
 
-function buildImage(repo, ref, term, onImageBuilt) {
+function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
     const providerSpec = "gh/" + repo + "/" + ref;
     // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
     let binderUrl = new URL(window.location.origin);
@@ -12,6 +13,8 @@ function buildImage(repo, ref, term, onImageBuilt) {
     image.onStateChange('*', (oldState, newState, data) => {
         // Write out all messages to the terminal!
         term.write(data.message);
+        // Resize our terminal to make sure it fits messages appropriately
+        fitAddon.fit();
     })
     image.onStateChange('ready', (oldState, newState, data) => {
         // Close the EventStream when the image has been built
@@ -25,14 +28,18 @@ function buildImage(repo, ref, term, onImageBuilt) {
     image.fetch();
 }
 
-function ImageLogs({expanded, setExpanded, setTerm}) {
+function ImageLogs({ expanded, setExpanded, setTerm, setFitAddon }) {
     useEffect(function () {
         const term = new Terminal({
             convertEol: true,
             disableStdin: true
         });
+        const fitAddon = new FitAddon();
+        term.loadAddon(fitAddon);
         term.open(document.getElementById('terminal'));
+        fitAddon.fit();
         setTerm(term);
+        setFitAddon(fitAddon)
     }, []);
 
     return <div className="panel panel-default" id="build-image-panel">
@@ -50,6 +57,7 @@ export function ImageBuilder({ inputName }) {
     const [repo, setRepo] = useState("");
     const [ref, setRef] = useState("HEAD");
     const [term, setTerm] = useState(null);
+    const [fitAddon, setFitAddon] = useState(null);
     const [imageName, setImageName] = useState("");
     const [logsVisible, setLogsVisible] = useState(false);
 
@@ -77,7 +85,7 @@ export function ImageBuilder({ inputName }) {
                     <input type="button" id="build-image" className="btn btn-jupyter pull-right" value="Build image"
                         onClick={e => {
                             setLogsVisible(true);
-                            buildImage(repo, ref, term, (imageName) => {
+                            buildImage(repo, ref, term, fitAddon, (imageName) => {
                                 setImageName(imageName);
                                 term.write("\nImage has been built! Click the start button to launch your server");
                             })
@@ -86,7 +94,7 @@ export function ImageBuilder({ inputName }) {
                 </div>
             </div>
 
-            <ImageLogs setTerm={setTerm} expanded={logsVisible} setExpanded={setLogsVisible}/>
+            <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} expanded={logsVisible} setExpanded={setLogsVisible} />
             {/* Hidden input that has the actual name of the image to launch */}
             <input name={inputName} className='hidden' type="hidden" value={imageName} />
 
