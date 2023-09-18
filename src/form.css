@@ -2,6 +2,10 @@
     margin-top: 12px;
 }
 
+#build-image-panel .panel-body {
+    background-color: black;
+}
+
 #logs-hide-toggle a {
     color: darkgrey;
 }
