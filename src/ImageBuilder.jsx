@@ -25,7 +25,7 @@ function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
     image.close();
     onImageBuilt(data.imageName);
   });
-  image.onStateChange("failed", (oldState, newState, data) => {
+  image.onStateChange("failed", () => {
     // Close the image stream when stuff has failed
     image.close();
   });
@@ -104,7 +104,7 @@ export function ImageBuilder({ inputName }) {
               id="build-image"
               className="btn btn-jupyter pull-right"
               value="Build image"
-              onClick={(e) => {
+              onClick={() => {
                 setLogsVisible(true);
                 buildImage(repo, ref, term, fitAddon, (imageName) => {
                   setImageName(imageName);
