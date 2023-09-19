@@ -15,7 +15,6 @@ function ProfileOption({
   extraSelectableItems,
   hideFromForm,
 }) {
-
   const formControlName = "profile-option-" + profileSlug + "-" + optionName;
   const defaultChoiceName =
     Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
@@ -40,9 +39,7 @@ function ProfileOption({
   return (
     <>
       <div className="profile-option-label-container">
-        <label htmlFor={formControlName}>
-          {displayName}
-        </label>
+        <label htmlFor={formControlName}>{displayName}</label>
       </div>
       <div className="profile-option-control-container">
         <Select
@@ -58,13 +55,15 @@ function ProfileOption({
             }
             if (meta.context === "menu") {
               // We are rendering items for display in the menu of options
-              classNames.push("react-select-item-menu-display")
+              classNames.push("react-select-item-menu-display");
             }
             return (
-              <div className={classNames.join(' ')}>
+              <div className={classNames.join(" ")}>
                 <div className="react-select-item-title">{option.label}</div>
                 {option.description && (
-                  <div className="react-select-item-description">{option.description}</div>
+                  <div className="react-select-item-description">
+                    {option.description}
+                  </div>
                 )}
               </div>
             );
@@ -98,7 +97,8 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
     {
       value: "--other--specify",
       label: "Specify an existing docker image",
-      description: "Use a pre-existing docker image a public docker registry (dockerhub, quay, etc)",
+      description:
+        "Use a pre-existing docker image a public docker registry (dockerhub, quay, etc)",
       onSelected: () => {
         setShowImageSpecifier(true);
       },

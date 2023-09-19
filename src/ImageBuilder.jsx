@@ -15,7 +15,7 @@ function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
     true,
   );
   // Clear the last line written, so we start from scratch
-  term.write('\x1b[2K\r');
+  term.write("\x1b[2K\r");
   term.resize(66, 16);
   fitAddon.fit();
   image.onStateChange("*", (oldState, newState, data) => {
@@ -44,7 +44,7 @@ function ImageLogs({ setTerm, setFitAddon }) {
       // 60 cols is pretty small, but unfortunately we have very limited width
       // available in our form!
       cols: 66,
-      rows: 1
+      rows: 1,
     });
     const fitAddon = new FitAddon();
     term.loadAddon(fitAddon);
@@ -52,7 +52,7 @@ function ImageLogs({ setTerm, setFitAddon }) {
     fitAddon.fit();
     setTerm(term);
     setFitAddon(fitAddon);
-    term.write("Logs will appear here when image is being built")
+    term.write("Logs will appear here when image is being built");
   }, []);
 
   return (
@@ -106,10 +106,7 @@ export function ImageBuilder({ inputName }) {
         />
       </div>
 
-      <ImageLogs
-        setFitAddon={setFitAddon}
-        setTerm={setTerm}
-      />
+      <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
       {/* Hidden input that has the actual name of the image to launch */}
       <input
         name={inputName}
