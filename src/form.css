@@ -1,7 +1,7 @@
 /* Layout */
 .resource-selector {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 6fr;
     gap: 16px;
 }
 
@@ -9,29 +9,18 @@
     grid-column-start: 1;
     align-self: center;
     justify-self: right;
+    text-align: right;
 }
 .profile-option-control-container {
     grid-column-start: 2;
 }
 
-#build-image-panel {
-  margin-top: 12px;
-}
+/* Image Building styling & layout */
 
-#build-image-panel .panel-body {
-  background-color: black;
+.terminal-container {
+    background-color: black;
+    padding: 16px;
 }
-
-#logs-hide-toggle a {
-  color: darkgrey;
-}
-
-#build-image-panel-title {
-  display: inline-block;
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-
 .profile-option-control-container input[type="text"] {
     width: 100%;
     /* 8px here, even though we only use 4px for .react-select-item-container.
@@ -40,6 +29,8 @@
     padding: 8px;
 }
 
+
+/* react-select styling */
 .react-select-item-container.react-select-item-menu-display.react-select-item-selected .react-select-item-description{
     /* When rendering an option in react select's *menu*, if it is the currently selected one, make the description much lighter.
        Otherwise, it gets unreadable in the blue;

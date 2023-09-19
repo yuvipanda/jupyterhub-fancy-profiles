@@ -14,6 +14,10 @@ function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
     null,
     true,
   );
+  // Clear the last line written, so we start from scratch
+  term.write('\x1b[2K\r');
+  term.resize(66, 16);
+  fitAddon.fit();
   image.onStateChange("*", (oldState, newState, data) => {
     // Write out all messages to the terminal!
     term.write(data.message);
@@ -32,11 +36,15 @@ function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   image.fetch();
 }
 
-function ImageLogs({ expanded, setExpanded, setTerm, setFitAddon }) {
+function ImageLogs({ setTerm, setFitAddon }) {
   useEffect(function () {
     const term = new Terminal({
       convertEol: true,
       disableStdin: true,
+      // 60 cols is pretty small, but unfortunately we have very limited width
+      // available in our form!
+      cols: 66,
+      rows: 1
     });
     const fitAddon = new FitAddon();
     term.loadAddon(fitAddon);
@@ -44,93 +52,71 @@ function ImageLogs({ expanded, setExpanded, setTerm, setFitAddon }) {
     fitAddon.fit();
     setTerm(term);
     setFitAddon(fitAddon);
+    term.write("Logs will appear here when image is being built")
   }, []);
 
   return (
-    <div className="panel panel-default" id="build-image-panel">
-      <div className="panel-heading" onClick={() => setExpanded((old) => !old)}>
-        <span>Build Logs</span>
-        <small id="logs-hide-toggle" className="pull-right">
-          <a href="#">{expanded ? "click to hide" : "click to show"}</a>
-        </small>
+    <>
+      <div className="profile-option-label-container build-logs-label-container">
+        <label>Build Logs</label>
       </div>
-      <div className={"panel-body " + (expanded || "hidden")}>
-        <div id="terminal"></div>
+      <div className="profile-option-control-container">
+        <div className="terminal-container">
+          <div id="terminal"></div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 export function ImageBuilder({ inputName }) {
   const [repo, setRepo] = useState("");
+
+  // FIXME: Allow users to actually configure this
   const [ref, setRef] = useState("HEAD");
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
   const [imageName, setImageName] = useState("");
-  const [logsVisible, setLogsVisible] = useState(false);
 
   return (
-    <div className="panel panel-default">
-      <div className="panel-body">
-        <p>Use a mybinder.org compatible repository to build the environment</p>
-
-        <div className="row">
-          <div className="col-md-8">
-            <label>Repo</label>
-            <input
-              className="form-control"
-              type="text"
-              value={repo}
-              onChange={(e) => setRepo(e.target.value)}
-            ></input>
-          </div>
-          <div className="col-md-4">
-            <label>Ref</label>
-            <input
-              className="form-control"
-              type="text"
-              value={ref}
-              onChange={(e) => setRef(e.target.value)}
-            ></input>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-8">
-            {imageName &&
-              "Image has been built! Click the Start button to launch your server."}
-          </div>
-          <div className="col-md-4">
-            <input
-              type="button"
-              id="build-image"
-              className="btn btn-jupyter pull-right"
-              value="Build image"
-              onClick={() => {
-                setLogsVisible(true);
-                buildImage(repo, ref, term, fitAddon, (imageName) => {
-                  setImageName(imageName);
-                  term.write(
-                    "\nImage has been built! Click the start button to launch your server",
-                  );
-                });
-              }}
-            />
-          </div>
-        </div>
-
-        <ImageLogs
-          setFitAddon={setFitAddon}
-          setTerm={setTerm}
-          expanded={logsVisible}
-          setExpanded={setLogsVisible}
-        />
-        {/* Hidden input that has the actual name of the image to launch */}
+    <>
+      <div className="profile-option-label-container">
+        <label>GitHub Repository</label>
+      </div>
+      <div className="profile-option-control-container">
         <input
-          name={inputName}
-          className="hidden"
-          type="hidden"
-          value={imageName}
+          type="text"
+          value={repo}
+          onChange={(e) => setRepo(e.target.value)}
+        ></input>
+      </div>
+      <div className="profile-option-control-container">
+        <input
+          type="button"
+          id="build-image"
+          className="btn btn-jupyter pull-right"
+          value="Build image"
+          onClick={() => {
+            buildImage(repo, ref, term, fitAddon, (imageName) => {
+              setImageName(imageName);
+              term.write(
+                "\nImage has been built! Click the start button to launch your server",
+              );
+            });
+          }}
         />
       </div>
-    </div>
+
+      <ImageLogs
+        setFitAddon={setFitAddon}
+        setTerm={setTerm}
+      />
+      {/* Hidden input that has the actual name of the image to launch */}
+      <input
+        name={inputName}
+        className="hidden"
+        type="hidden"
+        value={imageName}
+      />
+    </>
   );
 }
