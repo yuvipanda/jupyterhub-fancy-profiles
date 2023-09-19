@@ -39,20 +39,30 @@ function ProfileOption({
 
   return (
     <div className="form-group">
-      <label className="col-sm-3 control-label" htmlFor={formControlName}>
+      <label className="col-sm-2 control-label" htmlFor={formControlName}>
         {displayName}
       </label>
-      <div className="col-sm-9">
+      <div className="col-sm-10">
         <Select
           options={options}
           name={hideFromForm || formControlName}
           defaultValue={defaultOption}
-          formatOptionLabel={(option) => {
+          formatOptionLabel={(option, meta) => {
+            let classNames = ["react-select-item-container"];
+            if (meta.selectValue[0].value === option.value) {
+              // Check for the values, rather than the whole object, as react-select may make copies
+              // We are rendering a value that is the current selection
+              classNames.push("react-select-item-selected");
+            }
+            if (meta.context === "menu") {
+              // We are rendering items for display in the menu of options
+              classNames.push("react-select-item-menu-display")
+            }
             return (
-              <div>
-                <div style={{ fontWeight: "bold" }}>{option.label}</div>
+              <div className={classNames.join(' ')}>
+                <div className="react-select-item-title">{option.label}</div>
                 {option.description && (
-                  <div>{option.description}</div>
+                  <div className="react-select-item-description">{option.description}</div>
                 )}
               </div>
             );
@@ -125,8 +135,8 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
 
       {showImageSpecifier && (
         <div className="form-group">
-          <label className="col-sm-3 control-label">Custom Image</label>
-          <div className="col-sm-9">
+          <label className="col-sm-2 control-label">Custom Image</label>
+          <div className="col-sm-10">
             {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
             <input
               name={unlistedImageFormInputName}

@@ -15,3 +15,17 @@
   margin-top: 8px;
   margin-bottom: 8px;
 }
+
+.react-select-item-container.react-select-item-menu-display.react-select-item-selected .react-select-item-description{
+    /* When rendering an option in react select's *menu*, if it is the currently selected one, make the description much lighter.
+       Otherwise, it gets unreadable in the blue;
+    */
+    color: #ddd;
+}
+.react-select-item-container {
+    padding: 4px;
+}
+
+.react-select-item-description {
+    color: #999;
+}
