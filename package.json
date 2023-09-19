@@ -13,6 +13,7 @@
     "@jupyterhub/binderhub-client": "file:binderhub/js/packages/binderhub-client",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-select": "^5.7.4",
     "xterm": "^5.1.0",
     "xterm-addon-fit": "^0.8.0"
   },

@@ -1,96 +1,132 @@
 import { createRoot } from "react-dom/client";
 import { ImageBuilder } from "./ImageBuilder";
 import { useState } from "react";
+import Select from "react-select";
 
 import "../node_modules/xterm/css/xterm.css";
 
 import "./form.css";
 
-function ProfileOption({ profileSlug, optionName, displayName, choices }) {
+function ProfileOption({
+  profileSlug,
+  optionName,
+  displayName,
+  choices,
+  extraSelectableItems,
+  hideFromForm,
+}) {
+
   const formControlName = "profile-option-" + profileSlug + "-" + optionName;
   const defaultChoiceName =
     Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
     Object.keys(choices)[0];
 
+  let options = Object.keys(choices).map((choiceName) => {
+    return {
+      value: choiceName,
+      label: choices[choiceName].display_name,
+      description: choices[choiceName].description,
+    };
+  });
+  if (extraSelectableItems && extraSelectableItems.length > 0) {
+    options = [...options, ...extraSelectableItems];
+  }
+  const defaultOption = options.find(
+    (option) => option.value === defaultChoiceName,
+  );
+
+  const [lastSelectedOption, setLastSelectedOption] = useState(null);
+
   return (
     <div className="form-group">
-      <label className="col-sm-2 control-label" htmlFor={formControlName}>
-        {displayName}{" "}
+      <label className="col-sm-3 control-label" htmlFor={formControlName}>
+        {displayName}
       </label>
-      <div className="col-sm-10">
-        <select
-          name={formControlName}
-          className="form-control"
-          defaultValue={defaultChoiceName}
-        >
-          {Object.keys(choices).map((choiceName) => {
-            const choiceBody = choices[choiceName];
+      <div className="col-sm-9">
+        <Select
+          options={options}
+          name={hideFromForm || formControlName}
+          defaultValue={defaultOption}
+          formatOptionLabel={(option) => {
             return (
-              <option key={choiceName} value={choiceName}>
-                {choiceBody.display_name}
-              </option>
+              <div>
+                <div style={{ fontWeight: "bold" }}>{option.label}</div>
+                {option.description && (
+                  <div>{option.description}</div>
+                )}
+              </div>
             );
-          })}
-        </select>
+          }}
+          onChange={(option) => {
+            if (
+              lastSelectedOption &&
+              option !== lastSelectedOption &&
+              lastSelectedOption.onDeselected
+            ) {
+              lastSelectedOption.onDeselected();
+            }
+            if (option.onSelected) {
+              option.onSelected();
+            }
+            setLastSelectedOption(option);
+          }}
+        />
       </div>
     </div>
   );
 }
 
 function ImageOption({ profileSlug, optionName, displayName, choices }) {
-  const formControlName = "profile-option-" + profileSlug + "-" + optionName;
-  const defaultChoiceName =
-    Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
-    Object.keys(choices)[0];
   const [showImageBuilder, setShowImageBuilder] = useState(false);
   const [showImageSpecifier, setShowImageSpecifier] = useState(false);
   const [specifiedImage, setSpecifiedImage] = useState("");
-  const buildImageKey = "other--build";
-  const specifyImageKey = "other--specify";
   const unlistedImageFormInputName = `profile-option-${profileSlug}--${optionName}--unlisted-choice`;
+
+  const extraSelectableItems = [
+    {
+      value: "--other--specify",
+      label: "Specify an existing docker image",
+      description: "Use a pre-existing docker image from dockerhub, quay.io or other public docker registry",
+      onSelected: () => {
+        setShowImageSpecifier(true);
+      },
+      onDeselected: () => {
+        setShowImageSpecifier(false);
+      },
+    },
+    {
+      value: "--other--build",
+      label: "Build your own image",
+      description:
+        "Use a mybinder.org compatible GitHub repository to build your own image",
+      onSelected: () => {
+        setShowImageBuilder(true);
+      },
+      onDeselected: () => {
+        setShowImageBuilder(false);
+      },
+    },
+  ];
 
   return (
     <>
-      <div className="form-group">
-        <label className="col-sm-2 control-label" htmlFor={formControlName}>
-          {displayName}{" "}
-        </label>
-        <div className="col-sm-10">
-          {/* When we send an explicit image with unlisted choice, we should *not* send a value for the image field itself
-              This will confuse KubeSpawner and give us a 5xx. So we render the name attribute *only* if we are sending an
-              image option from the listed choices, and let it be empty if not.
-          */}
-          <select
-            name={!(showImageSpecifier || showImageBuilder) && formControlName}
-            className="form-control"
-            defaultValue={defaultChoiceName}
-            onChange={(ev) => {
-              setShowImageBuilder(ev.target.value === buildImageKey);
-              setShowImageSpecifier(ev.target.value === specifyImageKey);
-            }}
-          >
-            {Object.keys(choices).map((choiceName) => {
-              const choiceBody = choices[choiceName];
-              return (
-                <option key={choiceName} value={choiceName}>
-                  {choiceBody.display_name}
-                </option>
-              );
-            })}
-            <option key={specifyImageKey} value={specifyImageKey}>
-              Specify your own image
-            </option>
-            <option key={buildImageKey} value={buildImageKey}>
-              Build your own image (from a GitHub repository)
-            </option>
-          </select>
-        </div>
-      </div>
+      {/* When we send an explicit image with unlisted choice, we should *not* send a value for the image field itself
+          This will confuse KubeSpawner and give us a 5xx. So we render the name attribute *only* if we are sending an
+          image option from the listed choices, and let it be empty if not.
+      */}
+      <ProfileOption
+        hideFromForm={showImageBuilder || showImageSpecifier}
+        profileSlug={profileSlug}
+        optionName={optionName}
+        displayName={displayName}
+        choices={choices}
+        extraSelectableItems={extraSelectableItems}
+      />
 
       {showImageSpecifier && (
         <div className="form-group">
-          <label className="col-sm-2 control-label">Custom Image</label>
-          <div className="col-sm-10">
+          <label className="col-sm-3 control-label">Custom Image</label>
+          <div className="col-sm-9">
             {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
             <input
               name={unlistedImageFormInputName}
