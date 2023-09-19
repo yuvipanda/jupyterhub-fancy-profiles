@@ -38,11 +38,13 @@ function ProfileOption({
   const [lastSelectedOption, setLastSelectedOption] = useState(null);
 
   return (
-    <div className="form-group">
-      <label className="col-sm-2 control-label" htmlFor={formControlName}>
-        {displayName}
-      </label>
-      <div className="col-sm-10">
+    <>
+      <div className="profile-option-label-container">
+        <label htmlFor={formControlName}>
+          {displayName}
+        </label>
+      </div>
+      <div className="profile-option-control-container">
         <Select
           options={options}
           name={hideFromForm || formControlName}
@@ -82,7 +84,7 @@ function ProfileOption({
           }}
         />
       </div>
-    </div>
+    </>
   );
 }
 
@@ -96,7 +98,7 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
     {
       value: "--other--specify",
       label: "Specify an existing docker image",
-      description: "Use a pre-existing docker image from dockerhub, quay.io or other public docker registry",
+      description: "Use a pre-existing docker image a public docker registry (dockerhub, quay, etc)",
       onSelected: () => {
         setShowImageSpecifier(true);
       },
@@ -134,18 +136,20 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
       />
 
       {showImageSpecifier && (
-        <div className="form-group">
-          <label className="col-sm-2 control-label">Custom Image</label>
-          <div className="col-sm-10">
+        <>
+          <div className="profile-option-label-container">
+            <label>Custom Image</label>
+          </div>
+          <div className="profile-option-control-container">
             {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
             <input
               name={unlistedImageFormInputName}
+              type="text"
               defaultValue={specifiedImage}
-              className="form-control"
               onChange={(ev) => setSpecifiedImage(ev.target.value)}
             />
           </div>
-        </div>
+        </>
       )}
       {showImageBuilder && (
         <ImageBuilder inputName={unlistedImageFormInputName} />
@@ -157,24 +161,21 @@ function ResourceSelector({ profile }) {
   const options = profile.profile_options;
 
   return (
-    <div className="panel panel-default">
-      <div className="panel-heading">Options</div>
-      <div className="panel-body form-horizontal">
-        {Object.keys(options).map((optionName) => {
-          const OptionComponent =
-            optionName === "image" ? ImageOption : ProfileOption;
-          const optionBody = options[optionName];
-          return (
-            <OptionComponent
-              key={optionName}
-              optionName={optionName}
-              displayName={optionBody.display_name}
-              profileSlug={profile.slug}
-              choices={optionBody.choices}
-            />
-          );
-        })}
-      </div>
+    <div className="resource-selector">
+      {Object.keys(options).map((optionName) => {
+        const OptionComponent =
+          optionName === "image" ? ImageOption : ProfileOption;
+        const optionBody = options[optionName];
+        return (
+          <OptionComponent
+            key={optionName}
+            optionName={optionName}
+            displayName={optionBody.display_name}
+            profileSlug={profile.slug}
+            choices={optionBody.choices}
+          />
+        );
+      })}
     </div>
   );
 }

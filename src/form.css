@@ -1,3 +1,19 @@
+/* Layout */
+.resource-selector {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 16px;
+}
+
+.profile-option-label-container {
+    grid-column-start: 1;
+    align-self: center;
+    justify-self: right;
+}
+.profile-option-control-container {
+    grid-column-start: 2;
+}
+
 #build-image-panel {
   margin-top: 12px;
 }
@@ -14,6 +30,14 @@
   display: inline-block;
   margin-top: 8px;
   margin-bottom: 8px;
+}
+
+.profile-option-control-container input[type="text"] {
+    width: 100%;
+    /* 8px here, even though we only use 4px for .react-select-item-container.
+       Achieves similar visual effect.
+    */
+    padding: 8px;
 }
 
 .react-select-item-container.react-select-item-menu-display.react-select-item-selected .react-select-item-description{
