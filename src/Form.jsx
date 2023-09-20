@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { ImageBuilder } from "./ImageBuilder";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Select from "react-select";
 
 import "../node_modules/xterm/css/xterm.css";
@@ -31,7 +31,7 @@ function ProfileOption({
     options = [...options, ...extraSelectableItems];
   }
   const defaultOption = options.find(
-    (option) => option.value === defaultChoiceName,
+    (option) => option.value === defaultChoiceName
   );
 
   const [lastSelectedOption, setLastSelectedOption] = useState(null);
@@ -87,10 +87,48 @@ function ProfileOption({
   );
 }
 
-function ImageOption({ profileSlug, optionName, displayName, choices }) {
+function ImageSpecifier({ visible, setUnlistedImage }) {
+  const [specifiedImage, setSpecifiedImage] = useState("");
+  useEffect(() => {
+    console.log("visibility triggered");
+    console.log(visible);
+    if (!visible) {
+      setUnlistedImage("");
+    }
+  }, [visible]);
+  return (
+    visible && (
+      <>
+        <div className="profile-option-label-container">
+          <label>Custom Image</label>
+        </div>
+        <div className="profile-option-control-container">
+          {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
+          <input
+            type="text"
+            defaultValue={specifiedImage}
+            onChange={(ev) => {
+              const val = ev.target.value;
+              setSpecifiedImage(val);
+              setUnlistedImage(val);
+            }}
+          />
+        </div>
+      </>
+    )
+  );
+}
+
+function ImageOption({
+  profileSlug,
+  optionName,
+  displayName,
+  choices,
+  setCanStart,
+}) {
   const [showImageBuilder, setShowImageBuilder] = useState(false);
   const [showImageSpecifier, setShowImageSpecifier] = useState(false);
-  const [specifiedImage, setSpecifiedImage] = useState("");
+  const [unlistedImage, setUnlistedImage] = useState("");
   const unlistedImageFormInputName = `profile-option-${profileSlug}--${optionName}--unlisted-choice`;
 
   const extraSelectableItems = [
@@ -98,7 +136,7 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
       value: "--other--specify",
       label: "Specify an existing docker image",
       description:
-        "Use a pre-existing docker image a public docker registry (dockerhub, quay, etc)",
+        "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)",
       onSelected: () => {
         setShowImageSpecifier(true);
       },
@@ -120,6 +158,21 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
     },
   ];
 
+  useEffect(() => {
+    // This is run each time showImageSpecifier is changed
+    if (showImageSpecifier || showImageBuilder) {
+      // Image specifier is shown. If the user had *already* typed an image name
+      // here, and then navigated away to a different option, and then navigated
+      // back to the image specifier, specifiedImage will already be not empty.
+      // In this case, the user *can* start a server, as image is already specified.
+      setCanStart(unlistedImage.trim() !== "");
+    } else {
+      // The image specifier is hidden now, so from the perspective of the
+      // image specifier, starting can happen.
+      setCanStart(true);
+    }
+  }, [showImageSpecifier, unlistedImage, showImageBuilder]);
+
   return (
     <>
       {/* When we send an explicit image with unlisted choice, we should *not* send a value for the image field itself
@@ -135,31 +188,29 @@ function ImageOption({ profileSlug, optionName, displayName, choices }) {
         extraSelectableItems={extraSelectableItems}
       />
 
-      {showImageSpecifier && (
-        <>
-          <div className="profile-option-label-container">
-            <label>Custom Image</label>
-          </div>
-          <div className="profile-option-control-container">
-            {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
-            <input
-              name={unlistedImageFormInputName}
-              type="text"
-              defaultValue={specifiedImage}
-              onChange={(ev) => setSpecifiedImage(ev.target.value)}
-            />
-          </div>
-        </>
-      )}
-      {showImageBuilder && (
-        <ImageBuilder inputName={unlistedImageFormInputName} />
+      <ImageSpecifier
+        visible={showImageSpecifier}
+        unlistedImageFormInputName={unlistedImageFormInputName}
+        setUnlistedImage={setUnlistedImage}
+      />
+      <ImageBuilder
+        visible={showImageBuilder}
+        inputName={unlistedImageFormInputName}
+        setUnlistedImage={setUnlistedImage}
+      />
+
+      {(showImageBuilder || showImageSpecifier) && unlistedImage !== "" && (
+        <input
+          type="hidden"
+          name={unlistedImageFormInputName}
+          value={unlistedImage}
+        />
       )}
     </>
   );
 }
-function ResourceSelector({ profile }) {
+function ResourceSelector({ profile, setCanStart }) {
   const options = profile.profile_options;
-
   return (
     <div className="resource-selector">
       {Object.keys(options).map((optionName) => {
@@ -168,6 +219,7 @@ function ResourceSelector({ profile }) {
         const optionBody = options[optionName];
         return (
           <OptionComponent
+            setCanStart={setCanStart}
             key={optionName}
             optionName={optionName}
             displayName={optionBody.display_name}
@@ -189,6 +241,15 @@ function ResourceSelector({ profile }) {
 function Form() {
   const profileList = window.profileList;
   const profile = profileList[0];
+  const startButton = useRef(
+    document.querySelector(".feedback-container input[type='submit']")
+  );
+
+  const [canStart, setCanStart] = useState(true);
+
+  useEffect(() => {
+    startButton.current.disabled = !canStart;
+  }, [canStart]);
 
   return (
     <>
@@ -202,10 +263,10 @@ function Form() {
         readOnly
       />
 
-      <ResourceSelector profile={profile} />
+      <ResourceSelector profile={profile} setCanStart={setCanStart} />
     </>
   );
 }
 
 const root = createRoot(document.getElementById("form"));
-root.render(Form());
+root.render(<Form />);

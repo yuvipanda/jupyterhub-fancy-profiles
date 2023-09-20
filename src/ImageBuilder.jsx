@@ -68,16 +68,15 @@ function ImageLogs({ setTerm, setFitAddon }) {
     </>
   );
 }
-export function ImageBuilder({ inputName }) {
+export function ImageBuilder({ visible, setUnlistedImage }) {
   const [repo, setRepo] = useState("");
 
   // FIXME: Allow users to actually configure this
   const [ref, setRef] = useState("HEAD");
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
-  const [imageName, setImageName] = useState("");
 
-  return (
+  return visible &&
     <>
       <div className="profile-option-label-container">
         <label>GitHub Repository</label>
@@ -97,7 +96,7 @@ export function ImageBuilder({ inputName }) {
           value="Build image"
           onClick={() => {
             buildImage(repo, ref, term, fitAddon, (imageName) => {
-              setImageName(imageName);
+              setUnlistedImage(imageName);
               term.write(
                 "\nImage has been built! Click the start button to launch your server",
               );
@@ -107,13 +106,5 @@ export function ImageBuilder({ inputName }) {
       </div>
 
       <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
-      {/* Hidden input that has the actual name of the image to launch */}
-      <input
-        name={inputName}
-        className="hidden"
-        type="hidden"
-        value={imageName}
-      />
-    </>
-  );
+    </>;
 }
