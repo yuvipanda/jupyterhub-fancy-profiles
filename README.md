@@ -1,4 +1,4 @@
-# prototype-kubespawner-dynamic-building-ui
+# jupyterhub-fancy-profiles
 
 ## Goals
 
@@ -28,7 +28,7 @@ with this package to provide appropriate UI, by adding the following snippet
 to your `jupyterhub_config.py` file:
 
 ```python
-from kubespawner_dynamic_building_ui import setup_ui
+from jupyterhub_fancy_profiles import setup_ui
 setup_ui(c)
 ```
 
@@ -43,11 +43,11 @@ it will:
 
 The primary contents are:
 
-1. `kubespawner-dynamic-building-ui/templates` contains jinja2 templates, primarily
+1. `jupyterhub_fancy_profiles/templates` contains jinja2 templates, primarily
    `HTML` for constructing the form itself. This can contain multiple templates
    that are composed together using all of jinja2's composition features (like `include`)
 2. `src/` contains JS and CSS that are packaged via standard frontend bundling
-   tools (`webpack` and `babel`), outputing assets into `kubespawner-dynamic-building-ui/static/`.
+   tools (`webpack` and `babel`), outputing assets into `jupyterhub_fancy_profiles/static/`.
    This allows us to use _standard_ frontend tooling to write JS & CSS - for
    example, [xterm.js](http://xtermjs.org/) can be used without many complications.
 

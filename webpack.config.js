@@ -20,7 +20,7 @@ module.exports = {
   output: {
     publicPath: "/",
     filename: "form.js",
-    path: path.resolve(__dirname, "kubespawner_dynamic_building_ui/static/"),
+    path: path.resolve(__dirname, "jupyterhub_fancy_profiles/static/"),
   },
   resolve: {
     extensions: [".css", ".js", ".jsx"],
