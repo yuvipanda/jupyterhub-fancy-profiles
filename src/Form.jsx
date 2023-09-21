@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "../node_modules/xterm/css/xterm.css";
 
@@ -14,20 +14,23 @@ import { ResourceSelector } from "./ResourceSelector";
  */
 function Form() {
   const profileList = window.profileList;
-  const profile = profileList[0];
-  const startButton = useRef(
-    document.querySelector(".feedback-container input[type='submit']")
-  );
 
+  // Currently, we only support a single profile, with many options.
+  const profile = profileList[0];
   const [canStart, setCanStart] = useState(true);
 
   useEffect(() => {
-    startButton.current.disabled = !canStart;
+    // The "Start" button that submits the form and launches the server is
+    // rendered by JupyterHub itself, and we don't actually have *any* control
+    // over it. But, we need to enable & disable it as appropriate based on
+    // the state of the form, so we grab a reference to it with classical DOM manipulation.
+    // However, this might break in future JupyterHub versions if the CSS structure changes
+    const startButton = document.querySelector(".feedback-container input[type='submit']")
+    startButton.disabled = !canStart;
   }, [canStart]);
 
   return (
     <>
-      {/* We only support a single profile, and it must be marked as selected */}
       <input
         type="radio"
         className="hidden"
