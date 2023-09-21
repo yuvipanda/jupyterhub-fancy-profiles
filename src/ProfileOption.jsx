@@ -32,7 +32,7 @@ export function ProfileOption({
       <div className="profile-option-control-container">
         <Select
           options={options}
-          name={hideFromForm || formControlName}
+          name={hideFromForm ? null : formControlName}
           defaultValue={defaultOption}
           formatOptionLabel={(option, meta) => {
             let classNames = ["react-select-item-container"];
