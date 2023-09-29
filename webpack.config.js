@@ -3,6 +3,7 @@ const path = require("path");
 
 module.exports = {
   entry: path.resolve(__dirname, "src", "Form.jsx"),
+  devtool: "source-map",
   mode: "development",
   module: {
     rules: [
