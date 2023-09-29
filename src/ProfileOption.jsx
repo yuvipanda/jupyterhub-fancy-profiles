@@ -2,10 +2,17 @@ import { useState } from "react";
 import Select from "react-select";
 
 export function ProfileOption({
-  profileSlug, optionName, displayName, choices, extraSelectableItems, hideFromForm,
+  profileSlug,
+  optionName,
+  displayName,
+  choices,
+  extraSelectableItems,
+  hideFromForm,
+  onChange,
 }) {
   const formControlName = "profile-option-" + profileSlug + "-" + optionName;
-  const defaultChoiceName = Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
+  const defaultChoiceName =
+    Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
     Object.keys(choices)[0];
 
   let options = Object.keys(choices).map((choiceName) => {
@@ -56,17 +63,8 @@ export function ProfileOption({
               </div>
             );
           }}
-          onChange={(option) => {
-            if (lastSelectedOption &&
-              option !== lastSelectedOption &&
-              lastSelectedOption.onDeselected) {
-              lastSelectedOption.onDeselected();
-            }
-            if (option.onSelected) {
-              option.onSelected();
-            }
-            setLastSelectedOption(option);
-          }} />
+          onChange={onChange}
+        />
       </div>
     </>
   );

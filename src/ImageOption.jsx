@@ -1,85 +1,80 @@
 import { ImageBuilder } from "./ImageBuilder";
-import { useEffect, useState } from "react";
 import { ProfileOption } from "./ProfileOption";
 import { ImageSpecifier } from "./ImageSpecifier";
+import { useContext } from "react";
+import { IMAGE_OPTION_VIEWS, SpawnerFormContext } from "./state";
 
-export function ImageOption({
-  profileSlug, optionName, displayName, choices, setCanStart,
-}) {
-  const [showImageBuilder, setShowImageBuilder] = useState(false);
-  const [showImageSpecifier, setShowImageSpecifier] = useState(false);
-  const [unlistedImage, setUnlistedImage] = useState("");
+export function ImageOption({ profileSlug, optionName, displayName, choices }) {
   const unlistedImageFormInputName = `profile-option-${profileSlug}--${optionName}--unlisted-choice`;
+  const {
+    unlistedImage,
+    imageOptionView,
+    setImageOptionView,
+  } = useContext(SpawnerFormContext);
 
   const extraSelectableItems = [
     {
       value: "--other--specify",
       label: "Specify an existing docker image",
-      description: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)",
+      description:
+        "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)",
       onSelected: () => {
-        setShowImageSpecifier(true);
-      },
-      onDeselected: () => {
-        setShowImageSpecifier(false);
+        setImageOptionView(IMAGE_OPTION_VIEWS.specifier);
       },
     },
     {
       value: "--other--build",
       label: "Build your own image",
-      description: "Use a mybinder.org compatible GitHub repository to build your own image",
+      description:
+        "Use a mybinder.org compatible GitHub repository to build your own image",
       onSelected: () => {
-        setShowImageBuilder(true);
-      },
-      onDeselected: () => {
-        setShowImageBuilder(false);
+        setImageOptionView(IMAGE_OPTION_VIEWS.builder);
       },
     },
   ];
 
-  useEffect(() => {
-    // This is run each time showImageSpecifier is changed
-    if (showImageSpecifier || showImageBuilder) {
-      // Image specifier is shown. If the user had *already* typed an image name
-      // here, and then navigated away to a different option, and then navigated
-      // back to the image specifier, specifiedImage will already be not empty.
-      // In this case, the user *can* start a server, as image is already specified.
-      setCanStart(unlistedImage.trim() !== "");
-    } else {
-      // The image specifier is hidden now, so from the perspective of the
-      // image specifier, starting can happen.
-      setCanStart(true);
-    }
-  }, [showImageSpecifier, unlistedImage, showImageBuilder]);
-
   return (
     <>
       {/* When we send an explicit image with unlisted choice, we should *not* send a value for the image field itself
-                This will confuse KubeSpawner and give us a 5xx. So we render the name attribute *only* if we are sending an
-                image option from the listed choices, and let it be empty if not.
-            */}
+          This will confuse KubeSpawner and give us a 5xx. So we render the name attribute *only* if we are sending an
+          image option from the listed choices, and let it be empty if not.
+          */}
       <ProfileOption
-        hideFromForm={showImageBuilder || showImageSpecifier}
+        hideFromForm={imageOptionView !== IMAGE_OPTION_VIEWS.choices}
         profileSlug={profileSlug}
         optionName={optionName}
         displayName={displayName}
         choices={choices}
-        extraSelectableItems={extraSelectableItems} />
+        extraSelectableItems={extraSelectableItems}
+        onChange={(option) => {
+          let extraValueSelected = false;
+          for (const extraItem of extraSelectableItems) {
+            if (extraItem.value === option.value && extraItem.onSelected) {
+              extraItem.onSelected();
+              extraValueSelected = true;
+              break;
+            }
+          }
+          if (!extraValueSelected) {
+            // User clicked an existing choice, not the two extra items we sent
+            setImageOptionView(IMAGE_OPTION_VIEWS.choices);
+          }
+        }}
+      />
 
       <ImageSpecifier
-        visible={showImageSpecifier}
-        unlistedImageFormInputName={unlistedImageFormInputName}
-        setUnlistedImage={setUnlistedImage} />
-      <ImageBuilder
-        visible={showImageBuilder}
-        inputName={unlistedImageFormInputName}
-        setUnlistedImage={setUnlistedImage} />
+        visible={imageOptionView === IMAGE_OPTION_VIEWS.specifier}
+      />
+      <ImageBuilder visible={imageOptionView === IMAGE_OPTION_VIEWS.builder} />
 
-      {(showImageBuilder || showImageSpecifier) && unlistedImage !== "" && (
-        <input
-          type="hidden"
-          name={unlistedImageFormInputName}
-          value={unlistedImage} />
-      )}
+      {imageOptionView !== IMAGE_OPTION_VIEWS.choices &&
+        unlistedImage !== "" && (
+          <input
+            type="hidden"
+            name={unlistedImageFormInputName}
+            value={unlistedImage}
+          />
+        )}
     </>
   );
 }

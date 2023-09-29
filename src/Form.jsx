@@ -5,6 +5,8 @@ import "../node_modules/xterm/css/xterm.css";
 
 import "./form.css";
 import { ResourceSelector } from "./ResourceSelector";
+import { SpawnerFormContext, SpawnerFormProvider } from "./state";
+import { useContext } from "react";
 
 /**
  * Generates the *contents* of the form shown in the profile selection page
@@ -17,20 +19,10 @@ function Form() {
 
   // Currently, we only support a single profile, with many options.
   const profile = profileList[0];
-  const [canStart, setCanStart] = useState(true);
-
-  useEffect(() => {
-    // The "Start" button that submits the form and launches the server is
-    // rendered by JupyterHub itself, and we don't actually have *any* control
-    // over it. But, we need to enable & disable it as appropriate based on
-    // the state of the form, so we grab a reference to it with classical DOM manipulation.
-    // However, this might break in future JupyterHub versions if the CSS structure changes
-    const startButton = document.querySelector(".feedback-container input[type='submit']")
-    startButton.disabled = !canStart;
-  }, [canStart]);
+  const { canSubmit } = useContext(SpawnerFormContext);
 
   return (
-    <>
+    <div className="form-grid">
       <input
         type="radio"
         className="hidden"
@@ -39,11 +31,15 @@ function Form() {
         checked
         readOnly
       />
-      <ResourceSelector profile={profile} setCanStart={setCanStart} />
-
-    </>
+      <ResourceSelector profile={profile} />
+      <input id="submit-button" type="submit" value="Start" disabled={!canSubmit} className="btn btn-jupyter form-control" />
+    </div>
   );
 }
 
 const root = createRoot(document.getElementById("form"));
-root.render(<Form />);
+root.render(
+  <SpawnerFormProvider>
+    <Form />
+  </SpawnerFormProvider>
+);

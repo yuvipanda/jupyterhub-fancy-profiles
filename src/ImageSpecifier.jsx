@@ -1,12 +1,18 @@
+import { useContext } from "react";
 import { useEffect, useState } from "react";
+import { SpawnerFormContext } from "./state";
 
-export function ImageSpecifier({ visible, setUnlistedImage }) {
+export function ImageSpecifier({ visible }) {
   const [specifiedImage, setSpecifiedImage] = useState("");
+
+  const { setUnlistedImage } = useContext(SpawnerFormContext);
   useEffect(() => {
     console.log("visibility triggered");
     console.log(visible);
     if (!visible) {
       setUnlistedImage("");
+    } else {
+      setUnlistedImage(specifiedImage);
     }
   }, [visible]);
   return (
@@ -24,7 +30,8 @@ export function ImageSpecifier({ visible, setUnlistedImage }) {
               const val = ev.target.value;
               setSpecifiedImage(val);
               setUnlistedImage(val);
-            }} />
+            }}
+          />
         </div>
       </>
     )

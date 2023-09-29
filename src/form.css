@@ -1,5 +1,10 @@
+/* Hide existing submit */
+.feedback-container {
+    display: none;
+}
+
 /* Layout */
-.resource-selector {
+.form-grid {
   display: grid;
   grid-template-columns: 1fr 6fr;
   gap: 16px;
@@ -11,8 +16,14 @@
   justify-self: right;
   text-align: right;
 }
+
 .profile-option-control-container {
   grid-column-start: 2;
+}
+
+#submit-button {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 /* Image Building styling & layout */
