@@ -1,16 +1,22 @@
+import { useEffect } from "react";
 import { useState } from "react";
-import Select from "react-select";
+import { CustomizedSelect } from "./CustomSelect";
 
 export function ProfileOption({
   profileSlug,
   optionName,
   displayName,
   choices,
-  extraSelectableItems,
-  hideFromForm,
-  onChange,
+  unlistedChoice,
+  extraSelectableItem,
 }) {
-  const formControlName = "profile-option-" + profileSlug + "-" + optionName;
+  const [unlistedChoiceVisible, setUnlistedChoiceVisible] = useState(false);
+  const [unlistedChoiceValue, setUnlistedChoiceValue] = useState("");
+  const [extraSelectableItemVisible, setExtraSelectableItemVisible] = useState(false);
+
+  const listedInputName = `profile-option-${profileSlug}--${optionName}`;
+  const unlistedInputName = `${listedInputName}--unlisted-choice`;
+
   const defaultChoiceName =
     Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
     Object.keys(choices)[0];
@@ -22,50 +28,75 @@ export function ProfileOption({
       description: choices[choiceName].description,
     };
   });
-  if (extraSelectableItems && extraSelectableItems.length > 0) {
-    options = [...options, ...extraSelectableItems];
+
+  if (unlistedChoice && unlistedChoice.enabled) {
+    options.push({
+      value: "--unlisted-choice",
+      label: unlistedChoice.display_name_in_choices,
+      description: unlistedChoice.description_in_choices,
+      onSelected: () => {
+        setUnlistedChoiceVisible(true);
+      },
+      onDeselected: () => {
+        setUnlistedChoiceVisible(false);
+      }
+    });
   }
   const defaultOption = options.find(
     (option) => option.value === defaultChoiceName
   );
 
-  const [lastSelectedOption, setLastSelectedOption] = useState(null);
+  if(extraSelectableItem) {
+    options.push({
+      value: "--extra-selectable-item",
+      label: extraSelectableItem.display_name_in_choices,
+      description: extraSelectableItem.description_in_choices,
+      onSelected: () => {
+        setExtraSelectableItemVisible(true)
+      },
+      onDeselected: () => {
+        setExtraSelectableItemVisible(false)
+      }
+
+    })
+  }
 
   return (
     <>
       <div className="profile-option-label-container">
-        <label htmlFor={formControlName}>{displayName}</label>
+        <label htmlFor={listedInputName}>{displayName}</label>
       </div>
       <div className="profile-option-control-container">
-        <Select
+        <CustomizedSelect
           options={options}
-          name={hideFromForm ? null : formControlName}
+          name={( extraSelectableItemVisible || unlistedChoiceVisible) ? null : listedInputName}
           defaultValue={defaultOption}
-          formatOptionLabel={(option, meta) => {
-            let classNames = ["react-select-item-container"];
-            if (meta.selectValue[0].value === option.value) {
-              // Check for the values, rather than the whole object, as react-select may make copies
-              // We are rendering a value that is the current selection
-              classNames.push("react-select-item-selected");
-            }
-            if (meta.context === "menu") {
-              // We are rendering items for display in the menu of options
-              classNames.push("react-select-item-menu-display");
-            }
-            return (
-              <div className={classNames.join(" ")}>
-                <div className="react-select-item-title">{option.label}</div>
-                {option.description && (
-                  <div className="react-select-item-description">
-                    {option.description}
-                  </div>
-                )}
-              </div>
-            );
-          }}
-          onChange={onChange}
         />
       </div>
+
+      {unlistedChoiceVisible && (
+        <>
+          <div className="profile-option-label-container">
+            <label>{unlistedChoice.display_name}</label>
+          </div>
+          <div className="profile-option-control-container">
+            {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
+            <input
+              type="text"
+              name={unlistedInputName}
+              defaultValue={unlistedChoiceValue}
+              onChange={(ev) => {
+                setUnlistedChoiceValue(ev.target.value);
+              }}
+            />
+          </div>
+        </>
+      )}
+
+      {extraSelectableItem && (
+        <extraSelectableItem.component visible={extraSelectableItemVisible} unlistedInputName={unlistedInputName} />
+      )}
+
     </>
   );
 }

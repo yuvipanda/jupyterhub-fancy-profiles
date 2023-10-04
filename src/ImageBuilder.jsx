@@ -36,7 +36,7 @@ function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   image.fetch();
 }
 
-function ImageLogs({ setTerm, setFitAddon }) {
+function ImageLogs({ visible, setTerm, setFitAddon }) {
   useEffect(function () {
     const term = new Terminal({
       convertEol: true,
@@ -57,10 +57,10 @@ function ImageLogs({ setTerm, setFitAddon }) {
 
   return (
     <>
-      <div className="profile-option-label-container build-logs-label-container">
+      <div className={`profile-option-label-container ${visible ? "" : "hidden"}`}>
         <label>Build Logs</label>
       </div>
-      <div className="profile-option-control-container">
+      <div className={`profile-option-control-container ${visible ? "" : "hidden"}`}>
         <div className="terminal-container">
           <div id="terminal"></div>
         </div>
@@ -68,27 +68,31 @@ function ImageLogs({ setTerm, setFitAddon }) {
     </>
   );
 }
-export function ImageBuilder({ visible, setUnlistedImage }) {
+export function ImageBuilder({ visible, unlistedInputName }) {
   const [repo, setRepo] = useState("");
+  const [builtImage, setBuiltImage] = useState(null);
 
   // FIXME: Allow users to actually configure this
   const [ref, setRef] = useState("HEAD");
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
 
-  return visible &&
-    <>
-      <div className="profile-option-label-container">
+  // We render everything, but only toggle visibility based on wether we are being
+  // shown or hidden. This provides for more DOM stability, and also allows the image
+  // to continue being built evn if the user moves away elsewhere. When hidden, we just
+  // don't generate the hidden input that posts the built image out.
+  return <>
+      <div className={`profile-option-label-container ${visible ? "" : "hidden"}`}>
         <label>GitHub Repository</label>
       </div>
-      <div className="profile-option-control-container">
+      <div className={`profile-option-control-container ${visible ? "" : "hidden"}`}>
         <input
           type="text"
           value={repo}
           onChange={(e) => setRepo(e.target.value)}
         ></input>
       </div>
-      <div className="profile-option-control-container">
+      <div className={`profile-option-control-container ${visible ? "" : "hidden"}`}>
         <input
           type="button"
           id="build-image"
@@ -96,15 +100,16 @@ export function ImageBuilder({ visible, setUnlistedImage }) {
           value="Build image"
           onClick={() => {
             buildImage(repo, ref, term, fitAddon, (imageName) => {
-              setUnlistedImage(imageName);
+              setBuiltImage(imageName);
               term.write(
                 "\nImage has been built! Click the start button to launch your server",
               );
             });
           }}
         />
+        {visible && builtImage && <input name={unlistedInputName} type="hidden" value={builtImage} />}
       </div>
 
-      <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
+      <ImageLogs visible={visible} setFitAddon={setFitAddon} setTerm={setTerm} />
     </>;
 }

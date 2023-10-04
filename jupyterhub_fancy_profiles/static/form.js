@@ -2361,6 +2361,112 @@ class BinderRepository {
 
 /***/ }),
 
+/***/ "./src/CustomSelect.jsx":
+/*!******************************!*\
+  !*** ./src/CustomSelect.jsx ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CustomizedSelect": () => (/* binding */ CustomizedSelect)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+var _excluded = ["options"];
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+
+/**
+ * Customized react-select with a few extra options
+ *
+ * - Custom renderer to use our CSS classes, so we can theme the description of the
+ *   selected item to be readable. This should *probably* be replaced with react-select's
+ *   built in theming support eventually
+ * - Options now support a title and description, rendered as we would like
+ * - Options support 'onSelected' and 'onDeselected' callbacks
+ *
+ * @typedef {object} Option
+ * @property {string} label - User visible label for this option
+ * @property {string} value - Value to use for the <input> tag when this option is selected
+ * @property {string} [description] - (Optional) description to display under the label
+ * @property {} [onSelected] - (Optional) function to be called when this option is selected
+ * @property {} [onDeselected] - (Optional) function to be called when this option is deselected
+ *
+ * @typedef {object} Props - Props to pass to this components. Everything is passed through to React Select
+ * @prop {Option[]} options - List of options to display
+ *
+ * @param {Props} props
+ * @returns
+ */
+
+
+function CustomizedSelect(_ref) {
+  var options = _ref.options,
+    props = _objectWithoutProperties(_ref, _excluded);
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState2 = _slicedToArray(_useState, 2),
+    lastSelectedChoice = _useState2[0],
+    setLastSelectedChoice = _useState2[1];
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], _objectSpread({
+    options: options,
+    formatOptionLabel: function formatOptionLabel(option, meta) {
+      var classNames = ["react-select-item-container"];
+      if (meta.selectValue[0].value === option.value) {
+        // Check for the values, rather than the whole object, as react-select may make copies
+        // We are rendering a value that is the current selection
+        classNames.push("react-select-item-selected");
+      }
+      if (meta.context === "menu") {
+        // We are rendering items for display in the menu of options
+        classNames.push("react-select-item-menu-display");
+      }
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: classNames.join(" "),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+          className: "react-select-item-title",
+          children: option.label
+        }), option.description && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+          className: "react-select-item-description",
+          children: option.description
+        })]
+      });
+    },
+    onChange: function onChange(option, meta) {
+      console.log(meta);
+      if (lastSelectedChoice !== null && option !== lastSelectedChoice && lastSelectedChoice.onDeselected) {
+        lastSelectedChoice.onDeselected();
+      }
+      if (option.onSelected) {
+        option.onSelected();
+      }
+      if (props.onChange) {
+        props.onChange(option, meta);
+      }
+      setLastSelectedChoice(option);
+    }
+  }, props));
+}
+
+/***/ }),
+
 /***/ "./src/ImageBuilder.jsx":
 /*!******************************!*\
   !*** ./src/ImageBuilder.jsx ***!
@@ -2421,7 +2527,8 @@ function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   image.fetch();
 }
 function ImageLogs(_ref) {
-  var setTerm = _ref.setTerm,
+  var visible = _ref.visible,
+    setTerm = _ref.setTerm,
     setFitAddon = _ref.setFitAddon;
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(function () {
     var term = new xterm__WEBPACK_IMPORTED_MODULE_0__.Terminal({
@@ -2442,12 +2549,12 @@ function ImageLogs(_ref) {
   }, []);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-      className: "profile-option-label-container build-logs-label-container",
+      className: "profile-option-label-container ".concat(visible ? "" : "hidden"),
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
         children: "Build Logs"
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-      className: "profile-option-control-container",
+      className: "profile-option-control-container ".concat(visible ? "" : "hidden"),
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
         className: "terminal-container",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
@@ -2459,33 +2566,42 @@ function ImageLogs(_ref) {
 }
 function ImageBuilder(_ref2) {
   var visible = _ref2.visible,
-    setUnlistedImage = _ref2.setUnlistedImage;
+    unlistedInputName = _ref2.unlistedInputName;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(""),
     _useState2 = _slicedToArray(_useState, 2),
     repo = _useState2[0],
     setRepo = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null),
+    _useState4 = _slicedToArray(_useState3, 2),
+    builtImage = _useState4[0],
+    setBuiltImage = _useState4[1];
 
   // FIXME: Allow users to actually configure this
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("HEAD"),
-    _useState4 = _slicedToArray(_useState3, 2),
-    ref = _useState4[0],
-    setRef = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null),
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("HEAD"),
     _useState6 = _slicedToArray(_useState5, 2),
-    term = _useState6[0],
-    setTerm = _useState6[1];
+    ref = _useState6[0],
+    setRef = _useState6[1];
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null),
     _useState8 = _slicedToArray(_useState7, 2),
-    fitAddon = _useState8[0],
-    setFitAddon = _useState8[1];
-  return visible && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+    term = _useState8[0],
+    setTerm = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null),
+    _useState10 = _slicedToArray(_useState9, 2),
+    fitAddon = _useState10[0],
+    setFitAddon = _useState10[1];
+
+  // We render everything, but only toggle visibility based on wether we are being
+  // shown or hidden. This provides for more DOM stability, and also allows the image
+  // to continue being built evn if the user moves away elsewhere. When hidden, we just
+  // don't generate the hidden input that posts the built image out.
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-      className: "profile-option-label-container",
+      className: "profile-option-label-container ".concat(visible ? "" : "hidden"),
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
         children: "GitHub Repository"
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-      className: "profile-option-control-container",
+      className: "profile-option-control-container ".concat(visible ? "" : "hidden"),
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
         type: "text",
         value: repo,
@@ -2493,178 +2609,28 @@ function ImageBuilder(_ref2) {
           return setRepo(e.target.value);
         }
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-      className: "profile-option-control-container",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "profile-option-control-container ".concat(visible ? "" : "hidden"),
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
         type: "button",
         id: "build-image",
         className: "btn btn-jupyter pull-right",
         value: "Build image",
         onClick: function onClick() {
           buildImage(repo, ref, term, fitAddon, function (imageName) {
-            setUnlistedImage(imageName);
+            setBuiltImage(imageName);
             term.write("\nImage has been built! Click the start button to launch your server");
           });
         }
-      })
+      }), visible && builtImage && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+        name: unlistedInputName,
+        type: "hidden",
+        value: builtImage
+      })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(ImageLogs, {
+      visible: visible,
       setFitAddon: setFitAddon,
       setTerm: setTerm
-    })]
-  });
-}
-
-/***/ }),
-
-/***/ "./src/ImageOption.jsx":
-/*!*****************************!*\
-  !*** ./src/ImageOption.jsx ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ImageOption": () => (/* binding */ ImageOption)
-/* harmony export */ });
-/* harmony import */ var _ImageBuilder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ImageBuilder */ "./src/ImageBuilder.jsx");
-/* harmony import */ var _ProfileOption__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProfileOption */ "./src/ProfileOption.jsx");
-/* harmony import */ var _ImageSpecifier__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ImageSpecifier */ "./src/ImageSpecifier.jsx");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./state */ "./src/state.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
-
-
-
-
-
-
-
-function ImageOption(_ref) {
-  var profileSlug = _ref.profileSlug,
-    optionName = _ref.optionName,
-    displayName = _ref.displayName,
-    choices = _ref.choices;
-  var unlistedImageFormInputName = "profile-option-".concat(profileSlug, "--").concat(optionName, "--unlisted-choice");
-  var _useContext = (0,react__WEBPACK_IMPORTED_MODULE_3__.useContext)(_state__WEBPACK_IMPORTED_MODULE_4__.SpawnerFormContext),
-    unlistedImage = _useContext.unlistedImage,
-    imageOptionView = _useContext.imageOptionView,
-    setImageOptionView = _useContext.setImageOptionView;
-  var extraSelectableItems = [{
-    value: "--other--specify",
-    label: "Specify an existing docker image",
-    description: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)",
-    onSelected: function onSelected() {
-      setImageOptionView(_state__WEBPACK_IMPORTED_MODULE_4__.IMAGE_OPTION_VIEWS.specifier);
-    }
-  }, {
-    value: "--other--build",
-    label: "Build your own image",
-    description: "Use a mybinder.org compatible GitHub repository to build your own image",
-    onSelected: function onSelected() {
-      setImageOptionView(_state__WEBPACK_IMPORTED_MODULE_4__.IMAGE_OPTION_VIEWS.builder);
-    }
-  }];
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ProfileOption__WEBPACK_IMPORTED_MODULE_1__.ProfileOption, {
-      hideFromForm: imageOptionView !== _state__WEBPACK_IMPORTED_MODULE_4__.IMAGE_OPTION_VIEWS.choices,
-      profileSlug: profileSlug,
-      optionName: optionName,
-      displayName: displayName,
-      choices: choices,
-      extraSelectableItems: extraSelectableItems,
-      onChange: function onChange(option) {
-        var extraValueSelected = false;
-        for (var _i = 0, _extraSelectableItems = extraSelectableItems; _i < _extraSelectableItems.length; _i++) {
-          var extraItem = _extraSelectableItems[_i];
-          if (extraItem.value === option.value && extraItem.onSelected) {
-            extraItem.onSelected();
-            extraValueSelected = true;
-            break;
-          }
-        }
-        if (!extraValueSelected) {
-          // User clicked an existing choice, not the two extra items we sent
-          setImageOptionView(_state__WEBPACK_IMPORTED_MODULE_4__.IMAGE_OPTION_VIEWS.choices);
-        }
-      }
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ImageSpecifier__WEBPACK_IMPORTED_MODULE_2__.ImageSpecifier, {
-      visible: imageOptionView === _state__WEBPACK_IMPORTED_MODULE_4__.IMAGE_OPTION_VIEWS.specifier
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ImageBuilder__WEBPACK_IMPORTED_MODULE_0__.ImageBuilder, {
-      visible: imageOptionView === _state__WEBPACK_IMPORTED_MODULE_4__.IMAGE_OPTION_VIEWS.builder
-    }), imageOptionView !== _state__WEBPACK_IMPORTED_MODULE_4__.IMAGE_OPTION_VIEWS.choices && unlistedImage !== "" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("input", {
-      type: "hidden",
-      name: unlistedImageFormInputName,
-      value: unlistedImage
-    })]
-  });
-}
-
-/***/ }),
-
-/***/ "./src/ImageSpecifier.jsx":
-/*!********************************!*\
-  !*** ./src/ImageSpecifier.jsx ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ImageSpecifier": () => (/* binding */ ImageSpecifier)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "./src/state.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-
-
-
-function ImageSpecifier(_ref) {
-  var visible = _ref.visible;
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""),
-    _useState2 = _slicedToArray(_useState, 2),
-    specifiedImage = _useState2[0],
-    setSpecifiedImage = _useState2[1];
-  var _useContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_state__WEBPACK_IMPORTED_MODULE_1__.SpawnerFormContext),
-    setUnlistedImage = _useContext.setUnlistedImage;
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    console.log("visibility triggered");
-    console.log(visible);
-    if (!visible) {
-      setUnlistedImage("");
-    } else {
-      setUnlistedImage(specifiedImage);
-    }
-  }, [visible]);
-  return visible && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-      className: "profile-option-label-container",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("label", {
-        children: "Custom Image"
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-      className: "profile-option-control-container",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
-        type: "text",
-        defaultValue: specifiedImage,
-        onChange: function onChange(ev) {
-          var val = ev.target.value;
-          setSpecifiedImage(val);
-          setUnlistedImage(val);
-        }
-      })
     })]
   });
 }
@@ -2684,18 +2650,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.esm.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _CustomSelect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CustomSelect */ "./src/CustomSelect.jsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+
 
 
 
@@ -2706,10 +2669,23 @@ function ProfileOption(_ref) {
     optionName = _ref.optionName,
     displayName = _ref.displayName,
     choices = _ref.choices,
-    extraSelectableItems = _ref.extraSelectableItems,
-    hideFromForm = _ref.hideFromForm,
+    unlistedChoice = _ref.unlistedChoice,
+    extraSelectableItem = _ref.extraSelectableItem,
     onChange = _ref.onChange;
-  var formControlName = "profile-option-" + profileSlug + "-" + optionName;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    unlistedChoiceVisible = _useState2[0],
+    setUnlistedChoiceVisible = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""),
+    _useState4 = _slicedToArray(_useState3, 2),
+    unlistedChoiceValue = _useState4[0],
+    setUnlistedChoiceValue = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState6 = _slicedToArray(_useState5, 2),
+    extraSelectableItemVisible = _useState6[0],
+    setExtraSelectableItemVisible = _useState6[1];
+  var listedInputName = "profile-option-".concat(profileSlug, "--").concat(optionName);
+  var unlistedInputName = "".concat(listedInputName, "--unlisted-choice");
   var defaultChoiceName = Object.keys(choices).find(function (choiceName) {
     return choices[choiceName]["default"];
   }) || Object.keys(choices)[0];
@@ -2720,53 +2696,69 @@ function ProfileOption(_ref) {
       description: choices[choiceName].description
     };
   });
-  if (extraSelectableItems && extraSelectableItems.length > 0) {
-    options = [].concat(_toConsumableArray(options), _toConsumableArray(extraSelectableItems));
+  if (unlistedChoice && unlistedChoice.enabled) {
+    options.push({
+      value: "--unlisted-choice",
+      label: unlistedChoice.display_name_in_choices,
+      description: unlistedChoice.description_in_choices,
+      onSelected: function onSelected() {
+        setUnlistedChoiceVisible(true);
+      },
+      onDeselected: function onDeselected() {
+        setUnlistedChoiceVisible(false);
+      }
+    });
   }
   var defaultOption = options.find(function (option) {
     return option.value === defaultChoiceName;
   });
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState2 = _slicedToArray(_useState, 2),
-    lastSelectedOption = _useState2[0],
-    setLastSelectedOption = _useState2[1];
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+  if (extraSelectableItem) {
+    options.push({
+      value: "--extra-selectable-item",
+      label: extraSelectableItem.display_name_in_choices,
+      description: extraSelectableItem.description_in_choices,
+      onSelected: function onSelected() {
+        setExtraSelectableItemVisible(true);
+      },
+      onDeselected: function onDeselected() {
+        setExtraSelectableItemVisible(false);
+      }
+    });
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
       className: "profile-option-label-container",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-        htmlFor: formControlName,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("label", {
+        htmlFor: listedInputName,
         children: displayName
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
       className: "profile-option-control-container",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_CustomSelect__WEBPACK_IMPORTED_MODULE_1__.CustomizedSelect, {
         options: options,
-        name: hideFromForm ? null : formControlName,
-        defaultValue: defaultOption,
-        formatOptionLabel: function formatOptionLabel(option, meta) {
-          var classNames = ["react-select-item-container"];
-          if (meta.selectValue[0].value === option.value) {
-            // Check for the values, rather than the whole object, as react-select may make copies
-            // We are rendering a value that is the current selection
-            classNames.push("react-select-item-selected");
-          }
-          if (meta.context === "menu") {
-            // We are rendering items for display in the menu of options
-            classNames.push("react-select-item-menu-display");
-          }
-          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-            className: classNames.join(" "),
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-              className: "react-select-item-title",
-              children: option.label
-            }), option.description && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-              className: "react-select-item-description",
-              children: option.description
-            })]
-          });
-        },
-        onChange: onChange
+        name: extraSelectableItemVisible || unlistedChoiceVisible ? null : listedInputName,
+        defaultValue: defaultOption
       })
+    }), unlistedChoiceVisible && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+        className: "profile-option-label-container",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("label", {
+          children: unlistedChoice.display_name
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+        className: "profile-option-control-container",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          type: "text",
+          name: unlistedInputName,
+          defaultValue: unlistedChoiceValue,
+          onChange: function onChange(ev) {
+            setUnlistedChoiceValue(ev.target.value);
+          }
+        })
+      })]
+    }), extraSelectableItem && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(extraSelectableItem.component, {
+      visible: extraSelectableItemVisible,
+      unlistedInputName: unlistedInputName
     })]
   });
 }
@@ -2785,7 +2777,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ResourceSelector": () => (/* binding */ ResourceSelector)
 /* harmony export */ });
 /* harmony import */ var _ProfileOption__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProfileOption */ "./src/ProfileOption.jsx");
-/* harmony import */ var _ImageOption__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ImageOption */ "./src/ImageOption.jsx");
+/* harmony import */ var _ImageBuilder__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ImageBuilder */ "./src/ImageBuilder.jsx");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
@@ -2794,13 +2786,18 @@ function ResourceSelector(_ref) {
   var profile = _ref.profile;
   var options = profile.profile_options;
   return Object.keys(options).map(function (optionName) {
-    var OptionComponent = optionName === "image" ? _ImageOption__WEBPACK_IMPORTED_MODULE_1__.ImageOption : _ProfileOption__WEBPACK_IMPORTED_MODULE_0__.ProfileOption;
     var optionBody = options[optionName];
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(OptionComponent, {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_ProfileOption__WEBPACK_IMPORTED_MODULE_0__.ProfileOption, {
+      unlistedChoice: optionBody.unlisted_choice,
       optionName: optionName,
       displayName: optionBody.display_name,
       profileSlug: profile.slug,
-      choices: optionBody.choices
+      choices: optionBody.choices,
+      extraSelectableItem: optionName === "image" && {
+        display_name_in_choices: "Build your own image",
+        description_in_choices: "Use a mybinder.org compatible GitHub repo to build your own image",
+        component: _ImageBuilder__WEBPACK_IMPORTED_MODULE_1__.ImageBuilder
+      }
     }, optionName);
   });
 }
