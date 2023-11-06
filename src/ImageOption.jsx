@@ -6,11 +6,8 @@ import { IMAGE_OPTION_VIEWS, SpawnerFormContext } from "./state";
 
 export function ImageOption({ profileSlug, optionName, displayName, choices }) {
   const unlistedImageFormInputName = `profile-option-${profileSlug}--${optionName}--unlisted-choice`;
-  const {
-    unlistedImage,
-    imageOptionView,
-    setImageOptionView,
-  } = useContext(SpawnerFormContext);
+  const { unlistedImage, imageOptionView, setImageOptionView } =
+    useContext(SpawnerFormContext);
 
   const extraSelectableItems = [
     {

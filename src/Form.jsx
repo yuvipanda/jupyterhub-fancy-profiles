@@ -32,7 +32,13 @@ function Form() {
         readOnly
       />
       <ResourceSelector profile={profile} />
-      <input id="submit-button" type="submit" value="Start" disabled={!canSubmit} className="btn btn-jupyter form-control" />
+      <input
+        id="submit-button"
+        type="submit"
+        value="Start"
+        disabled={!canSubmit}
+        className="btn btn-jupyter form-control"
+      />
     </div>
   );
 }
@@ -41,5 +47,5 @@ const root = createRoot(document.getElementById("form"));
 root.render(
   <SpawnerFormProvider>
     <Form />
-  </SpawnerFormProvider>
+  </SpawnerFormProvider>,
 );

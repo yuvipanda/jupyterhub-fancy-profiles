@@ -76,35 +76,38 @@ export function ImageBuilder({ visible, setUnlistedImage }) {
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
 
-  return visible &&
-    <>
-      <div className="profile-option-label-container">
-        <label>GitHub Repository</label>
-      </div>
-      <div className="profile-option-control-container">
-        <input
-          type="text"
-          value={repo}
-          onChange={(e) => setRepo(e.target.value)}
-        ></input>
-      </div>
-      <div className="profile-option-control-container">
-        <input
-          type="button"
-          id="build-image"
-          className="btn btn-jupyter pull-right"
-          value="Build image"
-          onClick={() => {
-            buildImage(repo, ref, term, fitAddon, (imageName) => {
-              setUnlistedImage(imageName);
-              term.write(
-                "\nImage has been built! Click the start button to launch your server",
-              );
-            });
-          }}
-        />
-      </div>
+  return (
+    visible && (
+      <>
+        <div className="profile-option-label-container">
+          <label>GitHub Repository</label>
+        </div>
+        <div className="profile-option-control-container">
+          <input
+            type="text"
+            value={repo}
+            onChange={(e) => setRepo(e.target.value)}
+          ></input>
+        </div>
+        <div className="profile-option-control-container">
+          <input
+            type="button"
+            id="build-image"
+            className="btn btn-jupyter pull-right"
+            value="Build image"
+            onClick={() => {
+              buildImage(repo, ref, term, fitAddon, (imageName) => {
+                setUnlistedImage(imageName);
+                term.write(
+                  "\nImage has been built! Click the start button to launch your server",
+                );
+              });
+            }}
+          />
+        </div>
 
-      <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
-    </>;
+        <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
+      </>
+    )
+  );
 }

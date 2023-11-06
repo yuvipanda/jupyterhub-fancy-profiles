@@ -26,7 +26,7 @@ export function ProfileOption({
     options = [...options, ...extraSelectableItems];
   }
   const defaultOption = options.find(
-    (option) => option.value === defaultChoiceName
+    (option) => option.value === defaultChoiceName,
   );
 
   const [lastSelectedOption, setLastSelectedOption] = useState(null);
