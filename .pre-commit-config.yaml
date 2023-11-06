@@ -11,7 +11,7 @@
 repos:
   # Autoformat: Python code, syntax patterns are modernized
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.10.1
+    rev: v3.15.0
     hooks:
       - id: pyupgrade
         args:
@@ -19,7 +19,7 @@ repos:
 
   # Autoformat: Python code
   - repo: https://github.com/psf/black
-    rev: 23.7.0
+    rev: 23.10.1
     hooks:
       - id: black
         # args are not passed, but see the config in pyproject.toml
@@ -39,7 +39,7 @@ repos:
 
   # Misc autoformatting and linting
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: end-of-file-fixer
         exclude_types: [svg]
@@ -55,7 +55,7 @@ repos:
 
   # Lint: JS code
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: "v8.49.0" # Use the sha / tag you want to point at
+    rev: "v8.53.0" # Use the sha / tag you want to point at
     hooks:
       - id: eslint
         files: \.jsx?$
