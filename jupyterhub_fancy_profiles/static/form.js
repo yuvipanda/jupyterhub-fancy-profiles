@@ -2194,73 +2194,112 @@ var weakMemoize = function weakMemoize(func) {
 
 /***/ }),
 
-/***/ "./binderhub/js/packages/binderhub-client/lib/index.js":
-/*!*************************************************************!*\
-  !*** ./binderhub/js/packages/binderhub-client/lib/index.js ***!
-  \*************************************************************/
+/***/ "./node_modules/@jupyterhub/binderhub-client/lib/index.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@jupyterhub/binderhub-client/lib/index.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "BinderRepository": () => (/* binding */ BinderRepository)
+/* harmony export */   "BinderRepository": () => (/* binding */ BinderRepository),
+/* harmony export */   "makeBadgeMarkup": () => (/* binding */ makeBadgeMarkup),
+/* harmony export */   "makeShareableBinderURL": () => (/* binding */ makeShareableBinderURL)
 /* harmony export */ });
 /* harmony import */ var event_source_polyfill__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! event-source-polyfill */ "./node_modules/event-source-polyfill/src/eventsource.js");
 /* harmony import */ var event_source_polyfill__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(event_source_polyfill__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var event_iterator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! event-iterator */ "./node_modules/event-iterator/lib/dom.js");
+
 
 
 // Use native browser EventSource if available, and use the polyfill if not available
 const EventSource = event_source_polyfill__WEBPACK_IMPORTED_MODULE_0__.NativeEventSource || event_source_polyfill__WEBPACK_IMPORTED_MODULE_0__.EventSourcePolyfill;
 
 /**
- * Build and launch a repository by talking to a BinderHub API endpoint
+ * Build (and optionally launch) a repository by talking to a BinderHub API endpoint
  */
 class BinderRepository {
   /**
    *
    * @param {string} providerSpec Spec of the form <provider>/<repo>/<ref> to pass to the binderhub API.
-   * @param {string} baseUrl Base URL (including the trailing slash) of the binderhub installation to talk to.
-   * @param {string} buildToken Optional JWT based build token if this binderhub installation requires using build tokesn
-   * @param {string} buildOnly Optional boolean, set to true to *only* build the image, launching will not be allowed
+   * @param {URL} buildEndpointUrl API URL of the build endpoint to talk to
+   * @param {string} [buildToken] Optional JWT based build token if this binderhub installation requires using build tokens
+   * @param {boolean} [buildOnly] Opt out of launching built image by default by passing `build_only` param
    */
-  constructor(providerSpec, baseUrl, buildToken, buildOnly) {
+  constructor(providerSpec, buildEndpointUrl, buildToken, buildOnly) {
     this.providerSpec = providerSpec;
-    this.baseUrl = baseUrl;
-    this.buildToken = buildToken;
-    this.callbacks = {};
-    this.state = null;
-    this.buildOnly = buildOnly;
+    // Make sure that buildEndpointUrl is a real URL - this ensures hostname is properly set
+    if (!(buildEndpointUrl instanceof URL)) {
+      throw new TypeError(
+        `buildEndpointUrl must be a URL object, got ${buildEndpointUrl} instead`,
+      );
+    }
+    // We make a copy here so we don't modify the passed in URL object
+    this.buildEndpointUrl = new URL(buildEndpointUrl);
+    // The binderHub API is path based, so the buildEndpointUrl must have a trailing slash. We add
+    // it if it is not passed in here to us.
+    if (!this.buildEndpointUrl.pathname.endsWith("/")) {
+      this.buildEndpointUrl.pathname += "/";
+    }
+
+    // The actual URL we'll make a request to build this particular providerSpec
+    this.buildUrl = new URL(this.providerSpec, this.buildEndpointUrl);
+    if (buildToken) {
+      this.buildUrl.searchParams.append("build_token", buildToken);
+    }
+
+    if (buildOnly) {
+      this.buildUrl.searchParams.append("build_only", "true");
+    }
+
+    this.eventIteratorQueue = null;
   }
 
   /**
-   * Call the BinderHub API
+   * Call the binderhub API and yield responses as they come in
+   *
+   * Returns an Async iterator yielding each item returned by the
+   * server API.
+   *
+   * @typedef Line
+   * @prop {string} [phase] The phase the build is currently in. One of: building, built, fetching, launching, ready, unknown, waiting
+   * @prop {string} [message] Human readable message to display to the user. Extra newlines must *not* be added
+   * @prop {string} [imageName] (only with built) Full name of the image that has been built
+   * @prop {string} [binder_launch_host] (only with phase=ready) The host this binderhub API request was serviced by.
+   *                                     Could be different than the host the request was made to in federated cases
+   * @prop {string} [binder_request] (only with phase=ready) Request used to construct this image, of form v2/<provider>/<repo>/<ref>
+   * @prop {string} [binder_persistent_request] (only with phase=ready) Same as binder_request, but <ref> is fully resolved
+   * @prop {string} [binder_ref_url] (only with phase=ready) A URL to the repo provider where the repo can be browsed
+   * @prop {string} [image] (only with phase=ready) Full name of the image that has been built
+   * @prop {string} [token] (only with phase=ready) Token to use to authenticate with jupyter server at url
+   * @prop {string} [url] (only with phase=ready) URL where a jupyter server has been started
+   * @prop {string} [repo_url] (only with phase=ready) URL of the repository that is ready to be launched
+   *
+   * @returns {AsyncIterable<Line>} An async iterator yielding responses from the API as they come in
    */
   fetch() {
-    let apiUrl = new URL(this.baseUrl + "build/" + this.providerSpec);
-    let params = new URLSearchParams();
-    if (this.buildToken) {
-      params.append('build_token', this.buildToken);
-    }
-    if (this.buildOnly) {
-      params.append('build_only', true);
-    }
-    apiUrl.search = params.toString();
-    this.eventSource = new EventSource(apiUrl);
-    this.eventSource.onerror = err => {
-      console.error("Failed to construct event stream", err);
-      this._changeState("failed", {
-        message: "Failed to connect to event stream\n"
+    this.eventSource = new EventSource(this.buildUrl);
+    return new event_iterator__WEBPACK_IMPORTED_MODULE_1__.EventIterator((queue) => {
+      this.eventIteratorQueue = queue;
+      this.eventSource.onerror = (err) => {
+        queue.push({
+          phase: "failed",
+          message: "Failed to connect to event stream\n",
+        });
+        queue.stop();
+      };
+
+      this.eventSource.addEventListener("message", (event) => {
+        // console.log("message received")
+        // console.log(event)
+        const data = JSON.parse(event.data);
+        // FIXME: fix case of phase/state upstream
+        if (data.phase) {
+          data.phase = data.phase.toLowerCase();
+        }
+        queue.push(data);
       });
-    };
-    this.eventSource.addEventListener("message", event => {
-      const data = JSON.parse(event.data);
-      // FIXME: Rename 'phase' to 'state' upstream
-      // FIXME: fix case of phase/state upstream
-      let state = null;
-      if (data.phase) {
-        state = data.phase.toLowerCase();
-      }
-      this._changeState(state, data);
     });
   }
 
@@ -2271,93 +2310,120 @@ class BinderRepository {
     if (this.eventSource !== undefined) {
       this.eventSource.close();
     }
+    if (this.eventIteratorQueue !== null) {
+      // Stop any currently running fetch() iterations
+      this.eventIteratorQueue.stop();
+    }
   }
 
   /**
-   * Redirect user to a running jupyter server with given token
-    * @param {URL} url URL to the running jupyter server
+   * Get URL to redirect user to on a Jupyter Server to display a given path
+
+   * @param {URL} serverUrl URL to the running jupyter server
    * @param {string} token Secret token used to authenticate to the jupyter server
-   * @param {string} path The path of the file or url suffix to launch the user into
-   * @param {string} pathType One of "lab", "file" or "url", denoting what kinda path we are launching the user into
-   */
-  launch(url, token, path, pathType) {
-    if (self.buildOnly) {
-      throw new Error("Can not launch as buildOnly was set to true");
-    }
-    // redirect a user to a running server with a token
-    if (path) {
-      // strip trailing /
-      url = url.replace(/\/$/, "");
-      // trim leading '/'
-      path = path.replace(/(^\/)/g, "");
-      if (pathType === "lab") {
-        // trim trailing / on file paths
-        path = path.replace(/(\/$)/g, "");
-        // /doc/tree is safe because it allows redirect to files
-        url = url + "/doc/tree/" + encodeURI(path);
-      } else if (pathType === "file") {
-        // trim trailing / on file paths
-        path = path.replace(/(\/$)/g, "");
-        // /tree is safe because it allows redirect to files
-        url = url + "/tree/" + encodeURI(path);
-      } else {
-        // pathType === 'url'
-        url = url + "/" + path;
-      }
-    }
-    const sep = url.indexOf("?") == -1 ? "?" : "&";
-    url = url + sep + $.param({
-      token: token
-    });
-    window.location.href = url;
-  }
-
-  /**
-   * Add callback whenever state of the current build changes
+   * @param {string} [path] The path of the file or url suffix to launch the user into
+   * @param {string} [pathType] One of "lab", "file" or "url", denoting what kinda path we are launching the user into
    *
-   * @param {str} state The state to add this callback to. '*' to add callback for all state changes
-   * @param {*} cb Callback function to call whenever this state is reached
+   * @returns {URL} A URL to redirect the user to
    */
-  onStateChange(state, cb) {
-    if (this.callbacks[state] === undefined) {
-      this.callbacks[state] = [cb];
-    } else {
-      this.callbacks[state].push(cb);
-    }
-  }
-
-  /**
-   * @param {string} oldState Old state the building process was in
-   * @param {string} newState New state the building process is in
-   * @returns True if transition from oldState to newState is valid, False otherwise
-   */
-  validateStateTransition(oldState, newState) {
-    if (oldState === "start") {
-      return newState === "waiting" || newState === "built" || newState === "failed";
-    } else if (oldState === "waiting") {
-      return newState === "building" || newState === "failed";
-    } else if (oldState === "building") {
-      return newState === "pushing" || newState === "failed";
-    } else if (oldState === "pushing") {
-      return newState === "built" || newState === "failed";
-    } else {
-      return false;
-    }
-  }
-  _changeState(state, data) {
-    [state, "*"].map(key => {
-      const callbacks = this.callbacks[key];
-      if (callbacks) {
-        for (let i = 0; i < callbacks.length; i++) {
-          callbacks[i](this.state, state || this.state, data);
-        }
+  getFullRedirectURL(serverUrl, token, path, pathType) {
+    // Make a copy of the URL so we don't mangle the original
+    let url = new URL(serverUrl);
+    if (path) {
+      // Ensure there is a trailing / in serverUrl
+      if (!url.pathname.endsWith("/")) {
+        url.pathname += "/";
       }
-    });
-    if (state && this.validateStateTransition(this.state, state)) {
-      this.state = state;
+      // trim leading '/' from path to launch users into
+      path = path.replace(/(^\/)/g, "");
+
+      if (pathType === "lab") {
+        // The path is a specific *file* we should open with JupyterLab
+        // trim trailing / on file paths
+        path = path.replace(/(\/$)/g, "");
+
+        // /doc/tree is safe because it allows redirect to files
+        url = new URL("doc/tree/" + encodeURI(path), url);
+      } else if (pathType === "file") {
+        // The path is a specific file we should open with *classic notebook*
+
+        // trim trailing / on file paths
+        path = path.replace(/(\/$)/g, "");
+
+        url = new URL("tree/" + encodeURI(path), url);
+      } else {
+        // pathType is 'url' and we should just pass it on
+        url = new URL(path, url);
+      }
     }
+
+    url.searchParams.append("token", token);
+    return url;
   }
 }
+
+/**
+ * Generate a shareable binder URL for given repository
+ *
+ * @param {URL} publicBaseUrl Base URL to use for making public URLs. Must end with a trailing slash.
+ * @param {string} providerPrefix prefix denoting what provider was selected
+ * @param {string} repository repo to build
+ * @param {string} ref optional ref in this repo to build
+ * @param {string} [path] Path to launch after this repo has been built
+ * @param {string} [pathType] Type of thing to open path with (raw url, notebook file, lab, etc)
+ *
+ * @returns {URL} A URL that can be shared with others, and clicking which will launch the repo
+ */
+function makeShareableBinderURL(
+  publicBaseUrl,
+  providerPrefix,
+  repository,
+  ref,
+  path,
+  pathType,
+) {
+  if (!publicBaseUrl.pathname.endsWith("/")) {
+    throw new Error(
+      `publicBaseUrl must end with a trailing slash, got ${publicBaseUrl}`,
+    );
+  }
+  const url = new URL(
+    `v2/${providerPrefix}/${repository}/${ref}`,
+    publicBaseUrl,
+  );
+  if (path && path.length > 0) {
+    url.searchParams.append(`${pathType}path`, path);
+  }
+  return url;
+}
+
+/**
+ * Generate markup that people can put on their README or documentation to link to a specific binder
+ *
+ * @param {URL} publicBaseUrl Base URL to use for making public URLs
+ * @param {URL} url Link target URL that represents this binder installation
+ * @param {string} syntax Kind of markup to generate. Supports 'markdown' and 'rst'
+ * @returns {string}
+ */
+function makeBadgeMarkup(publicBaseUrl, url, syntax) {
+  if (!publicBaseUrl.pathname.endsWith("/")) {
+    throw new Error(
+      `publicBaseUrl must end with a trailing slash, got ${publicBaseUrl}`,
+    );
+  }
+  const badgeImageUrl = new URL("badge_logo.svg", publicBaseUrl);
+
+  if (syntax === "markdown") {
+    return `[![Binder](${badgeImageUrl})](${url})`;
+  } else if (syntax === "rst") {
+    return `.. image:: ${badgeImageUrl}\n :target: ${url}`;
+  } else {
+    throw new Error(
+      `Only markdown or rst badges are supported, got ${syntax} instead`,
+    );
+  }
+}
+
 
 /***/ }),
 
@@ -2484,14 +2550,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var xterm_addon_fit__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(xterm_addon_fit__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _jupyterhub_binderhub_client__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @jupyterhub/binderhub-client */ "./binderhub/js/packages/binderhub-client/lib/index.js");
+/* harmony import */ var _jupyterhub_binderhub_client__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @jupyterhub/binderhub-client */ "./node_modules/@jupyterhub/binderhub-client/lib/index.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function _asyncIterator(iterable) { var method, async, sync, retry = 2; for ("undefined" != typeof Symbol && (async = Symbol.asyncIterator, sync = Symbol.iterator); retry--;) { if (async && null != (method = iterable[async])) return method.call(iterable); if (sync && null != (method = iterable[sync])) return new AsyncFromSyncIterator(method.call(iterable)); async = "@@asyncIterator", sync = "@@iterator"; } throw new TypeError("Object is not async iterable"); }
+function AsyncFromSyncIterator(s) { function AsyncFromSyncIteratorContinuation(r) { if (Object(r) !== r) return Promise.reject(new TypeError(r + " is not an object.")); var done = r.done; return Promise.resolve(r.value).then(function (value) { return { value: value, done: done }; }); } return AsyncFromSyncIterator = function AsyncFromSyncIterator(s) { this.s = s, this.n = s.next; }, AsyncFromSyncIterator.prototype = { s: null, n: null, next: function next() { return AsyncFromSyncIteratorContinuation(this.n.apply(this.s, arguments)); }, "return": function _return(value) { var ret = this.s["return"]; return void 0 === ret ? Promise.resolve({ value: value, done: !0 }) : AsyncFromSyncIteratorContinuation(ret.apply(this.s, arguments)); }, "throw": function _throw(value) { var thr = this.s["return"]; return void 0 === thr ? Promise.reject(value) : AsyncFromSyncIteratorContinuation(thr.apply(this.s, arguments)); } }, new AsyncFromSyncIterator(s); }
 
 
 
@@ -2499,32 +2571,97 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
-  var providerSpec = "gh/" + repo + "/" + ref;
-  // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
-  var binderUrl = new URL(window.location.origin);
-  binderUrl.pathname = "/services/binder/";
-  var image = new _jupyterhub_binderhub_client__WEBPACK_IMPORTED_MODULE_3__.BinderRepository(providerSpec, binderUrl.toString(), null, true);
-  // Clear the last line written, so we start from scratch
-  term.write("\x1b[2K\r");
-  term.resize(66, 16);
-  fitAddon.fit();
-  image.onStateChange("*", function (oldState, newState, data) {
-    // Write out all messages to the terminal!
-    term.write(data.message);
-    // Resize our terminal to make sure it fits messages appropriately
-    fitAddon.fit();
-  });
-  image.onStateChange("ready", function (oldState, newState, data) {
-    // Close the EventStream when the image has been built
-    image.close();
-    onImageBuilt(data.imageName);
-  });
-  image.onStateChange("failed", function () {
-    // Close the image stream when stuff has failed
-    image.close();
-  });
-  image.fetch();
+function buildImage(_x, _x2, _x3, _x4, _x5) {
+  return _buildImage.apply(this, arguments);
+}
+function _buildImage() {
+  _buildImage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(repo, ref, term, fitAddon, onImageBuilt) {
+    var providerSpec, buildEndPointURL, image, _iteratorAbruptCompletion, _didIteratorError, _iteratorError, _iterator, _step, data;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          providerSpec = "gh/" + repo + "/" + ref; // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
+          buildEndPointURL = new URL("/services/binder/build/", window.location.origin);
+          image = new _jupyterhub_binderhub_client__WEBPACK_IMPORTED_MODULE_3__.BinderRepository(providerSpec, buildEndPointURL, null, true); // Clear the last line written, so we start from scratch
+          term.write("\x1b[2K\r");
+          term.resize(66, 16);
+          fitAddon.fit();
+          _iteratorAbruptCompletion = false;
+          _didIteratorError = false;
+          _context2.prev = 8;
+          _iterator = _asyncIterator(image.fetch());
+        case 10:
+          _context2.next = 12;
+          return _iterator.next();
+        case 12:
+          if (!(_iteratorAbruptCompletion = !(_step = _context2.sent).done)) {
+            _context2.next = 29;
+            break;
+          }
+          data = _step.value;
+          // Write message to the log terminal if there is a message
+          if (data.message !== undefined) {
+            // Write out all messages to the terminal!
+            term.write(data.message);
+            // Resize our terminal to make sure it fits messages appropriately
+            fitAddon.fit();
+          } else {
+            console.log(data);
+          }
+          _context2.t0 = data.phase;
+          _context2.next = _context2.t0 === "failed" ? 18 : _context2.t0 === "ready" ? 20 : 23;
+          break;
+        case 18:
+          image.close();
+          return _context2.abrupt("break", 26);
+        case 20:
+          // Close the EventStream when the image has been built
+          image.close();
+          onImageBuilt(data.imageName);
+          return _context2.abrupt("break", 26);
+        case 23:
+          console.log("Unknown phase in response from server");
+          console.log(data);
+          return _context2.abrupt("break", 26);
+        case 26:
+          _iteratorAbruptCompletion = false;
+          _context2.next = 10;
+          break;
+        case 29:
+          _context2.next = 35;
+          break;
+        case 31:
+          _context2.prev = 31;
+          _context2.t1 = _context2["catch"](8);
+          _didIteratorError = true;
+          _iteratorError = _context2.t1;
+        case 35:
+          _context2.prev = 35;
+          _context2.prev = 36;
+          if (!(_iteratorAbruptCompletion && _iterator["return"] != null)) {
+            _context2.next = 40;
+            break;
+          }
+          _context2.next = 40;
+          return _iterator["return"]();
+        case 40:
+          _context2.prev = 40;
+          if (!_didIteratorError) {
+            _context2.next = 43;
+            break;
+          }
+          throw _iteratorError;
+        case 43:
+          return _context2.finish(40);
+        case 44:
+          return _context2.finish(35);
+        case 45:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[8, 31, 35, 45], [36,, 40, 44]]);
+  }));
+  return _buildImage.apply(this, arguments);
 }
 function ImageLogs(_ref) {
   var visible = _ref.visible,
@@ -2616,12 +2753,21 @@ function ImageBuilder(_ref2) {
         id: "build-image",
         className: "btn btn-jupyter pull-right",
         value: "Build image",
-        onClick: function onClick() {
-          buildImage(repo, ref, term, fitAddon, function (imageName) {
-            setBuiltImage(imageName);
-            term.write("\nImage has been built! Click the start button to launch your server");
-          });
-        }
+        onClick: /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+          return _regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return buildImage(repo, ref, term, fitAddon, function (imageName) {
+                  setBuiltImage(imageName);
+                  term.write("\nImage has been built! Click the start button to launch your server");
+                });
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        }))
       }), visible && builtImage && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
         name: unlistedInputName,
         type: "hidden",
@@ -2670,8 +2816,7 @@ function ProfileOption(_ref) {
     displayName = _ref.displayName,
     choices = _ref.choices,
     unlistedChoice = _ref.unlistedChoice,
-    extraSelectableItem = _ref.extraSelectableItem,
-    onChange = _ref.onChange;
+    extraSelectableItem = _ref.extraSelectableItem;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     unlistedChoiceVisible = _useState2[0],
@@ -3071,6 +3216,161 @@ module.exports = function (item) {
   }
   return [content].join("\n");
 };
+
+/***/ }),
+
+/***/ "./node_modules/event-iterator/lib/dom.js":
+/*!************************************************!*\
+  !*** ./node_modules/event-iterator/lib/dom.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const event_iterator_1 = __webpack_require__(/*! ./event-iterator */ "./node_modules/event-iterator/lib/event-iterator.js");
+exports.EventIterator = event_iterator_1.EventIterator;
+function subscribe(event, options, evOptions) {
+    return new event_iterator_1.EventIterator(({ push }) => {
+        this.addEventListener(event, push, options);
+        return () => this.removeEventListener(event, push, options);
+    }, evOptions);
+}
+exports.subscribe = subscribe;
+exports["default"] = event_iterator_1.EventIterator;
+
+
+/***/ }),
+
+/***/ "./node_modules/event-iterator/lib/event-iterator.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/event-iterator/lib/event-iterator.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+class EventQueue {
+    constructor() {
+        this.pullQueue = [];
+        this.pushQueue = [];
+        this.eventHandlers = {};
+        this.isPaused = false;
+        this.isStopped = false;
+    }
+    push(value) {
+        if (this.isStopped)
+            return;
+        const resolution = { value, done: false };
+        if (this.pullQueue.length) {
+            const placeholder = this.pullQueue.shift();
+            if (placeholder)
+                placeholder.resolve(resolution);
+        }
+        else {
+            this.pushQueue.push(Promise.resolve(resolution));
+            if (this.highWaterMark !== undefined &&
+                this.pushQueue.length >= this.highWaterMark &&
+                !this.isPaused) {
+                this.isPaused = true;
+                if (this.eventHandlers.highWater) {
+                    this.eventHandlers.highWater();
+                }
+                else if (console) {
+                    console.warn(`EventIterator queue reached ${this.pushQueue.length} items`);
+                }
+            }
+        }
+    }
+    stop() {
+        if (this.isStopped)
+            return;
+        this.isStopped = true;
+        this.remove();
+        for (const placeholder of this.pullQueue) {
+            placeholder.resolve({ value: undefined, done: true });
+        }
+        this.pullQueue.length = 0;
+    }
+    fail(error) {
+        if (this.isStopped)
+            return;
+        this.isStopped = true;
+        this.remove();
+        if (this.pullQueue.length) {
+            for (const placeholder of this.pullQueue) {
+                placeholder.reject(error);
+            }
+            this.pullQueue.length = 0;
+        }
+        else {
+            const rejection = Promise.reject(error);
+            /* Attach error handler to avoid leaking an unhandled promise rejection. */
+            rejection.catch(() => { });
+            this.pushQueue.push(rejection);
+        }
+    }
+    remove() {
+        Promise.resolve().then(() => {
+            if (this.removeCallback)
+                this.removeCallback();
+        });
+    }
+    [Symbol.asyncIterator]() {
+        return {
+            next: (value) => {
+                const result = this.pushQueue.shift();
+                if (result) {
+                    if (this.lowWaterMark !== undefined &&
+                        this.pushQueue.length <= this.lowWaterMark &&
+                        this.isPaused) {
+                        this.isPaused = false;
+                        if (this.eventHandlers.lowWater) {
+                            this.eventHandlers.lowWater();
+                        }
+                    }
+                    return result;
+                }
+                else if (this.isStopped) {
+                    return Promise.resolve({ value: undefined, done: true });
+                }
+                else {
+                    return new Promise((resolve, reject) => {
+                        this.pullQueue.push({ resolve, reject });
+                    });
+                }
+            },
+            return: () => {
+                this.isStopped = true;
+                this.pushQueue.length = 0;
+                this.remove();
+                return Promise.resolve({ value: undefined, done: true });
+            },
+        };
+    }
+}
+class EventIterator {
+    constructor(listen, { highWaterMark = 100, lowWaterMark = 1 } = {}) {
+        const queue = new EventQueue();
+        queue.highWaterMark = highWaterMark;
+        queue.lowWaterMark = lowWaterMark;
+        queue.removeCallback =
+            listen({
+                push: value => queue.push(value),
+                stop: () => queue.stop(),
+                fail: error => queue.fail(error),
+                on: (event, fn) => {
+                    queue.eventHandlers[event] = fn;
+                },
+            }) || (() => { });
+        this[Symbol.asyncIterator] = () => queue[Symbol.asyncIterator]();
+        Object.freeze(this);
+    }
+}
+exports.EventIterator = EventIterator;
+exports["default"] = EventIterator;
+
 
 /***/ }),
 

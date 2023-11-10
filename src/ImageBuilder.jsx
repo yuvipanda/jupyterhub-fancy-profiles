@@ -3,14 +3,13 @@ import { FitAddon } from "xterm-addon-fit";
 import { useEffect, useState } from "react";
 import { BinderRepository } from "@jupyterhub/binderhub-client";
 
-function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
+async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   const providerSpec = "gh/" + repo + "/" + ref;
   // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
-  let binderUrl = new URL(window.location.origin);
-  binderUrl.pathname = "/services/binder/";
+  const buildEndPointURL = new URL("/services/binder/build/", window.location.origin);
   const image = new BinderRepository(
     providerSpec,
-    binderUrl.toString(),
+    buildEndPointURL,
     null,
     true,
   );
@@ -18,22 +17,35 @@ function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   term.write("\x1b[2K\r");
   term.resize(66, 16);
   fitAddon.fit();
-  image.onStateChange("*", (oldState, newState, data) => {
-    // Write out all messages to the terminal!
-    term.write(data.message);
-    // Resize our terminal to make sure it fits messages appropriately
-    fitAddon.fit();
-  });
-  image.onStateChange("ready", (oldState, newState, data) => {
-    // Close the EventStream when the image has been built
-    image.close();
-    onImageBuilt(data.imageName);
-  });
-  image.onStateChange("failed", () => {
-    // Close the image stream when stuff has failed
-    image.close();
-  });
-  image.fetch();
+  for await (const data of image.fetch()) {
+    // Write message to the log terminal if there is a message
+    if (data.message !== undefined) {
+      // Write out all messages to the terminal!
+      term.write(data.message);
+      // Resize our terminal to make sure it fits messages appropriately
+      fitAddon.fit();
+    } else {
+      console.log(data);
+    }
+
+    switch (data.phase) {
+      case "failed": {
+        image.close();
+        break;
+      }
+      case "ready": {
+        // Close the EventStream when the image has been built
+        image.close();
+        onImageBuilt(data.imageName);
+        break;
+      }
+      default: {
+        console.log("Unknown phase in response from server");
+        console.log(data);
+        break;
+      }
+    }
+  }
 }
 
 function ImageLogs({ visible, setTerm, setFitAddon }) {
@@ -98,8 +110,8 @@ export function ImageBuilder({ visible, unlistedInputName }) {
           id="build-image"
           className="btn btn-jupyter pull-right"
           value="Build image"
-          onClick={() => {
-            buildImage(repo, ref, term, fitAddon, (imageName) => {
+          onClick={async () => {
+            await buildImage(repo, ref, term, fitAddon, (imageName) => {
               setBuiltImage(imageName);
               term.write(
                 "\nImage has been built! Click the start button to launch your server",
