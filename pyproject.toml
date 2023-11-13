@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jupyterhub-fancy-profiles"
+dynamic = ["version"]
+authors = [
+    {name = "Yuvi", email = "yuvipanda@gmail.com"},
+]
+description = "Fancy Profile UI for jupyterhub-kubespawner"
+keywords = ["jupyterhub"]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+]
+
+[tool.setuptools_scm]
+version_file = "jupyterhub_fancy_profiles/_version.py"
