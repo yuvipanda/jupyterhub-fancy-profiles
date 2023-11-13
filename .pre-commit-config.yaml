@@ -36,6 +36,7 @@ repos:
     rev: v3.0.3
     hooks:
       - id: prettier
+        exclude: jupyterhub_fancy_profiles/static
 
   # Misc autoformatting and linting
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -43,6 +44,7 @@ repos:
     hooks:
       - id: end-of-file-fixer
         exclude_types: [svg]
+        exclude: jupyterhub_fancy_profiles/static
       - id: check-case-conflict
       - id: check-executables-have-shebangs
       - id: requirements-txt-fixer
@@ -60,6 +62,7 @@ repos:
       - id: eslint
         files: \.jsx?$
         types: [file]
+        exclude: jupyterhub_fancy_profiles/static
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:

@@ -6,7 +6,10 @@ import { BinderRepository } from "@jupyterhub/binderhub-client";
 async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   const providerSpec = "gh/" + repo + "/" + ref;
   // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
-  const buildEndPointURL = new URL("/services/binder/build/", window.location.origin);
+  const buildEndPointURL = new URL(
+    "/services/binder/build/",
+    window.location.origin,
+  );
   const image = new BinderRepository(
     providerSpec,
     buildEndPointURL,
@@ -69,10 +72,16 @@ function ImageLogs({ visible, setTerm, setFitAddon }) {
 
   return (
     <>
-      <div className={`profile-option-label-container ${visible ? "" : "hidden"}`}>
+      <div
+        className={`profile-option-label-container ${visible ? "" : "hidden"}`}
+      >
         <label>Build Logs</label>
       </div>
-      <div className={`profile-option-control-container ${visible ? "" : "hidden"}`}>
+      <div
+        className={`profile-option-control-container ${
+          visible ? "" : "hidden"
+        }`}
+      >
         <div className="terminal-container">
           <div id="terminal"></div>
         </div>
@@ -93,18 +102,29 @@ export function ImageBuilder({ visible, unlistedInputName }) {
   // shown or hidden. This provides for more DOM stability, and also allows the image
   // to continue being built evn if the user moves away elsewhere. When hidden, we just
   // don't generate the hidden input that posts the built image out.
-  return <>
-      <div className={`profile-option-label-container ${visible ? "" : "hidden"}`}>
+  return (
+    <>
+      <div
+        className={`profile-option-label-container ${visible ? "" : "hidden"}`}
+      >
         <label>GitHub Repository</label>
       </div>
-      <div className={`profile-option-control-container ${visible ? "" : "hidden"}`}>
+      <div
+        className={`profile-option-control-container ${
+          visible ? "" : "hidden"
+        }`}
+      >
         <input
           type="text"
           value={repo}
           onChange={(e) => setRepo(e.target.value)}
         ></input>
       </div>
-      <div className={`profile-option-control-container ${visible ? "" : "hidden"}`}>
+      <div
+        className={`profile-option-control-container ${
+          visible ? "" : "hidden"
+        }`}
+      >
         <input
           type="button"
           id="build-image"
@@ -119,9 +139,16 @@ export function ImageBuilder({ visible, unlistedInputName }) {
             });
           }}
         />
-        {visible && builtImage && <input name={unlistedInputName} type="hidden" value={builtImage} />}
+        {visible && builtImage && (
+          <input name={unlistedInputName} type="hidden" value={builtImage} />
+        )}
       </div>
 
-      <ImageLogs visible={visible} setFitAddon={setFitAddon} setTerm={setTerm} />
-    </>;
+      <ImageLogs
+        visible={visible}
+        setFitAddon={setFitAddon}
+        setTerm={setTerm}
+      />
+    </>
+  );
 }

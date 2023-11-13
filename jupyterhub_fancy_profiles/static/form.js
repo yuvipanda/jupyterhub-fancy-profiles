@@ -2809,7 +2809,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-
 function ProfileOption(_ref) {
   var profileSlug = _ref.profileSlug,
     optionName = _ref.optionName,
@@ -3091,7 +3090,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* Hide existing submit */\n.feedback-container {\n    display: none;\n}\n\n/* Layout */\n.form-grid {\n  display: grid;\n  grid-template-columns: 1fr 6fr;\n  gap: 16px;\n}\n\n.profile-option-label-container {\n  grid-column-start: 1;\n  align-self: center;\n  justify-self: right;\n  text-align: right;\n}\n\n.profile-option-control-container {\n  grid-column-start: 2;\n}\n\n#submit-button {\n    grid-column-start: 1;\n    grid-column-end: 3;\n}\n\n/* Image Building styling & layout */\n\n.terminal-container {\n  background-color: black;\n  padding: 16px;\n}\n.profile-option-control-container input[type=\"text\"] {\n  width: 100%;\n  /* 8px here, even though we only use 4px for .react-select-item-container.\n       Achieves similar visual effect.\n    */\n  padding: 8px;\n}\n\n/* react-select styling */\n.react-select-item-container.react-select-item-menu-display.react-select-item-selected\n  .react-select-item-description {\n  /* When rendering an option in react select's *menu*, if it is the currently selected one, make the description much lighter.\n       Otherwise, it gets unreadable in the blue;\n    */\n  color: #ddd;\n}\n.react-select-item-container {\n  padding: 4px;\n}\n\n.react-select-item-description {\n  color: #999;\n}\n", "",{"version":3,"sources":["webpack://./src/form.css"],"names":[],"mappings":"AAAA,yBAAyB;AACzB;IACI,aAAa;AACjB;;AAEA,WAAW;AACX;EACE,aAAa;EACb,8BAA8B;EAC9B,SAAS;AACX;;AAEA;EACE,oBAAoB;EACpB,kBAAkB;EAClB,mBAAmB;EACnB,iBAAiB;AACnB;;AAEA;EACE,oBAAoB;AACtB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;AACtB;;AAEA,oCAAoC;;AAEpC;EACE,uBAAuB;EACvB,aAAa;AACf;AACA;EACE,WAAW;EACX;;KAEG;EACH,YAAY;AACd;;AAEA,yBAAyB;AACzB;;EAEE;;KAEG;EACH,WAAW;AACb;AACA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;AACb","sourcesContent":["/* Hide existing submit */\n.feedback-container {\n    display: none;\n}\n\n/* Layout */\n.form-grid {\n  display: grid;\n  grid-template-columns: 1fr 6fr;\n  gap: 16px;\n}\n\n.profile-option-label-container {\n  grid-column-start: 1;\n  align-self: center;\n  justify-self: right;\n  text-align: right;\n}\n\n.profile-option-control-container {\n  grid-column-start: 2;\n}\n\n#submit-button {\n    grid-column-start: 1;\n    grid-column-end: 3;\n}\n\n/* Image Building styling & layout */\n\n.terminal-container {\n  background-color: black;\n  padding: 16px;\n}\n.profile-option-control-container input[type=\"text\"] {\n  width: 100%;\n  /* 8px here, even though we only use 4px for .react-select-item-container.\n       Achieves similar visual effect.\n    */\n  padding: 8px;\n}\n\n/* react-select styling */\n.react-select-item-container.react-select-item-menu-display.react-select-item-selected\n  .react-select-item-description {\n  /* When rendering an option in react select's *menu*, if it is the currently selected one, make the description much lighter.\n       Otherwise, it gets unreadable in the blue;\n    */\n  color: #ddd;\n}\n.react-select-item-container {\n  padding: 4px;\n}\n\n.react-select-item-description {\n  color: #999;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* Hide existing submit */\n.feedback-container {\n  display: none;\n}\n\n/* Layout */\n.form-grid {\n  display: grid;\n  grid-template-columns: 1fr 6fr;\n  gap: 16px;\n}\n\n.profile-option-label-container {\n  grid-column-start: 1;\n  align-self: center;\n  justify-self: right;\n  text-align: right;\n}\n\n.profile-option-control-container {\n  grid-column-start: 2;\n}\n\n#submit-button {\n  grid-column-start: 1;\n  grid-column-end: 3;\n}\n\n/* Image Building styling & layout */\n\n.terminal-container {\n  background-color: black;\n  padding: 16px;\n}\n.profile-option-control-container input[type=\"text\"] {\n  width: 100%;\n  /* 8px here, even though we only use 4px for .react-select-item-container.\n       Achieves similar visual effect.\n    */\n  padding: 8px;\n}\n\n/* react-select styling */\n.react-select-item-container.react-select-item-menu-display.react-select-item-selected\n  .react-select-item-description {\n  /* When rendering an option in react select's *menu*, if it is the currently selected one, make the description much lighter.\n       Otherwise, it gets unreadable in the blue;\n    */\n  color: #ddd;\n}\n.react-select-item-container {\n  padding: 4px;\n}\n\n.react-select-item-description {\n  color: #999;\n}\n", "",{"version":3,"sources":["webpack://./src/form.css"],"names":[],"mappings":"AAAA,yBAAyB;AACzB;EACE,aAAa;AACf;;AAEA,WAAW;AACX;EACE,aAAa;EACb,8BAA8B;EAC9B,SAAS;AACX;;AAEA;EACE,oBAAoB;EACpB,kBAAkB;EAClB,mBAAmB;EACnB,iBAAiB;AACnB;;AAEA;EACE,oBAAoB;AACtB;;AAEA;EACE,oBAAoB;EACpB,kBAAkB;AACpB;;AAEA,oCAAoC;;AAEpC;EACE,uBAAuB;EACvB,aAAa;AACf;AACA;EACE,WAAW;EACX;;KAEG;EACH,YAAY;AACd;;AAEA,yBAAyB;AACzB;;EAEE;;KAEG;EACH,WAAW;AACb;AACA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;AACb","sourcesContent":["/* Hide existing submit */\n.feedback-container {\n  display: none;\n}\n\n/* Layout */\n.form-grid {\n  display: grid;\n  grid-template-columns: 1fr 6fr;\n  gap: 16px;\n}\n\n.profile-option-label-container {\n  grid-column-start: 1;\n  align-self: center;\n  justify-self: right;\n  text-align: right;\n}\n\n.profile-option-control-container {\n  grid-column-start: 2;\n}\n\n#submit-button {\n  grid-column-start: 1;\n  grid-column-end: 3;\n}\n\n/* Image Building styling & layout */\n\n.terminal-container {\n  background-color: black;\n  padding: 16px;\n}\n.profile-option-control-container input[type=\"text\"] {\n  width: 100%;\n  /* 8px here, even though we only use 4px for .react-select-item-container.\n       Achieves similar visual effect.\n    */\n  padding: 8px;\n}\n\n/* react-select styling */\n.react-select-item-container.react-select-item-menu-display.react-select-item-selected\n  .react-select-item-description {\n  /* When rendering an option in react select's *menu*, if it is the currently selected one, make the description much lighter.\n       Otherwise, it gets unreadable in the blue;\n    */\n  color: #ddd;\n}\n.react-select-item-container {\n  padding: 4px;\n}\n\n.react-select-item-description {\n  color: #999;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -48047,14 +48046,13 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _node_modules_xterm_css_xterm_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../node_modules/xterm/css/xterm.css */ "./node_modules/xterm/css/xterm.css");
-/* harmony import */ var _form_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./form.css */ "./src/form.css");
-/* harmony import */ var _ResourceSelector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ResourceSelector */ "./src/ResourceSelector.jsx");
-/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./state */ "./src/state.js");
+/* harmony import */ var _node_modules_xterm_css_xterm_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node_modules/xterm/css/xterm.css */ "./node_modules/xterm/css/xterm.css");
+/* harmony import */ var _form_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./form.css */ "./src/form.css");
+/* harmony import */ var _ResourceSelector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ResourceSelector */ "./src/ResourceSelector.jsx");
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./state */ "./src/state.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
 
 
 
@@ -48075,7 +48073,7 @@ function Form() {
 
   // Currently, we only support a single profile, with many options.
   var profile = profileList[0];
-  var _useContext = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)(_state__WEBPACK_IMPORTED_MODULE_5__.SpawnerFormContext),
+  var _useContext = (0,react__WEBPACK_IMPORTED_MODULE_5__.useContext)(_state__WEBPACK_IMPORTED_MODULE_4__.SpawnerFormContext),
     canSubmit = _useContext.canSubmit;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
     className: "form-grid",
@@ -48086,7 +48084,7 @@ function Form() {
       value: profile.slug,
       checked: true,
       readOnly: true
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ResourceSelector__WEBPACK_IMPORTED_MODULE_4__.ResourceSelector, {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ResourceSelector__WEBPACK_IMPORTED_MODULE_3__.ResourceSelector, {
       profile: profile
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("input", {
       id: "submit-button",
@@ -48098,7 +48096,7 @@ function Form() {
   });
 }
 var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_0__.createRoot)(document.getElementById("form"));
-root.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_state__WEBPACK_IMPORTED_MODULE_5__.SpawnerFormProvider, {
+root.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_state__WEBPACK_IMPORTED_MODULE_4__.SpawnerFormProvider, {
   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(Form, {})
 }));
 })();

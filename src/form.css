@@ -1,6 +1,6 @@
 /* Hide existing submit */
 .feedback-container {
-    display: none;
+  display: none;
 }
 
 /* Layout */
@@ -22,8 +22,8 @@
 }
 
 #submit-button {
-    grid-column-start: 1;
-    grid-column-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 /* Image Building styling & layout */

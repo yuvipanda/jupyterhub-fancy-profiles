@@ -13,11 +13,14 @@ export function ResourceSelector({ profile }) {
         displayName={optionBody.display_name}
         profileSlug={profile.slug}
         choices={optionBody.choices}
-        extraSelectableItem={optionName === "image" && {
-          display_name_in_choices: "Build your own image",
-          description_in_choices: "Use a mybinder.org compatible GitHub repo to build your own image",
-          component: ImageBuilder
-        }}
+        extraSelectableItem={
+          optionName === "image" && {
+            display_name_in_choices: "Build your own image",
+            description_in_choices:
+              "Use a mybinder.org compatible GitHub repo to build your own image",
+            component: ImageBuilder,
+          }
+        }
       />
     );
   });

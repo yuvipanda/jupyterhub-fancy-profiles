@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useState } from "react";
 import { CustomizedSelect } from "./CustomSelect";
 
@@ -12,7 +11,8 @@ export function ProfileOption({
 }) {
   const [unlistedChoiceVisible, setUnlistedChoiceVisible] = useState(false);
   const [unlistedChoiceValue, setUnlistedChoiceValue] = useState("");
-  const [extraSelectableItemVisible, setExtraSelectableItemVisible] = useState(false);
+  const [extraSelectableItemVisible, setExtraSelectableItemVisible] =
+    useState(false);
 
   const listedInputName = `profile-option-${profileSlug}--${optionName}`;
   const unlistedInputName = `${listedInputName}--unlisted-choice`;
@@ -39,26 +39,25 @@ export function ProfileOption({
       },
       onDeselected: () => {
         setUnlistedChoiceVisible(false);
-      }
+      },
     });
   }
   const defaultOption = options.find(
-    (option) => option.value === defaultChoiceName
+    (option) => option.value === defaultChoiceName,
   );
 
-  if(extraSelectableItem) {
+  if (extraSelectableItem) {
     options.push({
       value: "--extra-selectable-item",
       label: extraSelectableItem.display_name_in_choices,
       description: extraSelectableItem.description_in_choices,
       onSelected: () => {
-        setExtraSelectableItemVisible(true)
+        setExtraSelectableItemVisible(true);
       },
       onDeselected: () => {
-        setExtraSelectableItemVisible(false)
-      }
-
-    })
+        setExtraSelectableItemVisible(false);
+      },
+    });
   }
 
   return (
@@ -69,7 +68,11 @@ export function ProfileOption({
       <div className="profile-option-control-container">
         <CustomizedSelect
           options={options}
-          name={( extraSelectableItemVisible || unlistedChoiceVisible) ? null : listedInputName}
+          name={
+            extraSelectableItemVisible || unlistedChoiceVisible
+              ? null
+              : listedInputName
+          }
           defaultValue={defaultOption}
         />
       </div>
@@ -94,9 +97,11 @@ export function ProfileOption({
       )}
 
       {extraSelectableItem && (
-        <extraSelectableItem.component visible={extraSelectableItemVisible} unlistedInputName={unlistedInputName} />
+        <extraSelectableItem.component
+          visible={extraSelectableItemVisible}
+          unlistedInputName={unlistedInputName}
+        />
       )}
-
     </>
   );
 }
