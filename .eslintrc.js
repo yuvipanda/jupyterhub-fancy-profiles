@@ -28,7 +28,7 @@ module.exports = {
     "no-unused-vars": ["error", { args: "after-used" }],
   },
   ignorePatterns: [
-    "kubespawner_dynamic_building_ui/static/*.js",
+    "jupyterhub_fancy_profiles/static/*.js",
     "webpack.config.js",
   ],
 };

@@ -57,7 +57,7 @@ repos:
 
   # Lint: JS code
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: "v8.49.0" # Use the sha / tag you want to point at
+    rev: "v8.53.0" # Use the sha / tag you want to point at
     hooks:
       - id: eslint
         files: \.jsx?$

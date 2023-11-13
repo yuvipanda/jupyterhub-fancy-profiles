@@ -94,7 +94,7 @@ export function ImageBuilder({ visible, unlistedInputName }) {
   const [builtImage, setBuiltImage] = useState(null);
 
   // FIXME: Allow users to actually configure this
-  const [ref, setRef] = useState("HEAD");
+  const [ref, _] = useState("HEAD"); // eslint-disable-line no-unused-vars
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
 

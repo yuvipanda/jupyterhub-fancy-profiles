@@ -2,7 +2,6 @@
 
 ## Setting up a dev environment
 
-
 ### Setting up `minikube`
 
 Currently, these instructions only work with [minikube](https://minikube.sigs.k8s.io/docs/start/)
