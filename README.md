@@ -1,25 +1,26 @@
-# jupyterhub-fancy-profiles
+# `jupyterhub-fancy-profiles`
 
-## Goals
+A react based, fancy implementation of user selectable profiles
+for use with [jupyterhub-kubespawner](https://github.com/jupyterhub/kubespawner).
 
-This is a pure **prototype**, exploring answers to the following
-questions:
+![Screenshot showing an image selector](screenshot.png)
 
-1. How to sustainably develop complex UIs that sit in the kubespawner
-   profile selector page without requiring strong coupling with kubespawner
-   itself, or unmaintainable stuff that is copy pasted into YAML config?
+## Features
 
-2. How to bundle JS & CSS properly into this kinda UI, so we can use modern
-   frontend practices to build the UI without having to do weird tricks?
+1. Interpret a `profileList` given to kubespawner, and render a better looking
+   and more featureful selector. This includes descriptions for various options,
+   as well as better descriptions for allowing users to 'write-in' a choice.
 
-3. How to package assets in such a way that admins can install these complex
-   UIs without needing changes to JupyterHub or KubeSpawner?
+2. If enabled, interact with a [binderhub](https://github.com/jupyterhub/binderhub/)
+   deployed as a JupyterHub service to allow users to _dynamically_ build images
+   they want to use, without requiring it to be pre-built.
 
-4. How to best use custom jinja2 templates in KubeSpawner's profile_list,
-   as enabled by [this PR](https://github.com/jupyterhub/kubespawner/pull/724)
+## Limitations
 
-We could answer other questions in the future, but this is what is needed
-right now.
+1. While multiple `profile_options` are supported, only a single `profile` is
+   supported.
+
+2. The forms values don't remember their previous state upon refresh
 
 ## How to use
 
@@ -65,23 +66,3 @@ it. Given the size and complexity of this - a complex UI but only a single page 
 plain react without typescript seems the correct choice. We will _not_ make
 this into a super-heavy, complex application - just a fairly simple one that
 uses react.
-
-## Where this fits in
-
-This project puts UI in the KubeSpawner's 'profile*list' page, which allows
-users to select options they want to spawn their server with. As such, it
-is \_injected* into the pre-existing HTML of that page. As of JupyterHub 4.0,
-that page uses [Bootstrap 3](https://getbootstrap.com/docs/3.3/) for styling,
-so that is what is available to us. We should [upgrade to Bootstrap 5](https://github.com/jupyterhub/jupyterhub/issues/4437)
-at some point - until then, we have to use Bootstrap 3. Since this package and
-JupyterHub are both versioned, we can easily transition once JupyterHub releases
-a version with Bootstrap 5.
-
-## Current state
-
-This is how the app looks _right now_, to show how the user flow might be. Note
-that we aren't quite at a stage to do proper UX yet, so **hold your UX thoughts
-for now**. We're currently trying to figure out the technical parts of building
-and deploying this sustainably, and figuring out UX will definitely be next!
-
-![screenshot](screenshot.png)
