@@ -6,10 +6,10 @@ from jupyterhub_fancy_profiles import setup_ui
 c = get_config()  # noqa
 
 # Allow any username and any password to login
-c.JupyterHub.authenticator_class = 'dummy'
+c.JupyterHub.authenticator_class = "dummy"
 
 # Launch into Kubernetes
-c.JupyterHub.spawner_class = 'kubespawner.KubeSpawner'
+c.JupyterHub.spawner_class = "kubespawner.KubeSpawner"
 
 # Explicitly set the command to start, as repo2docker default is notebook,
 # not the jupyterhub-singleuser
