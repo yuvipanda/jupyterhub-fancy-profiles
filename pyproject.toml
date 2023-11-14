@@ -19,3 +19,7 @@ classifiers = [
 
 [tool.setuptools_scm]
 version_file = "jupyterhub_fancy_profiles/_version.py"
+
+[tool.setuptools.packages.find]
+where = [""]
+include = ["jupyterhub_fancy_profiles*"]

@@ -161,3 +161,6 @@ cython_debug/
 
 # JS is everywhere
 node_modules/
+
+# Built files should not be in the package
+static/dist/

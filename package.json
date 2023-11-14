@@ -6,8 +6,8 @@
   "author": "yuvipanda",
   "license": "BSD-3-Clause",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch"
+    "webpack": "webpack",
+    "webpack:watch": "webpack --watch"
   },
   "dependencies": {
     "@jupyterhub/binderhub-client": "0.4.0",
