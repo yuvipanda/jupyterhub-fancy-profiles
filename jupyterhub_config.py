@@ -1,24 +1,26 @@
 import os
 import socket
 
-from jupyterhub.auth import DummyAuthenticator
-from kubespawner.spawner import KubeSpawner
-
 from jupyterhub_fancy_profiles import setup_ui
 
 c = get_config()  # noqa
 
+# Allow any username and any password to login
+c.JupyterHub.authenticator_class = 'dummy'
 
-c.JupyterHub.authenticator_class = DummyAuthenticator
+# Launch into Kubernetes
+c.JupyterHub.spawner_class = 'kubespawner.KubeSpawner'
 
-
-c.JupyterHub.spawner_class = KubeSpawner
-
+# Explicitly set the command to start, as repo2docker default is notebook,
+# not the jupyterhub-singleuser
 c.Spawner.cmd = ["jupyterhub-singleuser"]
 
 # Don't try to cleanup servers on exit - since in general for k8s, we want
 # the hub to be able to restart without losing user containers
 c.JupyterHub.cleanup_servers = False
+
+# Automatically start binderhub as a service, at the URL path that jupyterhub-fancy-profiles
+# expects it to be at
 c.JupyterHub.services = [
     {
         "name": "binder",
@@ -38,9 +40,10 @@ s.close()
 
 c.JupyterHub.hub_connect_ip = host_ip
 
-
+# Setup jupyterhub_fancy_profiles
 setup_ui(c)
 
+# Provide an example profile with various options in use
 c.KubeSpawner.profile_list = [
     {
         "display_name": "Small",
