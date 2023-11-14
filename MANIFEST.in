@@ -1,4 +1,19 @@
-include LICENSE
-include README.md
-graft jupyterhub_fancy_profiles/templates
-graft jupyterhub_fancy_profiles/static
+# setuptools-scm puts all tracked files here already. We need to
+# prune files we don't want in our sdist, and include generated files
+# Ideally we can simply just *include* files we want, but I have given up
+# on that for now.
+
+# Add generated files
+graft jupyterhub_fancy_profiles/static/dist
+
+# Remove JS files that we won't need when installed
+exclude src/*
+exclude webpack.config.js
+
+# Remove docs & dev time needs we won't need when installed in sdist
+exclude CONTRIBUTING.md
+exclude dev-requirements.txt
+exclude jupyterhub_config.py
+exclude binderhub_config.py
+exclude package.json
+exclude screenshot.png

@@ -21,7 +21,7 @@ module.exports = {
   output: {
     publicPath: "/",
     filename: "form.js",
-    path: path.resolve(__dirname, "jupyterhub_fancy_profiles/static/"),
+    path: path.resolve(__dirname, "jupyterhub_fancy_profiles/static/dist/"),
   },
   resolve: {
     extensions: [".css", ".js", ".jsx"],
