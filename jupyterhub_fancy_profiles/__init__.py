@@ -6,6 +6,8 @@ HERE = os.path.dirname(__file__)
 
 TEMPLATE_PATHS = [os.path.join(HERE, "templates")]
 
+# FIXME: Handle JupyterHub's base_path here correctly, so we support
+# running under prefixes
 STATIC_HANDLER_TUPLE = (
     "/fancy-profiles/static/(.*)",
     StaticFileHandler,
