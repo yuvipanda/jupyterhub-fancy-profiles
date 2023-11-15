@@ -2,6 +2,8 @@ import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { useEffect, useState } from "react";
 import { BinderRepository } from "@jupyterhub/binderhub-client";
+import { SpawnerFormContext, CHOICE_TYPE } from "./state";
+import { useContext } from "react";
 
 async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   const providerSpec = "gh/" + repo + "/" + ref;
@@ -43,7 +45,6 @@ async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
         break;
       }
       default: {
-        console.log("Unknown phase in response from server");
         console.log(data);
         break;
       }
@@ -89,14 +90,29 @@ function ImageLogs({ visible, setTerm, setFitAddon }) {
     </>
   );
 }
-export function ImageBuilder({ visible, unlistedInputName }) {
+export function ImageBuilder({ visible, optionName }) {
   const [repo, setRepo] = useState("");
-  const [builtImage, setBuiltImage] = useState(null);
+  const { setOptionValue } = useContext(SpawnerFormContext);
 
   // FIXME: Allow users to actually configure this
   const [ref, _] = useState("HEAD"); // eslint-disable-line no-unused-vars
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
+  const [imageName, setImageName] = useState("");
+
+  useEffect(() => {
+    setOptionValue(optionName, CHOICE_TYPE.UNLISTED, imageName);
+  }, [imageName]);
+
+  useEffect(() => {
+    if (visible) {
+      // When the state of visibility changes, set option to be current imageName
+      // This is empty string when we first start, and last built image otherwise
+      // When we migrate *away* from this component, whatever we migrate to will
+      // set this instead.
+      setOptionValue(optionName, CHOICE_TYPE.UNLISTED, imageName);
+    }
+  }, [visible]);
 
   // We render everything, but only toggle visibility based on wether we are being
   // shown or hidden. This provides for more DOM stability, and also allows the image
@@ -132,16 +148,13 @@ export function ImageBuilder({ visible, unlistedInputName }) {
           value="Build image"
           onClick={async () => {
             await buildImage(repo, ref, term, fitAddon, (imageName) => {
-              setBuiltImage(imageName);
+              setImageName(imageName);
               term.write(
                 "\nImage has been built! Click the start button to launch your server",
               );
             });
           }}
         />
-        {visible && builtImage && (
-          <input name={unlistedInputName} type="hidden" value={builtImage} />
-        )}
       </div>
 
       <ImageLogs

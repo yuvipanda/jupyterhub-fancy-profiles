@@ -5,7 +5,7 @@ import "../node_modules/xterm/css/xterm.css";
 import "./form.css";
 import { ResourceSelector } from "./ResourceSelector";
 import { SpawnerFormContext, SpawnerFormProvider } from "./state";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 /**
  * Generates the *contents* of the form shown in the profile selection page
@@ -18,7 +18,11 @@ function Form() {
 
   // Currently, we only support a single profile, with many options.
   const profile = profileList[0];
-  const { canSubmit } = useContext(SpawnerFormContext);
+  const { canSubmit, setProfileSlug } = useContext(SpawnerFormContext);
+
+  useEffect(() => {
+    setProfileSlug(profile.slug);
+  }, []);
 
   return (
     <div className="form-grid">
