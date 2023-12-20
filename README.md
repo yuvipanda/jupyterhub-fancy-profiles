@@ -66,3 +66,9 @@ it. Given the size and complexity of this - a complex UI but only a single page 
 plain react without typescript seems the correct choice. We will _not_ make
 this into a super-heavy, complex application - just a fairly simple one that
 uses react.
+
+## Funding
+
+Funded in part by [GESIS](http://notebooks.gesis.org) in cooperation with
+NFDI4DS [460234259](https://gepris.dfg.de/gepris/projekt/460234259?context=projekt&task=showDetail&id=460234259&)
+and [CESSDA](https://www.cessda.eu).
