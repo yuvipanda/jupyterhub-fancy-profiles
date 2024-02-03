@@ -30,8 +30,8 @@ jobs:
         if: "${{ github.event_name == 'push' }}"
         with:
           registry: quay.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
 
       - name: Build and push
         id: docker_build
