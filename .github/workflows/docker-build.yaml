@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # We use setuptools-scm to do versioning, and it needs tags
+          fetch-tags: true
 
       - name: Figure out docker image tag
         id: taggen
