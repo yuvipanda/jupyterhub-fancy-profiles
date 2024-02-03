@@ -12,8 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # We use setuptools-scm to do versioning, and it needs tags
-          fetch-tags: true
+          # We use setuptools-scm to do versioning, and it needs a full clone
+          fetch-depth: "0"
 
       - name: Figure out docker image tag
         id: taggen
