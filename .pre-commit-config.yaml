@@ -64,7 +64,8 @@ repos:
         types: [file]
         exclude: jupyterhub_fancy_profiles/static
         additional_dependencies:
-          # Duplicated from package.json's devDependencies
+          # Duplicated from package.json's devDependencies, otherwise pre-commit.ci
+          # does not like it
           - eslint
           - eslint-plugin-react
 
