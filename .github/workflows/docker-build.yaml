@@ -17,7 +17,7 @@ jobs:
 
       - name: Figure out docker image tag
         id: taggen
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           images: |
             quay.io/yuvipanda/z2jh-hub-with-fancy-profiles
