@@ -1,3 +1,5 @@
+# When you upgrade this version, update the tag in `.github/workflows/docker-build.yaml`
+# as well.
 ARG Z2JH_VERSION=3.2.1
 
 # We need node to build the package, but not to run it
