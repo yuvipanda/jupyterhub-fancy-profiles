@@ -24,7 +24,37 @@ for use with [jupyterhub-kubespawner](https://github.com/jupyterhub/kubespawner)
 
 ## How to use
 
-Once installed, you can have kubespawner use the templates shipped
+### Using with z2jh
+
+This package can be used with any installation of KubeSpawner, but is most
+commonly used with an installation of z2jh. It requires installing `jupyterhub-fancy-profiles`
+in the `hub` image used by z2jh.
+
+As a convenience, we build and push docker images that can be automatically
+used with z2jh!
+
+1. Look at the [list of available tags](https://quay.io/repository/yuvipanda/z2jh-hub-with-fancy-profiles?tab=tags)
+   and find a tag that matches the version of z2jh you are using.
+
+2. Use this image in the z2jh config. In the `values.yaml` file you pass to
+   `helm`, use the following:
+
+   ```yaml
+   hub:
+     image:
+       name: quay.io/yuvipanda/z2jh-hub-with-fancy-profiles
+       tag: <tag-from-the-list>
+     extraConfig:
+       01-enable-fancy-profiles: |
+         from jupyterhub_fancy_profiles import setup_ui
+         setup_ui(c)
+   ```
+
+3. Run a `helm upgrade` and you should have fancy profiles enabled!
+
+### Using directly with KubeSpawner
+
+After the package is installed, you can have kubespawner use the templates shipped
 with this package to provide appropriate UI, by adding the following snippet
 to your `jupyterhub_config.py` file:
 
