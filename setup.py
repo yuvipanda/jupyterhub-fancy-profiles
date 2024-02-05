@@ -3,6 +3,7 @@ Setup.py to build generated js files with webpack.
 
 Everything else is handled in pyproject.toml
 """
+
 import os
 from subprocess import check_call
 
