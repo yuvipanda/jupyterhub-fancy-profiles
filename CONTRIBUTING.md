@@ -42,22 +42,37 @@ but can be adapted to work with any other local kubernetes setup.
    python -m pip install -r dev-requirements.txt
    ```
 
-4. Install [configurable-http-proxy](https://github.com/jupyterhub/configurable-http-proxy/),
+4. Install the `jupyterhub-fancy-profiles` package itself.
+
+   ```bash
+   python -m pip install -e .
+   ```
+
+   This also will build the JS and CSS assets.
+
+5. Install [configurable-http-proxy](https://github.com/jupyterhub/configurable-http-proxy/),
    as that is required for JupyterHub to run.
 
    ```bash
    npm install configurable-http-proxy
    ```
 
-5. Put `configurable-http-proxy` in `$PATH` so jupyterhub can discover it.
+6. Put `configurable-http-proxy` in `$PATH` so jupyterhub can discover it.
 
    ```bash
    export PATH="$(pwd)/node_modules/.bin:${PATH}"
    ```
 
-6. Now, start `jupyterhub` and go to `localhost:8000` to access it! You can login with any
+7. Now, start `jupyterhub` and go to `localhost:8000` to access it! You can login with any
    username and password.
 
    ```bash
-   jupyterhub
+   python -m jupyterhub
+   ```
+
+8. If you're working on the JS / CSS, you can also run the following command in another
+   terminal to automatically watch and rebuild the JS / CSS as you edit.
+
+   ```bash
+   npm run webpack:watch
    ```
