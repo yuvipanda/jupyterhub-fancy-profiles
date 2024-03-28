@@ -55,7 +55,9 @@ but can be adapted to work with any other local kubernetes setup.
    export PATH="$(pwd)/node_modules/.bin:${PATH}"
    ```
 
-6. Now, start `jupyterhub` and go to `localhost:8000` to access it! You can login with any
+6. Install frontend dependencies with `npm install` and build and watch for changes: `npm run webpack:watch`
+
+7. Now, start `jupyterhub` and go to `localhost:8000` to access it! You can login with any
    username and password.
 
    ```bash
