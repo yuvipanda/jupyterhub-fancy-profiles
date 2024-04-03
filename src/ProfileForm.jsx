@@ -1,7 +1,8 @@
 import "../node_modules/xterm/css/xterm.css";
 
 import "./form.css";
-import { ResourceSelector } from "./ResourceSelector";
+import ImageSelect from "./ImageSelect";
+import ResourceSelect from "./ResourceSelect";
 import { SpawnerFormContext } from "./state";
 import { useContext } from "react";
 
@@ -16,6 +17,8 @@ function Form() {
 
   // Currently, we only support a single profile, with many options.
   const profile = profileList[0];
+  const { image, resources } = profile.profile_options;
+
   const { canSubmit } = useContext(SpawnerFormContext);
 
   return (
@@ -28,7 +31,8 @@ function Form() {
         checked
         readOnly
       />
-      <ResourceSelector profile={profile} />
+      <ImageSelect config={image} />
+      <ResourceSelect config={resources} />
       <input
         id="submit-button"
         type="submit"

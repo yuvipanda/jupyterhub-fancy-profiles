@@ -89,7 +89,7 @@ function ImageLogs({ visible, setTerm, setFitAddon }) {
     </>
   );
 }
-export function ImageBuilder({ visible, unlistedInputName }) {
+export function ImageBuilder({ visible, name }) {
   const [repo, setRepo] = useState("");
   const [builtImage, setBuiltImage] = useState(null);
 
@@ -140,7 +140,7 @@ export function ImageBuilder({ visible, unlistedInputName }) {
           }}
         />
         {visible && builtImage && (
-          <input name={unlistedInputName} type="hidden" value={builtImage} />
+          <input name={name} type="hidden" value={builtImage} />
         )}
       </div>
 
