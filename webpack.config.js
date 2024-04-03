@@ -2,7 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
-  entry: path.resolve(__dirname, "src", "Form.jsx"),
+  entry: path.resolve(__dirname, "src", "index.jsx"),
   devtool: "source-map",
   mode: "development",
   module: {

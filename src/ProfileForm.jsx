@@ -1,10 +1,8 @@
-import { createRoot } from "react-dom/client";
-
 import "../node_modules/xterm/css/xterm.css";
 
 import "./form.css";
 import { ResourceSelector } from "./ResourceSelector";
-import { SpawnerFormContext, SpawnerFormProvider } from "./state";
+import { SpawnerFormContext } from "./state";
 import { useContext } from "react";
 
 /**
@@ -42,9 +40,4 @@ function Form() {
   );
 }
 
-const root = createRoot(document.getElementById("form"));
-root.render(
-  <SpawnerFormProvider>
-    <Form />
-  </SpawnerFormProvider>,
-);
+export default Form;
