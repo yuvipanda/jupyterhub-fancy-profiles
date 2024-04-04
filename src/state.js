@@ -1,67 +1,31 @@
-import { createContext, useReducer } from "react";
+import { createContext, useState } from "react";
 
-const IMAGE_OPTION_VIEWS = {
-  choices: Symbol("choices"),
-  specifier: Symbol("specifier"),
-  builder: Symbol("builder"),
-};
+export const SpawnerFormContext = createContext();
 
-const INITIAL_STATE = {
-  canSubmit: true,
-  unlistedImage: "",
-  imageOptionView: IMAGE_OPTION_VIEWS.choices,
-};
-
-const ACTION_TYPES = {
-  SET_UNLISTED_IMAGE: Symbol("set-unlisted-image"),
-  SET_IMAGE_OPTION_VIEW: Symbol("set-image-option-view"),
-};
-
-function reducer(oldState, action) {
-  switch (action.type) {
-    case ACTION_TYPES.SET_IMAGE_OPTION_VIEW:
-      return {
-        ...oldState,
-        imageOptionView: action.payload,
-        canSubmit:
-          action.payload == IMAGE_OPTION_VIEWS.choices ||
-          oldState.unlistedImage !== "",
-      };
-    case ACTION_TYPES.SET_UNLISTED_IMAGE:
-      return {
-        ...oldState,
-        unlistedImage: action.payload,
-        canSubmit:
-          oldState.imageOptionView == IMAGE_OPTION_VIEWS.choices ||
-          action.payload !== "",
-      };
-    default:
-      throw new Error();
-  }
+function getDefaultOption(choices) {
+  return Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
+    Object.keys(choices)[0];
 }
 
-const SpawnerFormContext = createContext();
+export const SpawnerFormProvider = ({ children }) => {
+  const profileList = window.profileList;
+  const profile = profileList[0];
 
-const SpawnerFormProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const defaultImageKey = getDefaultOption(profile.profile_options.image.choices);
+  const defaultResourceKey = getDefaultOption(profile.profile_options.resources.choices);
 
-  // These can be destructured out by any child element
+  const [image, setImage] = useState(defaultImageKey);
+  const [customImage, setCustomImage] = useState('');
+  const [resource, setResource] = useState(defaultResourceKey);
+
   const value = {
-    canSubmit: state.canSubmit,
-    imageOptionView: state.imageOptionView,
-    unlistedImage: state.unlistedImage,
-    setUnlistedImage: (unlistedImage) => {
-      dispatch({
-        type: ACTION_TYPES.SET_UNLISTED_IMAGE,
-        payload: unlistedImage,
-      });
-    },
-    setImageOptionView: (imageOptionView) => {
-      dispatch({
-        type: ACTION_TYPES.SET_IMAGE_OPTION_VIEW,
-        payload: imageOptionView,
-      });
-    },
+    profile,
+    image,
+    setImage,
+    customImage,
+    setCustomImage,
+    resource,
+    setResource
   };
 
   return (
@@ -70,5 +34,3 @@ const SpawnerFormProvider = ({ children }) => {
     </SpawnerFormContext.Provider>
   );
 };
-
-export { SpawnerFormContext, SpawnerFormProvider, IMAGE_OPTION_VIEWS };

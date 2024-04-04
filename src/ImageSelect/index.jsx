@@ -1,7 +1,8 @@
-import { useCallback, useState } from "react";
+import { useContext } from "react";
 import { CustomizedSelect } from "../CustomSelect";
 import { ImageBuilder } from "./ImageBuilder";
 import useSelectOptions from "../hooks/useSelectOptions";
+import { SpawnerFormContext } from "../state";
 
 const extraChoices = [
   {
@@ -17,14 +18,14 @@ const extraChoices = [
 
 
 function ImageSelect({ config }) {
-  const FIELD_ID = "image";
+  const { profile } = useContext(SpawnerFormContext);
+  const FIELD_ID = `profile-option-${ profile }--image`;
+  const FIELD_ID_UNLISTED = `${FIELD_ID}--unlisted-choice`;
   const { display_name, choices } = config;
 
   const { options, defaultOption } = useSelectOptions(choices, extraChoices);
 
-  const [value, setValue] = useState(defaultOption.value);
-  const [imageName, setImageName] = useState('');
-  const onChange = useCallback(e => setValue(e.value), []);
+  const { image, setImage, customImage, setCustomImage } = useContext(SpawnerFormContext);
 
   return (
     <>
@@ -35,30 +36,28 @@ function ImageSelect({ config }) {
         <CustomizedSelect
           options={options}
           id={FIELD_ID}
-          name={FIELD_ID}
           defaultValue={defaultOption}
-          onChange={onChange}
+          onChange={e => setImage(e.value)}
         />
       </div>
-      {value === "dockerImage" && (
+      {image === "dockerImage" && (
         <>
         <div className="profile-option-label-container">
-          <label htmlFor="imageName">Custom image</label>
+          <label htmlFor={FIELD_ID_UNLISTED}>Custom image</label>
         </div>
         <div className="profile-option-control-container">
           {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
           <input
             type="text"
-            id="imageName"
-            name="imageName"
-            value={imageName}
-            onChange={(e) => setImageName(e.target.value)}
+            id={FIELD_ID_UNLISTED}
+            value={customImage}
+            onChange={(e) => setCustomImage(e.target.value)}
           />
         </div>
       </>
       )}
-      {value === "buildImage" && (
-        <ImageBuilder name="imageName" visible="true" />
+      {image === "buildImage" && (
+        <ImageBuilder name={FIELD_ID_UNLISTED} visible="true" />
       )}
     </>
   )

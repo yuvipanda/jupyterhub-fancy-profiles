@@ -13,13 +13,9 @@ import { useContext } from "react";
  * be generated here.
  */
 function Form() {
-  const profileList = window.profileList;
-
   // Currently, we only support a single profile, with many options.
-  const profile = profileList[0];
+  const { profile } = useContext(SpawnerFormContext);
   const { image, resources } = profile.profile_options;
-
-  const { canSubmit } = useContext(SpawnerFormContext);
 
   return (
     <div className="form-grid">
@@ -37,7 +33,6 @@ function Form() {
         id="submit-button"
         type="submit"
         value="Start"
-        disabled={!canSubmit}
         className="btn btn-jupyter form-control"
       />
     </div>
