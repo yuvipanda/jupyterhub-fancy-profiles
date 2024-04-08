@@ -14,7 +14,7 @@ import { useContext } from "react";
  */
 function Form() {
   // Currently, we only support a single profile, with many options.
-  const { profile } = useContext(SpawnerFormContext);
+  const { profile, submit } = useContext(SpawnerFormContext);
   const { image, resources } = profile.profile_options;
 
   return (
@@ -29,12 +29,13 @@ function Form() {
       />
       <ImageSelect config={image} />
       <ResourceSelect config={resources} />
-      <input
-        id="submit-button"
-        type="submit"
-        value="Start"
+      <div />
+      <button
         className="btn btn-jupyter form-control"
-      />
+        type="submit"
+      >
+        Start
+      </button>
     </div>
   );
 }
