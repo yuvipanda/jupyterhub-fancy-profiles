@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 function useSelectOptions(choices, extraChoices = []) {
-
   const options = useMemo(() => {
     const defaultChoices = Object.keys(choices).map((choiceName) => {
       return {
@@ -11,16 +10,13 @@ function useSelectOptions(choices, extraChoices = []) {
       };
     });
 
-    return [
-      ...defaultChoices,
-      ...extraChoices
-    ];
+    return [...defaultChoices, ...extraChoices];
   }, [choices]);
 
   const defaultChoiceName =
     Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
     Object.keys(choices)[0];
-  
+
   const defaultOption = options.find(
     (option) => option.value === defaultChoiceName,
   );
@@ -28,7 +24,7 @@ function useSelectOptions(choices, extraChoices = []) {
   return {
     options,
     defaultOption,
-  }
+  };
 }
 
 export default useSelectOptions;

@@ -21,11 +21,11 @@ function ResourceSelect({ config }) {
           id={FIELD_ID}
           name={FIELD_ID}
           defaultValue={defaultOption}
-          onChange={e => setResource(e.value)}
+          onChange={(e) => setResource(e.value)}
         />
       </div>
     </>
-  )
+  );
 }
 
 export default ResourceSelect;

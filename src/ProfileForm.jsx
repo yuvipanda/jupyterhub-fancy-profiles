@@ -30,10 +30,7 @@ function Form() {
       <ImageSelect config={image} />
       <ResourceSelect config={resources} />
       <div />
-      <button
-        className="btn btn-jupyter form-control"
-        type="submit"
-      >
+      <button className="btn btn-jupyter form-control" type="submit">
         Start
       </button>
     </div>
