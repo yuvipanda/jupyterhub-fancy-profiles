@@ -92,7 +92,7 @@ function ImageLogs({ visible, setTerm, setFitAddon }) {
 }
 export function ImageBuilder({ visible, name }) {
   const [repo, setRepo] = useState("");
-  const { costumImage, setCustomImage } = useContext(SpawnerFormContext);
+  const { customImage, setCustomImage } = useContext(SpawnerFormContext);
 
   // FIXME: Allow users to actually configure this
   const [ref, _] = useState("HEAD"); // eslint-disable-line no-unused-vars
@@ -140,8 +140,8 @@ export function ImageBuilder({ visible, name }) {
             });
           }}
         />
-        {visible && costumImage && (
-          <input name={name} type="hidden" value={costumImage} />
+        {visible && customImage && (
+          <input name={name} type="hidden" value={customImage} />
         )}
       </div>
 
