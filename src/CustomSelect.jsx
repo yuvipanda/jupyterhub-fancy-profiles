@@ -23,7 +23,7 @@ import Select from "react-select";
  * @param {Props} props
  * @returns
  */
-export function CustomizedSelect({ options, ...props }) {
+export function CustomizedSelect({ options, hasError, ...props }) {
   const [lastSelectedChoice, setLastSelectedChoice] = useState(null);
   return (
     <Select
@@ -66,6 +66,12 @@ export function CustomizedSelect({ options, ...props }) {
           props.onChange(option, meta);
         }
         setLastSelectedChoice(option);
+      }}
+      styles={{
+        control: (baseStyles) => ({
+          ...baseStyles,
+          borderColor: hasError ? 'red' : 'grey',
+        }),
       }}
       {...props}
     />

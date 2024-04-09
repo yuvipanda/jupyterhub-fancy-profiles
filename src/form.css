@@ -4,15 +4,17 @@
 }
 
 /* Layout */
-.form-grid {
+
+.profile-option-container {
   display: grid;
   grid-template-columns: 1fr 6fr;
-  gap: 16px;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .profile-option-label-container {
   grid-column-start: 1;
-  align-self: center;
+  align-self: start;
   justify-self: right;
   text-align: right;
 }
@@ -38,6 +40,21 @@
        Achieves similar visual effect.
     */
   padding: 8px;
+  border: 1px solid gray;
+  border-radius: 4px;
+}
+
+.profile-option-container.has-error label {
+  color: red;
+}
+
+.profile-option-container.has-error input {
+  border-color: red;
+}
+
+.profile-option-control-error {
+  color: red;
+  margin-top: 0.5rem;
 }
 
 /* react-select styling */
