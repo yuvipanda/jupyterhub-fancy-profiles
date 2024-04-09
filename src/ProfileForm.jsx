@@ -14,7 +14,7 @@ import { useContext } from "react";
  */
 function Form() {
   // Currently, we only support a single profile, with many options.
-  const { profile, submit } = useContext(SpawnerFormContext);
+  const { profile } = useContext(SpawnerFormContext);
   const { image, resources } = profile.profile_options;
 
   return (
