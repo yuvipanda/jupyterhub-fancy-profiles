@@ -27,15 +27,25 @@ function ImageSelect({ config }) {
 
   const { options, defaultOption } = useSelectOptions(choices, extraChoices);
 
-  const { image, setImage, customImage, setCustomImage, errors, touched, setTouched } =
-    useContext(SpawnerFormContext);
-  
+  const {
+    image,
+    setImage,
+    customImage,
+    setCustomImage,
+    errors,
+    touched,
+    setTouched,
+  } = useContext(SpawnerFormContext);
+
   const imageError = errors[FIELD_ID] && touched[FIELD_ID];
-  const customImageError = errors[FIELD_ID_UNLISTED] && touched[FIELD_ID_UNLISTED];
+  const customImageError =
+    errors[FIELD_ID_UNLISTED] && touched[FIELD_ID_UNLISTED];
 
   return (
     <>
-      <div className={`profile-option-container ${imageError ? "has-error" : ""}`}>
+      <div
+        className={`profile-option-container ${imageError ? "has-error" : ""}`}
+      >
         <div className="profile-option-label-container">
           <label htmlFor={FIELD_ID}>{display_name}</label>
         </div>
@@ -48,12 +58,16 @@ function ImageSelect({ config }) {
             onBlur={() => setTouched(FIELD_ID, true)}
           />
           {imageError && (
-            <div className="profile-option-control-error">{errors[FIELD_ID]}</div>
+            <div className="profile-option-control-error">
+              {errors[FIELD_ID]}
+            </div>
           )}
         </div>
       </div>
       {image === "dockerImage" && (
-        <div className={`profile-option-container ${customImageError ? "has-error" : ""}`}>
+        <div
+          className={`profile-option-container ${customImageError ? "has-error" : ""}`}
+        >
           <div className="profile-option-label-container">
             <label htmlFor={FIELD_ID_UNLISTED}>Custom image</label>
           </div>
@@ -68,7 +82,9 @@ function ImageSelect({ config }) {
               required
             />
             {customImageError && (
-              <div className="profile-option-control-error">{errors[FIELD_ID_UNLISTED]}</div>
+              <div className="profile-option-control-error">
+                {errors[FIELD_ID_UNLISTED]}
+              </div>
             )}
           </div>
         </div>

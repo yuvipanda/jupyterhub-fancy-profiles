@@ -25,23 +25,31 @@ export const SpawnerFormProvider = ({ children }) => {
   const [resource, setResource] = useState(defaultResourceKey);
 
   const [touched, setTouched] = useState({});
-  const setFieldTouched = useCallback((fieldName, isTouched) => {
-    setTouched({
-      ...touched,
-      [fieldName]: isTouched
-    })
-  }, [touched]);
+  const setFieldTouched = useCallback(
+    (fieldName, isTouched) => {
+      setTouched({
+        ...touched,
+        [fieldName]: isTouched,
+      });
+    },
+    [touched],
+  );
 
   const errors = useMemo(() => {
     const e = {};
     if (!resource) {
-      e[`profile-option-${profile.slug}--resouces`] = "Select the resouces allocation for your container."
+      e[`profile-option-${profile.slug}--resouces`] =
+        "Select the resouces allocation for your container.";
     }
     if (!image) {
-      e[`profile-option-${profile.slug}--image`] = "Select an image"
+      e[`profile-option-${profile.slug}--image`] = "Select an image";
     }
-    if (!Object.keys(profile.profile_options.image.choices).includes(image) && !customImage) {
-      e[`profile-option-${profile.slug}--image--unlisted-choice`] = "Provide a custom image."
+    if (
+      !Object.keys(profile.profile_options.image.choices).includes(image) &&
+      !customImage
+    ) {
+      e[`profile-option-${profile.slug}--image--unlisted-choice`] =
+        "Provide a custom image.";
     }
     return e;
   }, [image, resource, customImage]);
@@ -56,7 +64,7 @@ export const SpawnerFormProvider = ({ children }) => {
     setResource,
     touched,
     setTouched: setFieldTouched,
-    errors
+    errors,
   };
 
   return (

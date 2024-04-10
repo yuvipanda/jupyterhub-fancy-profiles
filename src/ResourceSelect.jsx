@@ -7,7 +7,8 @@ function ResourceSelect({ config }) {
   const { display_name, choices } = config;
 
   const { options, defaultOption } = useSelectOptions(choices);
-  const { setResource, profile, touched, setTouched, errors } = useContext(SpawnerFormContext);
+  const { setResource, profile, touched, setTouched, errors } =
+    useContext(SpawnerFormContext);
   const FIELD_ID = `profile-option-${profile.slug}--resource`;
   const hasError = errors[FIELD_ID] && touched[FIELD_ID];
 

@@ -33,7 +33,11 @@ function Form() {
       <ImageSelect config={image} />
       <ResourceSelect config={resources} />
       <div />
-      <button className="btn btn-jupyter form-control" type="submit" disabled={!canSubmit}>
+      <button
+        className="btn btn-jupyter form-control"
+        type="submit"
+        disabled={!canSubmit}
+      >
         Start
       </button>
     </div>

@@ -70,7 +70,7 @@ export function CustomizedSelect({ options, hasError, ...props }) {
       styles={{
         control: (baseStyles) => ({
           ...baseStyles,
-          borderColor: hasError ? 'red' : 'grey',
+          borderColor: hasError ? "red" : "grey",
         }),
       }}
       {...props}
