@@ -18,7 +18,6 @@ function Form() {
   const { image, resources } = profile.profile_options;
 
   const canSubmit = Object.keys(errors).length === 0;
-  console.log(canSubmit);
 
   return (
     <div className="form-grid">

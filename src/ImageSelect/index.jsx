@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CustomizedSelect } from "../CustomSelect";
+import { SelectField, TextField } from "../components/form/fields";
 import { ImageBuilder } from "./ImageBuilder";
 import useSelectOptions from "../hooks/useSelectOptions";
 import { SpawnerFormContext } from "../state";
@@ -37,57 +37,27 @@ function ImageSelect({ config }) {
     setTouched,
   } = useContext(SpawnerFormContext);
 
-  const imageError = errors[FIELD_ID] && touched[FIELD_ID];
-  const customImageError =
-    errors[FIELD_ID_UNLISTED] && touched[FIELD_ID_UNLISTED];
-
   return (
     <>
-      <div
-        className={`profile-option-container ${imageError ? "has-error" : ""}`}
-      >
-        <div className="profile-option-label-container">
-          <label htmlFor={FIELD_ID}>{display_name}</label>
-        </div>
-        <div className="profile-option-control-container">
-          <CustomizedSelect
-            options={options}
-            id={FIELD_ID}
-            defaultValue={defaultOption}
-            onChange={(e) => setImage(e.value)}
-            onBlur={() => setTouched(FIELD_ID, true)}
-          />
-          {imageError && (
-            <div className="profile-option-control-error">
-              {errors[FIELD_ID]}
-            </div>
-          )}
-        </div>
-      </div>
+      <SelectField
+        id={FIELD_ID}
+        label={display_name}
+        options={options}
+        defaultOption={defaultOption}
+        error={touched[FIELD_ID] && errors[FIELD_ID]}
+        onChange={(e) => setImage(e.value)}
+        onBlur={() => setTouched(FIELD_ID, true)}
+      />
       {image === "dockerImage" && (
-        <div
-          className={`profile-option-container ${customImageError ? "has-error" : ""}`}
-        >
-          <div className="profile-option-label-container">
-            <label htmlFor={FIELD_ID_UNLISTED}>Custom image</label>
-          </div>
-          <div className="profile-option-control-container">
-            {/* Save and restore the typed in value, so we don't lose it if the user selects another choice */}
-            <input
-              type="text"
-              id={FIELD_ID_UNLISTED}
-              value={customImage}
-              onChange={(e) => setCustomImage(e.target.value)}
-              onBlur={() => setTouched(FIELD_ID_UNLISTED, true)}
-              required
-            />
-            {customImageError && (
-              <div className="profile-option-control-error">
-                {errors[FIELD_ID_UNLISTED]}
-              </div>
-            )}
-          </div>
-        </div>
+        <TextField
+          id={FIELD_ID_UNLISTED}
+          label="Custom image"
+          value={customImage}
+          required
+          error={touched[FIELD_ID_UNLISTED] && errors[FIELD_ID_UNLISTED]}
+          onChange={(e) => setCustomImage(e.target.value)}
+          onBlur={() => setTouched(FIELD_ID_UNLISTED, true)}
+        />
       )}
       {image === "buildImage" && (
         <ImageBuilder name={FIELD_ID_UNLISTED} visible="true" />
