@@ -43,6 +43,7 @@ export function TextField({
   label,
   value,
   required,
+  pattern,
   error,
   onChange,
   onBlur,
@@ -53,6 +54,7 @@ export function TextField({
         type="text"
         id={id}
         value={value}
+        pattern={pattern}
         onChange={onChange}
         onBlur={onBlur}
         required={required}

@@ -44,12 +44,14 @@ export const SpawnerFormProvider = ({ children }) => {
     if (!image) {
       e[`profile-option-${profile.slug}--image`] = "Select an image";
     }
-    if (
-      !Object.keys(profile.profile_options.image.choices).includes(image) &&
-      !customImage
-    ) {
-      e[`profile-option-${profile.slug}--image--unlisted-choice`] =
-        "Provide a custom image.";
+    if (!Object.keys(profile.profile_options.image.choices).includes(image)) {
+      if (!customImage) {
+        e[`profile-option-${profile.slug}--image--unlisted-choice`] =
+          "Provide a custom image.";
+      } else if (!(/^.+:.+$/.test(customImage))) {
+        e[`profile-option-${profile.slug}--image--unlisted-choice`] =
+          "Must be a publicly available docker image, of form <image-name>:<tag>.";
+      }
     }
     return e;
   }, [image, resource, customImage]);

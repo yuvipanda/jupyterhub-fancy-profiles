@@ -54,6 +54,7 @@ function ImageSelect({ config }) {
           label="Custom image"
           value={customImage}
           required
+          pattern="^.+:.+$"
           error={touched[FIELD_ID_UNLISTED] && errors[FIELD_ID_UNLISTED]}
           onChange={(e) => setCustomImage(e.target.value)}
           onBlur={() => setTouched(FIELD_ID_UNLISTED, true)}
