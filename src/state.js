@@ -48,7 +48,7 @@ export const SpawnerFormProvider = ({ children }) => {
       if (!customImage) {
         e[`profile-option-${profile.slug}--image--unlisted-choice`] =
           "Provide a custom image.";
-      } else if (!(/^.+:.+$/.test(customImage))) {
+      } else if (!/^.+:.+$/.test(customImage)) {
         e[`profile-option-${profile.slug}--image--unlisted-choice`] =
           "Must be a publicly available docker image, of form <image-name>:<tag>.";
       }
