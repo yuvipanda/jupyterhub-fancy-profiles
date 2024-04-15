@@ -19,8 +19,26 @@
   text-align: right;
 }
 
+.profile-option-label-container legend {
+  font-size: 1em;
+  font-weight: bold;
+  border: 0;
+  padding: 0;
+}
+
 .profile-option-control-container {
   grid-column-start: 2;
+}
+
+.profile-option-control-radio {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.profile-option-control-radio > * {
+  font-weight: normal;
+  margin: 0 !important;
 }
 
 #submit-button {
