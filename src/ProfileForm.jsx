@@ -15,17 +15,18 @@ import { SpawnerFormContext } from "./state";
  */
 function Form() {
   // Currently, we only support a single profile, with many options.
-  const { profileList, profile, setProfile, errors } = useContext(SpawnerFormContext);
+  const { profileList, profile, setProfile, errors } =
+    useContext(SpawnerFormContext);
 
   const canSubmit = Object.keys(errors).length === 0;
 
   const profileOptions = useMemo(() => {
-    return profileList.map(({slug, display_name, description}) => {
+    return profileList.map(({ slug, display_name, description }) => {
       return {
         value: slug,
-        label: `${display_name} (${description})`
-      }
-    })
+        label: `${display_name} (${description})`,
+      };
+    });
   }, [profileList]);
 
   return (

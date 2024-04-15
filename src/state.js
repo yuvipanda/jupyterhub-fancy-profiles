@@ -1,4 +1,10 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export const SpawnerFormContext = createContext();
 
@@ -40,7 +46,7 @@ export const SpawnerFormProvider = ({ children }) => {
       if (!customImage) {
         e[`profile-option-${profile.slug}--image--unlisted-choice`] =
           "Provide a custom image.";
-      } else if (!(/^.+:.+$/.test(customImage))) {
+      } else if (!/^.+:.+$/.test(customImage)) {
         e[`profile-option-${profile.slug}--image--unlisted-choice`] =
           "Must be a publicly available docker image, of form <image-name>:<tag>.";
       }

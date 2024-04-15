@@ -63,27 +63,31 @@ export function TextField({
   );
 }
 
-export function RadioField({
-  id,
-  legend,
-  options,
-  onChange,
-  error
-}) {
+export function RadioField({ id, legend, options, onChange, error }) {
   return (
-    <fieldset className={`profile-option-container ${error ? "has-error" : ""}`}>
+    <fieldset
+      className={`profile-option-container ${error ? "has-error" : ""}`}
+    >
       <div className="profile-option-label-container">
-        <legend>{ legend }</legend>
+        <legend>{legend}</legend>
       </div>
       <div className="profile-option-control-container">
         {options.map(({ value, label }) => {
           const radioId = `${id}-${value}`;
           return (
             <div key={radioId} className="profile-option-control-radio">
-              <input type="radio" name="profile" id={radioId} value={value} onChange={onChange} />
-              <label htmlFor={radioId} key={radioId}>{ label }</label>
+              <input
+                type="radio"
+                name="profile"
+                id={radioId}
+                value={value}
+                onChange={onChange}
+              />
+              <label htmlFor={radioId} key={radioId}>
+                {label}
+              </label>
             </div>
-          )
+          );
         })}
 
         {error && <div className="profile-option-control-error">{error}</div>}
