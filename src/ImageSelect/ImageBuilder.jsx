@@ -1,7 +1,8 @@
+import { useEffect, useState, useContext } from "react";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import { useEffect, useState } from "react";
 import { BinderRepository } from "@jupyterhub/binderhub-client";
+import { SpawnerFormContext } from "../state";
 
 async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   const providerSpec = "gh/" + repo + "/" + ref;
@@ -89,9 +90,9 @@ function ImageLogs({ visible, setTerm, setFitAddon }) {
     </>
   );
 }
-export function ImageBuilder({ visible, unlistedInputName }) {
+export function ImageBuilder({ visible, name }) {
   const [repo, setRepo] = useState("");
-  const [builtImage, setBuiltImage] = useState(null);
+  const { customImage, setCustomImage } = useContext(SpawnerFormContext);
 
   // FIXME: Allow users to actually configure this
   const [ref, _] = useState("HEAD"); // eslint-disable-line no-unused-vars
@@ -132,15 +133,15 @@ export function ImageBuilder({ visible, unlistedInputName }) {
           value="Build image"
           onClick={async () => {
             await buildImage(repo, ref, term, fitAddon, (imageName) => {
-              setBuiltImage(imageName);
+              setCustomImage(imageName);
               term.write(
                 "\nImage has been built! Click the start button to launch your server",
               );
             });
           }}
         />
-        {visible && builtImage && (
-          <input name={unlistedInputName} type="hidden" value={builtImage} />
+        {visible && customImage && (
+          <input name={name} type="hidden" value={customImage} />
         )}
       </div>
 
