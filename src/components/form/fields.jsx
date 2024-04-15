@@ -62,3 +62,25 @@ export function TextField({
     </Field>
   );
 }
+
+export function RadioField({
+  id,
+  legend,
+  options,
+  onChange
+}) {
+  return (
+    <fieldset>
+      <legend>{ legend }</legend>
+      {options.map(({ value, label }) => {
+        const radioId = `${id}-${value}`;
+        return (
+          <div key={radioId}>
+            <input type="radio" name="profile" id={radioId} value={value} onChange={onChange} />
+            <label htmlFor={radioId} key={radioId}>{ label }</label>
+          </div>
+        )
+      })}
+    </fieldset>
+  );
+}

@@ -1,8 +1,9 @@
-import { createContext, useCallback, useMemo, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 
 export const SpawnerFormContext = createContext();
 
 function getDefaultOption(choices) {
+  if (!choices) return;
   return (
     Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
     Object.keys(choices)[0]
@@ -11,31 +12,22 @@ function getDefaultOption(choices) {
 
 export const SpawnerFormProvider = ({ children }) => {
   const profileList = window.profileList;
-  const profile = profileList[0];
-
-  const defaultImageKey = getDefaultOption(
-    profile.profile_options.image.choices,
-  );
-  const defaultResourceKey = getDefaultOption(
-    profile.profile_options.resources.choices,
-  );
-
-  const [image, setImage] = useState(defaultImageKey);
-  const [customImage, setCustomImage] = useState("");
-  const [resource, setResource] = useState(defaultResourceKey);
 
   const [touched, setTouched] = useState({});
-  const setFieldTouched = useCallback(
-    (fieldName, isTouched) => {
-      setTouched({
-        ...touched,
-        [fieldName]: isTouched,
-      });
-    },
-    [touched],
-  );
+  const [image, setImage] = useState();
+  const [customImage, setCustomImage] = useState("");
+  const [resource, setResource] = useState();
+
+  const [selectedProfile, setProfile] = useState();
+  const profile = useMemo(() => {
+    return profileList.find(({ slug }) => slug === selectedProfile);
+  }, [selectedProfile]);
 
   const errors = useMemo(() => {
+    if (!profile) {
+      return { profile: "Select a profile" };
+    }
+
     const e = {};
     if (!resource) {
       e[`profile-option-${profile.slug}--resouces`] =
@@ -54,10 +46,35 @@ export const SpawnerFormProvider = ({ children }) => {
       }
     }
     return e;
-  }, [image, resource, customImage]);
+  }, [profile, image, resource, customImage]);
+
+  useEffect(() => {
+    if (!profile) return;
+    const defaultImageKey = getDefaultOption(
+      profile?.profile_options.image.choices,
+    );
+    setImage(defaultImageKey);
+
+    const defaultResourceKey = getDefaultOption(
+      profile?.profile_options.resources.choices,
+    );
+    setResource(defaultResourceKey);
+  }, [profile]);
+
+  const setFieldTouched = useCallback(
+    (fieldName, isTouched) => {
+      setTouched({
+        ...touched,
+        [fieldName]: isTouched,
+      });
+    },
+    [touched],
+  );
 
   const value = {
+    profileList,
     profile,
+    setProfile,
     image,
     setImage,
     customImage,
