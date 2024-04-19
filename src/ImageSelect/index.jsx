@@ -19,12 +19,12 @@ const extraChoices = [
   },
 ];
 
-function ImageSelect({ config }) {
+function ImageSelect({ config, isActive }) {
   const { profile } = useContext(SpawnerFormContext);
-  const FIELD_ID = `profile-option-${profile.slug}--image`;
+  const FIELD_ID = `profile-option-${profile?.slug}--image`;
   const FIELD_ID_UNLISTED = `${FIELD_ID}--unlisted-choice`;
-  const { display_name, choices } = config;
 
+  const { display_name, choices } = config;
   const { options, defaultOption } = useSelectOptions(choices, extraChoices);
 
   const {
@@ -47,6 +47,7 @@ function ImageSelect({ config }) {
         error={touched[FIELD_ID] && errors[FIELD_ID]}
         onChange={(e) => setImage(e.value)}
         onBlur={() => setTouched(FIELD_ID, true)}
+        tabIndex={isActive ? "0" : "-1"}
       />
       {image === "dockerImage" && (
         <TextField
@@ -58,6 +59,7 @@ function ImageSelect({ config }) {
           error={touched[FIELD_ID_UNLISTED] && errors[FIELD_ID_UNLISTED]}
           onChange={(e) => setCustomImage(e.target.value)}
           onBlur={() => setTouched(FIELD_ID_UNLISTED, true)}
+          tabIndex={isActive ? "0" : "-1"}
         />
       )}
       {image === "buildImage" && (

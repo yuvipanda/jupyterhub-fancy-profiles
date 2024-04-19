@@ -1,4 +1,10 @@
-import { createContext, useCallback, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export const SpawnerFormContext = createContext();
 
@@ -11,18 +17,11 @@ function getDefaultOption(choices) {
 
 export const SpawnerFormProvider = ({ children }) => {
   const profileList = window.profileList;
-  const profile = profileList[0];
+  const [selectedProfile, setProfile] = useState();
 
-  const defaultImageKey = getDefaultOption(
-    profile.profile_options.image.choices,
-  );
-  const defaultResourceKey = getDefaultOption(
-    profile.profile_options.resources.choices,
-  );
-
-  const [image, setImage] = useState(defaultImageKey);
+  const [image, setImage] = useState();
   const [customImage, setCustomImage] = useState("");
-  const [resource, setResource] = useState(defaultResourceKey);
+  const [resource, setResource] = useState();
 
   const [touched, setTouched] = useState({});
   const setFieldTouched = useCallback(
@@ -35,29 +34,49 @@ export const SpawnerFormProvider = ({ children }) => {
     [touched],
   );
 
-  const errors = useMemo(() => {
-    const e = {};
-    if (!resource) {
-      e[`profile-option-${profile.slug}--resouces`] =
-        "Select the resouces allocation for your container.";
-    }
-    if (!image) {
-      e[`profile-option-${profile.slug}--image`] = "Select an image";
-    }
-    if (!Object.keys(profile.profile_options.image.choices).includes(image)) {
-      if (!customImage) {
-        e[`profile-option-${profile.slug}--image--unlisted-choice`] =
-          "Provide a custom image.";
-      } else if (!/^.+:.+$/.test(customImage)) {
-        e[`profile-option-${profile.slug}--image--unlisted-choice`] =
-          "Must be a publicly available docker image, of form <image-name>:<tag>.";
-      }
-    }
-    return e;
-  }, [image, resource, customImage]);
+  const profile = useMemo(() => {
+    return profileList.find(({ slug }) => slug === selectedProfile);
+  }, [selectedProfile]);
+
+  useEffect(() => {
+    if (!profile) return;
+    const defaultImageKey = getDefaultOption(
+      profile?.profile_options.image.choices,
+    );
+    setImage(defaultImageKey);
+
+    const defaultResourceKey = getDefaultOption(
+      profile?.profile_options.resources.choices,
+    );
+    setResource(defaultResourceKey);
+  }, [profile]);
+
+  // const errors = useMemo(() => {
+  //   const e = {};
+  //   if (!resource) {
+  //     e[`profile-option-${profile.slug}--resouces`] =
+  //       "Select the resouces allocation for your container.";
+  //   }
+  //   if (!image) {
+  //     e[`profile-option-${profile.slug}--image`] = "Select an image";
+  //   }
+  //   if (!Object.keys(profile.profile_options.image.choices).includes(image)) {
+  //     if (!customImage) {
+  //       e[`profile-option-${profile.slug}--image--unlisted-choice`] =
+  //         "Provide a custom image.";
+  //     } else if (!/^.+:.+$/.test(customImage)) {
+  //       e[`profile-option-${profile.slug}--image--unlisted-choice`] =
+  //         "Must be a publicly available docker image, of form <image-name>:<tag>.";
+  //     }
+  //   }
+  //   return e;
+  // }, [image, resource, customImage]);
+  const errors = {};
 
   const value = {
+    profileList,
     profile,
+    setProfile,
     image,
     setImage,
     customImage,

@@ -5,6 +5,20 @@
 
 /* Layout */
 
+.profile-select {
+  margin-bottom: 5rem;
+}
+
+.profile-select-radio {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profile-select-radio > * {
+  margin: 0 !important;
+}
+
 .profile-option-container {
   display: grid;
   grid-template-columns: 1fr 6fr;

@@ -23,6 +23,7 @@ export function SelectField({
   error,
   onChange,
   onBlur,
+  tabIndex,
 }) {
   return (
     <Field id={id} label={label} error={error}>
@@ -33,6 +34,7 @@ export function SelectField({
         defaultValue={defaultOption}
         onChange={onChange}
         onBlur={onBlur}
+        tabIndex={tabIndex}
       />
     </Field>
   );
@@ -47,6 +49,7 @@ export function TextField({
   error,
   onChange,
   onBlur,
+  tabIndex,
 }) {
   return (
     <Field id={id} label={label} error={error}>
@@ -58,6 +61,7 @@ export function TextField({
         onChange={onChange}
         onBlur={onBlur}
         required={required}
+        tabIndex={tabIndex}
       />
     </Field>
   );

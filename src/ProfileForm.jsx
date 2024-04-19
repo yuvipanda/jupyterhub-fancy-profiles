@@ -14,24 +14,54 @@ import { SpawnerFormContext } from "./state";
  */
 function Form() {
   // Currently, we only support a single profile, with many options.
-  const { profile, errors } = useContext(SpawnerFormContext);
-  const { image, resources } = profile.profile_options;
-
+  const {
+    profile: selectedProfile,
+    setProfile,
+    profileList,
+    errors,
+  } = useContext(SpawnerFormContext);
   const canSubmit = Object.keys(errors).length === 0;
 
   return (
-    <div className="form-grid">
+    <fieldset
+      aria-label="Select profile"
+      aria-description="First, select the profile; second, configure the options for the selected profile."
+    >
       <input
         type="radio"
         className="hidden"
         name="profile"
-        value={profile.slug}
+        value={selectedProfile?.slug}
         checked
         readOnly
       />
-      <ImageSelect config={image} />
-      <ResourceSelect config={resources} />
-      <div />
+      {profileList.map((profile) => {
+        const { display_name, description, profile_options, slug } = profile;
+        const { image, resources } = profile_options;
+
+        const isActive = !!selectedProfile && selectedProfile.slug === slug;
+
+        return (
+          <div key={slug} className="profile-select">
+            <div className="profile-select-radio">
+              <input
+                type="radio"
+                name="select-profile"
+                id={`profile-option-${slug}`}
+                value={slug}
+                onChange={() => setProfile(slug)}
+              />
+              <label htmlFor={`profile-option-${slug}`}>
+                {display_name} ({description})
+              </label>
+            </div>
+            <div className="form-grid">
+              <ImageSelect config={image} isActive={isActive} />
+              <ResourceSelect config={resources} isActive={isActive} />
+            </div>
+          </div>
+        );
+      })}
       <button
         className="btn btn-jupyter form-control"
         type="submit"
@@ -39,7 +69,7 @@ function Form() {
       >
         Start
       </button>
-    </div>
+    </fieldset>
   );
 }
 
