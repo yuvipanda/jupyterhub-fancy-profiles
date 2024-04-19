@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 
-function useSelectOptions(choices, extraChoices = []) {
+function useSelectOptions(config) {
+  const { choices, unlisted_choice } = config;
+
   const options = useMemo(() => {
     const defaultChoices = Object.keys(choices).map((choiceName) => {
       return {
@@ -9,6 +11,16 @@ function useSelectOptions(choices, extraChoices = []) {
         description: choices[choiceName].description,
       };
     });
+
+    const extraChoices = [];
+    if (unlisted_choice?.enabled) {
+      console.log(unlisted_choice);
+      extraChoices.push({
+        value: 'unlisted_choice',
+        label: unlisted_choice.display_name_in_choices,
+        description: unlisted_choice.description_in_choices,
+      })
+    }
 
     return [...defaultChoices, ...extraChoices];
   }, [choices]);

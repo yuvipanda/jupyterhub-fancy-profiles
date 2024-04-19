@@ -2,9 +2,8 @@ import { useContext } from "react";
 import "../node_modules/xterm/css/xterm.css";
 
 import "./form.css";
-import ImageSelect from "./ImageSelect";
-import ResourceSelect from "./ResourceSelect";
 import { SpawnerFormContext } from "./state";
+import { ProfileOptions } from "./ProfileOptions";
 
 /**
  * Generates the *contents* of the form shown in the profile selection page
@@ -37,9 +36,6 @@ function Form() {
       />
       {profileList.map((profile) => {
         const { display_name, description, profile_options, slug } = profile;
-        const { image, resources } = profile_options;
-
-        const isActive = !!selectedProfile && selectedProfile.slug === slug;
 
         return (
           <div key={slug} className="profile-select">
@@ -55,10 +51,7 @@ function Form() {
                 {display_name} ({description})
               </label>
             </div>
-            <div className="form-grid">
-              <ImageSelect config={image} isActive={isActive} />
-              <ResourceSelect config={resources} isActive={isActive} />
-            </div>
+            <ProfileOptions profile={slug} config={profile_options} />
           </div>
         );
       })}
