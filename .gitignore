@@ -164,3 +164,12 @@ node_modules/
 
 # Built files should not be in the package
 static/dist/
+
+#Jupytherhub configs
+bin
+jupyterhub_fancy_profiles
+share
+jupyterhub_cookie_secret
+jupyterhub-proxy.pid
+jupyterhub.sqlite
+pyvenv.cfg
