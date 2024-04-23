@@ -14,7 +14,6 @@ function useSelectOptions(config) {
 
     const extraChoices = [];
     if (unlisted_choice?.enabled) {
-      console.log(unlisted_choice);
       extraChoices.push({
         value: "unlisted_choice",
         label: unlisted_choice.display_name_in_choices,

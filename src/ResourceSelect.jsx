@@ -15,6 +15,10 @@ function ResourceSelect({ id, profile, config }) {
   const [value, setValue] = useState(defaultOption.value);
   const [unlistedChoiceValue, setUnlistedChoiceValue] = useState("");
 
+  if (!options.length > 0) {
+    return null;
+  }
+
   return (
     <>
       <SelectField
