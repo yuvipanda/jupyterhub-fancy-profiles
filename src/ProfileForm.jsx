@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import "../node_modules/xterm/css/xterm.css";
 
 import "./form.css";
@@ -17,15 +17,29 @@ function Form() {
     profile: selectedProfile,
     setProfile,
     profileList,
-    errors,
   } = useContext(SpawnerFormContext);
-  const canSubmit = Object.keys(errors).length === 0;
+
+  const [formError, setFormError] = useState("");
+
+  const handleSubmit = (e) => {
+    const form = e.target.closest("form");
+
+    // validate the form
+    const formIsValid = form.checkValidity();
+
+    // prevent form submit
+    if (!formIsValid) {
+      setFormError(!selectedProfile ? "Select a container profile" : "");
+      e.preventDefault();
+    }
+  };
 
   return (
     <fieldset
       aria-label="Select profile"
       aria-description="First, select the profile; second, configure the options for the selected profile."
     >
+      {formError && <div className="profile-form-error">{formError}</div>}
       <input
         type="radio"
         className="hidden"
@@ -46,6 +60,7 @@ function Form() {
                 id={`profile-option-${slug}`}
                 value={slug}
                 onChange={() => setProfile(slug)}
+                required
               />
               <label htmlFor={`profile-option-${slug}`}>
                 {display_name} ({description})
@@ -58,7 +73,7 @@ function Form() {
       <button
         className="btn btn-jupyter form-control"
         type="submit"
-        disabled={!canSubmit}
+        onClick={handleSubmit}
       >
         Start
       </button>

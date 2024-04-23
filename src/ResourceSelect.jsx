@@ -1,19 +1,19 @@
 import { useContext, useState } from "react";
 import useSelectOptions from "./hooks/useSelectOptions";
 import { SpawnerFormContext } from "./state";
-import { SelectField, TextField} from "./components/form/fields";
+import { SelectField, TextField } from "./components/form/fields";
 
-function ResourceSelect({ id, profile, config, isActive }) {
-  const { display_name } = config;
+function ResourceSelect({ id, profile, config }) {
+  const { display_name, unlisted_choice } = config;
 
   const { options, defaultOption } = useSelectOptions(config);
-  const { touched, setTouched, errors } =
-    useContext(SpawnerFormContext);
+  const { profile: selectedProfile } = useContext(SpawnerFormContext);
   const FIELD_ID = `profile-option-${profile}--${id}`;
   const FIELD_ID_UNLISTED = `${FIELD_ID}--unlisted-choice`;
 
+  const isActive = selectedProfile?.slug === profile;
   const [value, setValue] = useState(defaultOption.value);
-  const [unlistedChoiceValue, setUnlistedChoiceValue] = useState();
+  const [unlistedChoiceValue, setUnlistedChoiceValue] = useState("");
 
   return (
     <>
@@ -22,21 +22,30 @@ function ResourceSelect({ id, profile, config, isActive }) {
         label={display_name}
         options={options}
         defaultOption={defaultOption}
-        error={touched[FIELD_ID] && errors[FIELD_ID]}
+        value={value}
         onChange={(e) => setValue(e.value)}
-        onBlur={() => setTouched(FIELD_ID, true)}
         tabIndex={isActive ? "0" : "-1"}
+        validate={
+          isActive && {
+            required: "Select a value.",
+          }
+        }
       />
       {value === "unlisted_choice" && (
         <TextField
           id={FIELD_ID_UNLISTED}
-          label="Custom image"
+          label={unlisted_choice.display_name}
           value={unlistedChoiceValue}
-          required
-          pattern="^.+:.+$"
-          error={touched[FIELD_ID_UNLISTED] && errors[FIELD_ID_UNLISTED]}
+          validate={
+            isActive && {
+              required: "Enter a value.",
+              pattern: {
+                value: unlisted_choice.validation_regex,
+                message: unlisted_choice.validation_message,
+              },
+            }
+          }
           onChange={(e) => setUnlistedChoiceValue(e.target.value)}
-          onBlur={() => setTouched(FIELD_ID_UNLISTED, true)}
           tabIndex={isActive ? "0" : "-1"}
         />
       )}

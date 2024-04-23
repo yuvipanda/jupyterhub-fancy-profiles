@@ -1,4 +1,23 @@
+import { useState } from "react";
+
 import { CustomizedSelect } from "./CustomSelect";
+
+function validateField(value, validateConfig, touched) {
+  if (!touched) return;
+
+  if (validateConfig.required && !value) {
+    return validateConfig.required;
+  }
+
+  if (
+    validateConfig.pattern &&
+    !new RegExp(validateConfig.pattern.value, "g").test(value)
+  ) {
+    return validateConfig.pattern.message;
+  }
+
+  return;
+}
 
 function Field({ id, label, children, error }) {
   return (
@@ -20,11 +39,17 @@ export function SelectField({
   label,
   options,
   defaultOption,
-  error,
   onChange,
-  onBlur,
+  value,
+  validate,
   tabIndex,
 }) {
+  const [touched, setTouched] = useState(false);
+  const onBlur = () => setTouched(true);
+
+  const required = !!validate.required;
+  const error = validateField(value, validate, touched);
+
   return (
     <Field id={id} label={label} error={error}>
       <CustomizedSelect
@@ -35,6 +60,8 @@ export function SelectField({
         onChange={onChange}
         onBlur={onBlur}
         tabIndex={tabIndex}
+        required={required}
+        aria-invalid={!!error}
       />
     </Field>
   );
@@ -44,15 +71,19 @@ export function TextField({
   id,
   label,
   value,
-  required,
-  pattern,
-  error,
+  validate = {},
   onChange,
-  onBlur,
   tabIndex,
 }) {
+  const [touched, setTouched] = useState(false);
+  const onBlur = () => setTouched(true);
+
+  const required = !!validate.required;
+  const pattern = validate.pattern?.value;
+  const error = validateField(value, validate, touched);
+
   return (
-    <Field id={id} label={label} error={error}>
+    <Field id={id} label={label} error={touched && error}>
       <input
         type="text"
         id={id}
@@ -62,6 +93,8 @@ export function TextField({
         onBlur={onBlur}
         required={required}
         tabIndex={tabIndex}
+        aria-invalid={!!error}
+        onInvalid={() => setTouched(true)}
       />
     </Field>
   );

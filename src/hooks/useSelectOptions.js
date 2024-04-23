@@ -16,10 +16,10 @@ function useSelectOptions(config) {
     if (unlisted_choice?.enabled) {
       console.log(unlisted_choice);
       extraChoices.push({
-        value: 'unlisted_choice',
+        value: "unlisted_choice",
         label: unlisted_choice.display_name_in_choices,
         description: unlisted_choice.description_in_choices,
-      })
+      });
     }
 
     return [...defaultChoices, ...extraChoices];

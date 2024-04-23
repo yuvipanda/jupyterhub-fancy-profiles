@@ -71,6 +71,11 @@
   margin-top: 0.5rem;
 }
 
+.profile-form-error {
+  color: red;
+  margin-bottom: 1rem;
+}
+
 /* react-select styling */
 .react-select-item-container.react-select-item-menu-display.react-select-item-selected
   .react-select-item-description {
