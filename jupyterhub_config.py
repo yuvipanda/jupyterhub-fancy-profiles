@@ -133,59 +133,5 @@ c.KubeSpawner.profile_list = [
                 },
             },
         },
-    },
-    {
-        "display_name": "Big",
-        "description": "~4 CPU, ~16G RAM",
-        "profile_options": {
-            "image": {
-                "display_name": "Image",
-                "choices": {
-                    "pangeo": {
-                        "display_name": "Pangeo Notebook Image",
-                        "description": "Python image with scientific, dask and geospatial tools",
-                        "kubespawner_override": {
-                            "image": "pangeo/pangeo-notebook:2023.09.11"
-                        },
-                    },
-                    "geospatial": {
-                        "display_name": "Rocker Geospatial",
-                        "description": "R image with RStudio, the tidyverse & Geospatial tools",
-                        "default": True,
-                        "slug": "geospatial",
-                        "kubespawner_override": {
-                            "image": "rocker/binder:4.3",
-                            "default_url": "/rstudio",
-                            "working_dir": "/home/rstudio",
-                        },
-                    },
-                },
-            },
-            "resources": {
-                "display_name": "Resource Allocation",
-                "choices": {
-                    "mem_2_7": {
-                        "display_name": "2.7 GB RAM, upto 3.479 CPUs",
-                        "description": "Use this for the workshop on 2023 September",
-                        "kubespawner_override": {
-                            "mem_guarantee": 1024,
-                            "mem_limit": 2904451072,
-                            "cpu_guarantee": 0.1,
-                            "cpu_limit": 3.479,
-                        },
-                        "default": True,
-                    },
-                    "mem_5_4": {
-                        "display_name": "5.4 GB RAM, upto 3.479 CPUs",
-                        "kubespawner_override": {
-                            "mem_guarantee": 1024,
-                            "mem_limit": 5808902144,
-                            "cpu_guarantee": 0.1,
-                            "cpu_limit": 3.479,
-                        },
-                    },
-                },
-            },
-        },
     }
 ]

@@ -1,5 +1,5 @@
 import ResourceSelect from "./ResourceSelect";
-import { ImageBuilder } from "./ImageSelect/ImageBuilder";
+import { ImageBuilder } from "./ImageBuilder";
 
 export function ProfileOptions({ config, profile }) {
   return (
