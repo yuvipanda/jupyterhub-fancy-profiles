@@ -76,6 +76,10 @@
   margin-bottom: 1rem;
 }
 
+.btn-jupyter {
+  margin-top: 0.5rem;
+}
+
 /* react-select styling */
 .react-select-item-container.react-select-item-menu-display.react-select-item-selected
   .react-select-item-description {

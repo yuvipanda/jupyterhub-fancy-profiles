@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-function useSelectOptions(config) {
+function useSelectOptions(config, customOptions = []) {
   const { choices, unlisted_choice } = config;
 
   const options = useMemo(() => {
@@ -21,7 +21,7 @@ function useSelectOptions(config) {
       });
     }
 
-    return [...defaultChoices, ...extraChoices];
+    return [...defaultChoices, ...extraChoices, ...customOptions];
   }, [choices]);
 
   const defaultChoiceName =
