@@ -41,7 +41,7 @@ export function SelectField({
   defaultOption,
   onChange,
   value,
-  validate,
+  validate = {},
   tabIndex,
 }) {
   const [touched, setTouched] = useState(false);
@@ -62,6 +62,7 @@ export function SelectField({
         tabIndex={tabIndex}
         required={required}
         aria-invalid={!!error}
+        aria-label={label}
       />
     </Field>
   );

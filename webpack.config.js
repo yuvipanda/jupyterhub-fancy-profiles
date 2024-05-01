@@ -19,7 +19,7 @@ module.exports = {
     ],
   },
   output: {
-    publicPath: "/",
+    publicPath: "/hub/fancy-profiles/static/dist/",
     filename: "form.js",
     path: path.resolve(__dirname, "jupyterhub_fancy_profiles/static/dist/"),
   },
