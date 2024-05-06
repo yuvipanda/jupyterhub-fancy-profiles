@@ -22,7 +22,7 @@ function Form() {
   const [formError, setFormError] = useState("");
 
   const handleSubmit = (e) => {
-    setFormError('');
+    setFormError("");
     const form = e.target.closest("form");
 
     // validate the form
@@ -38,8 +38,8 @@ function Form() {
   const handleProfileSelect = (e) => {
     const slug = e.target.value;
     setProfile(slug);
-    setFormError('');
-  }
+    setFormError("");
+  };
 
   return (
     <fieldset
