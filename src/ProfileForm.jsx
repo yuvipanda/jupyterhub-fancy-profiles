@@ -22,6 +22,7 @@ function Form() {
   const [formError, setFormError] = useState("");
 
   const handleSubmit = (e) => {
+    setFormError('');
     const form = e.target.closest("form");
 
     // validate the form
@@ -33,6 +34,12 @@ function Form() {
       e.preventDefault();
     }
   };
+
+  const handleProfileSelect = (e) => {
+    const slug = e.target.value;
+    setProfile(slug);
+    setFormError('');
+  }
 
   return (
     <fieldset
@@ -59,7 +66,7 @@ function Form() {
                 name="select-profile"
                 id={`profile-option-${slug}`}
                 value={slug}
-                onChange={() => setProfile(slug)}
+                onChange={handleProfileSelect}
                 required
               />
               <label htmlFor={`profile-option-${slug}`}>
