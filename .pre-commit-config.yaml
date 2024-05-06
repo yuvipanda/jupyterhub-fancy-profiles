@@ -63,11 +63,11 @@ repos:
         files: \.jsx?$
         types: [file]
         exclude: jupyterhub_fancy_profiles/static
-        # additional_dependencies:
+        additional_dependencies:
           # Duplicated from package.json's devDependencies, otherwise pre-commit.ci
           # does not like it
           # - eslint
-          # - eslint-plugin-react
+          - eslint-plugin-react
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:
