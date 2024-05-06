@@ -1,26 +1,64 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import useSelectOptions from "./hooks/useSelectOptions";
 import { SpawnerFormContext } from "./state";
-import { SelectField } from "./components/form/fields";
+import { SelectField, TextField } from "./components/form/fields";
 
-function ResourceSelect({ config }) {
-  const { display_name, choices } = config;
+function ResourceSelect({ id, profile, config, customOptions = [] }) {
+  const { display_name, unlisted_choice } = config;
 
-  const { options, defaultOption } = useSelectOptions(choices);
-  const { setResource, profile, touched, setTouched, errors } =
-    useContext(SpawnerFormContext);
-  const FIELD_ID = `profile-option-${profile.slug}--resource`;
+  const { options, defaultOption } = useSelectOptions(config, customOptions);
+  const { profile: selectedProfile } = useContext(SpawnerFormContext);
+  const FIELD_ID = `profile-option-${profile}--${id}`;
+  const FIELD_ID_UNLISTED = `${FIELD_ID}--unlisted-choice`;
+
+  const isActive = selectedProfile?.slug === profile;
+  const [value, setValue] = useState(defaultOption.value);
+  const [unlistedChoiceValue, setUnlistedChoiceValue] = useState("");
+
+  if (!options.length > 0) {
+    return null;
+  }
+
+  const selectedCustomOption = customOptions.find((opt) => opt.value === value);
 
   return (
-    <SelectField
-      id={FIELD_ID}
-      label={display_name}
-      options={options}
-      defaultOption={defaultOption}
-      error={touched[FIELD_ID] && errors[FIELD_ID]}
-      onChange={(e) => setResource(e.value)}
-      onBlur={() => setTouched(FIELD_ID, true)}
-    />
+    <>
+      <SelectField
+        id={FIELD_ID}
+        label={display_name}
+        options={options}
+        defaultOption={defaultOption}
+        value={value}
+        onChange={(e) => setValue(e.value)}
+        tabIndex={isActive ? "0" : "-1"}
+        validate={
+          isActive && {
+            required: "Select a value.",
+          }
+        }
+      />
+      {value === "unlisted_choice" && (
+        <TextField
+          id={FIELD_ID_UNLISTED}
+          label={unlisted_choice.display_name}
+          value={unlistedChoiceValue}
+          validate={
+            isActive && {
+              required: "Enter a value.",
+              pattern: {
+                value: unlisted_choice.validation_regex,
+                message: unlisted_choice.validation_message,
+              },
+            }
+          }
+          onChange={(e) => setUnlistedChoiceValue(e.target.value)}
+          tabIndex={isActive ? "0" : "-1"}
+        />
+      )}
+      {!!selectedCustomOption && (
+        <selectedCustomOption.component name={FIELD_ID_UNLISTED} />
+      )}
+    </>
   );
 }
 

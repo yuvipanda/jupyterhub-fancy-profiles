@@ -1,8 +1,7 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { BinderRepository } from "@jupyterhub/binderhub-client";
-import { SpawnerFormContext } from "../state";
 
 async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   const providerSpec = "gh/" + repo + "/" + ref;
@@ -52,7 +51,7 @@ async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   }
 }
 
-function ImageLogs({ visible, setTerm, setFitAddon }) {
+function ImageLogs({ setTerm, setFitAddon }) {
   useEffect(function () {
     const term = new Terminal({
       convertEol: true,
@@ -72,32 +71,41 @@ function ImageLogs({ visible, setTerm, setFitAddon }) {
   }, []);
 
   return (
-    <>
-      <div
-        className={`profile-option-label-container ${visible ? "" : "hidden"}`}
-      >
-        <label>Build Logs</label>
+    <div className="profile-option-container">
+      <div className="profile-option-label-container">
+        <b>Build Logs</b>
       </div>
-      <div
-        className={`profile-option-control-container ${
-          visible ? "" : "hidden"
-        }`}
-      >
+      <div className="profile-option-control-container">
         <div className="terminal-container">
           <div id="terminal"></div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
-export function ImageBuilder({ visible, name }) {
+export function ImageBuilder({ name }) {
   const [repo, setRepo] = useState("");
-  const { customImage, setCustomImage } = useContext(SpawnerFormContext);
+  const [customImage, setCustomImage] = useState("");
+  const [error, setError] = useState("");
 
   // FIXME: Allow users to actually configure this
   const [ref, _] = useState("HEAD"); // eslint-disable-line no-unused-vars
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
+
+  const handleBuildStart = async () => {
+    if (!repo) {
+      setError("Provide a Github repository.");
+      return;
+    }
+
+    await buildImage(repo, ref, term, fitAddon, (imageName) => {
+      setCustomImage(imageName);
+      term.write(
+        "\nImage has been built! Click the start button to launch your server",
+      );
+    });
+  };
 
   // We render everything, but only toggle visibility based on wether we are being
   // shown or hidden. This provides for more DOM stability, and also allows the image
@@ -105,51 +113,29 @@ export function ImageBuilder({ visible, name }) {
   // don't generate the hidden input that posts the built image out.
   return (
     <>
-      <div
-        className={`profile-option-label-container ${visible ? "" : "hidden"}`}
-      >
-        <label>GitHub Repository</label>
+      <div className={`profile-option-container ${error ? "has-error" : ""}`}>
+        <div className="profile-option-label-container">
+          <label htmlFor="github-repo">GitHub Repository</label>
+        </div>
+        <div className="profile-option-control-container">
+          <input
+            id="github-repo"
+            type="text"
+            value={repo}
+            onChange={(e) => setRepo(e.target.value)}
+          />
+          {error && <div className="profile-option-control-error">{error}</div>}
+          <button
+            type="button"
+            className="btn btn-jupyter pull-right"
+            onClick={handleBuildStart}
+          >
+            Build image
+          </button>
+        </div>
+        <input name={name} type="hidden" value={customImage} />
       </div>
-      <div
-        className={`profile-option-control-container ${
-          visible ? "" : "hidden"
-        }`}
-      >
-        <input
-          type="text"
-          value={repo}
-          onChange={(e) => setRepo(e.target.value)}
-        ></input>
-      </div>
-      <div
-        className={`profile-option-control-container ${
-          visible ? "" : "hidden"
-        }`}
-      >
-        <input
-          type="button"
-          id="build-image"
-          className="btn btn-jupyter pull-right"
-          value="Build image"
-          onClick={async () => {
-            await buildImage(repo, ref, term, fitAddon, (imageName) => {
-              setCustomImage(imageName);
-              term.write(
-                "\nImage has been built! Click the start button to launch your server",
-              );
-            });
-          }}
-        />
-        {visible && customImage && (
-          <input name={name} type="hidden" value={customImage} />
-        )}
-      </div>
-
-      <ImageLogs
-        visible={visible}
-        setFitAddon={setFitAddon}
-        setTerm={setTerm}
-      />
+      <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
     </>
   );
 }

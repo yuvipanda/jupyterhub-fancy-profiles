@@ -1,72 +1,19 @@
-import { createContext, useCallback, useMemo, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 
 export const SpawnerFormContext = createContext();
 
-function getDefaultOption(choices) {
-  return (
-    Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
-    Object.keys(choices)[0]
-  );
-}
-
 export const SpawnerFormProvider = ({ children }) => {
   const profileList = window.profileList;
-  const profile = profileList[0];
+  const [selectedProfile, setProfile] = useState();
 
-  const defaultImageKey = getDefaultOption(
-    profile.profile_options.image.choices,
-  );
-  const defaultResourceKey = getDefaultOption(
-    profile.profile_options.resources.choices,
-  );
-
-  const [image, setImage] = useState(defaultImageKey);
-  const [customImage, setCustomImage] = useState("");
-  const [resource, setResource] = useState(defaultResourceKey);
-
-  const [touched, setTouched] = useState({});
-  const setFieldTouched = useCallback(
-    (fieldName, isTouched) => {
-      setTouched({
-        ...touched,
-        [fieldName]: isTouched,
-      });
-    },
-    [touched],
-  );
-
-  const errors = useMemo(() => {
-    const e = {};
-    if (!resource) {
-      e[`profile-option-${profile.slug}--resouces`] =
-        "Select the resouces allocation for your container.";
-    }
-    if (!image) {
-      e[`profile-option-${profile.slug}--image`] = "Select an image";
-    }
-    if (!Object.keys(profile.profile_options.image.choices).includes(image)) {
-      if (!customImage) {
-        e[`profile-option-${profile.slug}--image--unlisted-choice`] =
-          "Provide a custom image.";
-      } else if (!/^.+:.+$/.test(customImage)) {
-        e[`profile-option-${profile.slug}--image--unlisted-choice`] =
-          "Must be a publicly available docker image, of form <image-name>:<tag>.";
-      }
-    }
-    return e;
-  }, [image, resource, customImage]);
+  const profile = useMemo(() => {
+    return profileList.find(({ slug }) => slug === selectedProfile);
+  }, [selectedProfile]);
 
   const value = {
+    profileList,
     profile,
-    image,
-    setImage,
-    customImage,
-    setCustomImage,
-    resource,
-    setResource,
-    touched,
-    setTouched: setFieldTouched,
-    errors,
+    setProfile,
   };
 
   return (
