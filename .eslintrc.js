@@ -30,5 +30,11 @@ module.exports = {
   ignorePatterns: [
     "jupyterhub_fancy_profiles/static/*.js",
     "webpack.config.js",
+    "babel.config.js",
   ],
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
 };
