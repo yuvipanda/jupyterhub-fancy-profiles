@@ -95,4 +95,68 @@ window.profileList = [
       },
     },
   },
+  {
+    slug: "big",
+    display_name: "Big",
+    description: "~16 CPU, ~512G RAM",
+    profile_options: {
+      image: {
+        display_name: "Image - Big",
+        choices: {
+          pangeo: {
+            display_name: "Pangeo Notebook Image",
+            description:
+              "Python image with scientific, dask and geospatial tools",
+            kubespawner_override: {
+              image: "pangeo/pangeo-notebook:2023.09.11",
+            },
+          },
+          geospatial: {
+            display_name: "Rocker Geospatial",
+            description:
+              "R image with RStudio, the tidyverse & Geospatial tools",
+            default: true,
+            slug: "geospatial",
+            kubespawner_override: {
+              image: "rocker/binder:4.3",
+              default_url: "/rstudio",
+              working_dir: "/home/rstudio",
+            },
+          },
+          scipy: {
+            display_name: "Jupyter SciPy Notebook",
+            slug: "scipy",
+            kubespawner_override: {
+              image: "jupyter/scipy-notebook:2023-06-26",
+            },
+          },
+        },
+      },
+      resources: {
+        display_name: "Resource Allocation - Big",
+        choices: {
+          mem_2_7: {
+            display_name: "3.7 GB RAM, upto 4.479 CPUs",
+            description: "Use this for the workshop on 2023 September",
+            kubespawner_override: {
+              mem_guarantee: 1024,
+              mem_limit: 2904451072,
+              cpu_guarantee: 0.1,
+              cpu_limit: 3.479,
+            },
+            default: true,
+          },
+          mem_5_4: {
+            display_name: "8.4 GB RAM, upto 3.479 CPUs",
+            kubespawner_override: {
+              mem_guarantee: 1024,
+              mem_limit: 5808902144,
+              cpu_guarantee: 0.1,
+              cpu_limit: 3.479,
+            },
+          },
+        },
+      },
+    },
+  },
 ];

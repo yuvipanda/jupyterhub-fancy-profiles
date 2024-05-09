@@ -115,3 +115,34 @@ test("custom image field accepts specific format", async () => {
     ),
   ).not.toBeInTheDocument();
 });
+
+test("Multiple profiles renders", async () => {
+  const user = userEvent.setup();
+
+  render(
+    <SpawnerFormProvider>
+      <ProfileForm />
+    </SpawnerFormProvider>,
+  );
+
+  const radio = screen.getByRole("radio", { name: "Big (~16 CPU, ~512G RAM)" });
+  await user.click(radio);
+
+  expect(screen.getByLabelText("Image - Big").tabIndex).toEqual(0);
+  expect(screen.getByLabelText("Resource Allocation - Big").tabIndex).toEqual(
+    0,
+  );
+
+  const smallImageField = screen.getByLabelText("Image");
+  await user.click(smallImageField);
+  await user.click(screen.getByText("Specify an existing docker image"));
+
+  const customImageField = screen.getByLabelText("Custom image");
+  await user.click(customImageField);
+  await user.click(document.body);
+
+  expect(screen.queryByText("Enter a value.")).not.toBeInTheDocument();
+
+  expect(smallImageField.tabIndex).toEqual(-1);
+  expect(screen.getByLabelText("Resource Allocation").tabIndex).toEqual(-1);
+});
