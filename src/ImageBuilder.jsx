@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Terminal } from "xterm";
-import { FitAddon } from "xterm-addon-fit";
-import { BinderRepository } from "@jupyterhub/binderhub-client";
 
 async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
+  const { BinderRepository } = await import("@jupyterhub/binderhub-client");
   const providerSpec = "gh/" + repo + "/" + ref;
   // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
   const buildEndPointURL = new URL(
@@ -52,22 +50,27 @@ async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
 }
 
 function ImageLogs({ setTerm, setFitAddon }) {
-  useEffect(function () {
-    const term = new Terminal({
-      convertEol: true,
-      disableStdin: true,
-      // 60 cols is pretty small, but unfortunately we have very limited width
-      // available in our form!
-      cols: 66,
-      rows: 1,
-    });
-    const fitAddon = new FitAddon();
-    term.loadAddon(fitAddon);
-    term.open(document.getElementById("terminal"));
-    fitAddon.fit();
-    setTerm(term);
-    setFitAddon(fitAddon);
-    term.write("Logs will appear here when image is being built");
+  useEffect(() => {
+    async function setup() {
+      const { Terminal } = await import("xterm");
+      const { FitAddon } = await import("xterm-addon-fit");
+      const term = new Terminal({
+        convertEol: true,
+        disableStdin: true,
+        // 60 cols is pretty small, but unfortunately we have very limited width
+        // available in our form!
+        cols: 66,
+        rows: 1,
+      });
+      const fitAddon = new FitAddon();
+      term.loadAddon(fitAddon);
+      term.open(document.getElementById("terminal"));
+      fitAddon.fit();
+      setTerm(term);
+      setFitAddon(fitAddon);
+      term.write("Logs will appear here when image is being built");
+    }
+    setup();
   }, []);
 
   return (
