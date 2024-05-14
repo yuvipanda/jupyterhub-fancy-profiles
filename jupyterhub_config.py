@@ -46,8 +46,8 @@ setup_ui(c)
 # Provide an example profile with various options in use
 c.KubeSpawner.profile_list = [
     {
-        "display_name": "Small",
-        "description": "~2 CPU, ~2G RAM",
+        "display_name": "CPU only usage",
+        "description": "For use with just CPU, no GPU",
         "profile_options": {
             "image": {
                 "display_name": "Image",

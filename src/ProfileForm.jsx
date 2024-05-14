@@ -69,8 +69,12 @@ function Form() {
                 onChange={handleProfileSelect}
                 required
               />
-              <label htmlFor={`profile-option-${slug}`}>
-                {display_name} ({description})
+              <label
+                htmlFor={`profile-option-${slug}`}
+                className="profile-select-label"
+              >
+                <h4>{display_name}</h4>
+                {description}
               </label>
             </div>
             <ProfileOptions profile={slug} config={profile_options} />

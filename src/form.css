@@ -9,6 +9,10 @@
   margin-bottom: 5rem;
 }
 
+.profile-select-label {
+  font-weight: normal;
+}
+
 .profile-select-radio {
   display: flex;
   gap: 1rem;
