@@ -73,8 +73,10 @@ function Form() {
                 htmlFor={`profile-option-${slug}`}
                 className="profile-select-label"
               >
-                <h4>{display_name}</h4>
-                <p>{description}</p>
+                <span className="profile-select-label-heading">
+                  {display_name}
+                </span>
+                <span>{description}</span>
               </label>
 
               <ProfileOptions profile={slug} config={profile_options} />
