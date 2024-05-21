@@ -7,6 +7,24 @@
 
 .profile-select {
   margin-bottom: 5rem;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #ccc;
+}
+
+.profile-select-body {
+  margin-left: 3rem;
+}
+
+.profile-select-body label {
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+
+.profile-select-label-heading {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .profile-select-radio {
@@ -29,8 +47,6 @@
 .profile-option-label-container {
   grid-column-start: 1;
   align-self: start;
-  justify-self: right;
-  text-align: right;
 }
 
 .profile-option-control-container {

@@ -60,20 +60,27 @@ function Form() {
 
         return (
           <div key={slug} className="profile-select">
-            <div className="profile-select-radio">
-              <input
-                type="radio"
-                name="select-profile"
-                id={`profile-option-${slug}`}
-                value={slug}
-                onChange={handleProfileSelect}
-                required
-              />
-              <label htmlFor={`profile-option-${slug}`}>
-                {display_name} ({description})
+            <input
+              type="radio"
+              name="select-profile"
+              id={`profile-option-${slug}`}
+              value={slug}
+              onChange={handleProfileSelect}
+              required
+            />
+            <div className="profile-select-body">
+              <label
+                htmlFor={`profile-option-${slug}`}
+                className="profile-select-label"
+              >
+                <span className="profile-select-label-heading">
+                  {display_name}
+                </span>
+                <span>{description}</span>
               </label>
+
+              <ProfileOptions profile={slug} config={profile_options} />
             </div>
-            <ProfileOptions profile={slug} config={profile_options} />
           </div>
         );
       })}

@@ -2,9 +2,9 @@ import "@testing-library/jest-dom";
 
 window.profileList = [
   {
-    slug: "small",
-    display_name: "Small",
-    description: "~2 CPU, ~2G RAM",
+    slug: "cpu",
+    display_name: "CPU only",
+    description: "No GPU, only CPU",
     profile_options: {
       image: {
         display_name: "Image",
@@ -96,12 +96,12 @@ window.profileList = [
     },
   },
   {
-    slug: "big",
-    display_name: "Big",
-    description: "~16 CPU, ~512G RAM",
+    slug: "gpu",
+    display_name: "GPU",
+    description: "Nvidia Tesla T4 GPU",
     profile_options: {
       image: {
-        display_name: "Image - Big",
+        display_name: "Image - GPU",
         choices: {
           pangeo: {
             display_name: "Pangeo Notebook Image",
@@ -133,7 +133,7 @@ window.profileList = [
         },
       },
       resources: {
-        display_name: "Resource Allocation - Big",
+        display_name: "Resource Allocation - GPU",
         choices: {
           mem_2_7: {
             display_name: "3.7 GB RAM, upto 4.479 CPUs",

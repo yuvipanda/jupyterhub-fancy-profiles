@@ -28,7 +28,9 @@ test("image and resource fields tabable", async () => {
     </SpawnerFormProvider>,
   );
 
-  const radio = screen.getByRole("radio", { name: "Small (~2 CPU, ~2G RAM)" });
+  const radio = screen.getByRole("radio", {
+    name: "CPU only No GPU, only CPU",
+  });
   await user.click(radio);
 
   const imageField = screen.getByLabelText("Image");
@@ -47,7 +49,9 @@ test("custom image field is required", async () => {
     </SpawnerFormProvider>,
   );
 
-  const radio = screen.getByRole("radio", { name: "Small (~2 CPU, ~2G RAM)" });
+  const radio = screen.getByRole("radio", {
+    name: "CPU only No GPU, only CPU",
+  });
   await user.click(radio);
 
   const imageField = screen.getByLabelText("Image");
@@ -70,7 +74,9 @@ test("custom image field needs specific format", async () => {
     </SpawnerFormProvider>,
   );
 
-  const radio = screen.getByRole("radio", { name: "Small (~2 CPU, ~2G RAM)" });
+  const radio = screen.getByRole("radio", {
+    name: "CPU only No GPU, only CPU",
+  });
   await user.click(radio);
 
   const imageField = screen.getByLabelText("Image");
@@ -97,7 +103,9 @@ test("custom image field accepts specific format", async () => {
     </SpawnerFormProvider>,
   );
 
-  const radio = screen.getByRole("radio", { name: "Small (~2 CPU, ~2G RAM)" });
+  const radio = screen.getByRole("radio", {
+    name: "CPU only No GPU, only CPU",
+  });
   await user.click(radio);
 
   const imageField = screen.getByLabelText("Image");
@@ -125,11 +133,11 @@ test("Multiple profiles renders", async () => {
     </SpawnerFormProvider>,
   );
 
-  const radio = screen.getByRole("radio", { name: "Big (~16 CPU, ~512G RAM)" });
+  const radio = screen.getByRole("radio", { name: "GPU Nvidia Tesla T4 GPU" });
   await user.click(radio);
 
-  expect(screen.getByLabelText("Image - Big").tabIndex).toEqual(0);
-  expect(screen.getByLabelText("Resource Allocation - Big").tabIndex).toEqual(
+  expect(screen.getByLabelText("Image - GPU").tabIndex).toEqual(0);
+  expect(screen.getByLabelText("Resource Allocation - GPU").tabIndex).toEqual(
     0,
   );
 
