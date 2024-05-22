@@ -6,7 +6,10 @@ import { SelectField, TextField } from "./components/form/fields";
 function ResourceSelect({ id, profile, config, customOptions = [] }) {
   const { display_name, unlisted_choice } = config;
 
-  const { options, defaultOption, hasDefaultChoices } = useSelectOptions(config, customOptions);
+  const { options, defaultOption, hasDefaultChoices } = useSelectOptions(
+    config,
+    customOptions,
+  );
   const { profile: selectedProfile } = useContext(SpawnerFormContext);
   const FIELD_ID = `profile-option-${profile}--${id}`;
   const FIELD_ID_UNLISTED = `${FIELD_ID}--unlisted-choice`;
@@ -19,26 +22,25 @@ function ResourceSelect({ id, profile, config, customOptions = [] }) {
     return null;
   }
 
-
   const selectedCustomOption = customOptions.find((opt) => opt.value === value);
 
   return (
     <>
       {hasDefaultChoices && (
-      <SelectField
-        id={FIELD_ID}
-        label={display_name}
-        options={options}
-        defaultOption={defaultOption}
-        value={value}
-        onChange={(e) => setValue(e.value)}
-        tabIndex={isActive ? "0" : "-1"}
-        validate={
-          isActive && {
-            required: "Select a value.",
+        <SelectField
+          id={FIELD_ID}
+          label={display_name}
+          options={options}
+          defaultOption={defaultOption}
+          value={value}
+          onChange={(e) => setValue(e.value)}
+          tabIndex={isActive ? "0" : "-1"}
+          validate={
+            isActive && {
+              required: "Select a value.",
+            }
           }
-        }
-      />
+        />
       )}
       {value === "unlisted_choice" && (
         <TextField

@@ -23,13 +23,15 @@ function useSelectOptions(config, customOptions = []) {
 
     return [...defaultChoices, ...extraChoices, ...customOptions];
   }, [choices]);
-  
+
   // The default choice is either the choice marked as default,
   // OR the first explicit choice
   // OR the first item from options which could be an extra or custom choice
   const defaultChoiceName =
     Object.keys(choices).find((choiceName) => choices[choiceName].default) ||
-    Object.keys(choices).length > 0 ? Object.keys(choices)[0] : options[0].value;
+    Object.keys(choices).length > 0
+      ? Object.keys(choices)[0]
+      : options[0].value;
 
   const defaultOption = options.find(
     (option) => option.value === defaultChoiceName,
@@ -38,7 +40,7 @@ function useSelectOptions(config, customOptions = []) {
   return {
     options,
     defaultOption,
-    hasDefaultChoices
+    hasDefaultChoices,
   };
 }
 

@@ -241,5 +241,5 @@ c.KubeSpawner.profile_list = [
             },
         },
         "slug": "custom",
-    }
+    },
 ]
