@@ -223,4 +223,23 @@ c.KubeSpawner.profile_list = [
             },
         },
     },
+    {
+        "description": "Specify your own docker image (must have python and jupyterhub installed in it)",
+        "display_name": "Bring your own image",
+        "profile_options": {
+            "image": {
+                "choices": {},
+                "display_name": "Image",
+                "unlisted_choice": {
+                    "display_name": "Custom image",
+                    "enabled": True,
+                    "kubespawner_override": {"image": "{value}"},
+                    "validation_message": "Must be a publicly available docker image, of form <image-name>:<tag>",
+                    "validation_regex": "^.+:.+$",
+                    "display_name_in_choices": "Other...",
+                },
+            },
+        },
+        "slug": "custom",
+    }
 ]

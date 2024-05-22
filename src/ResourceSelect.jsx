@@ -6,23 +6,25 @@ import { SelectField, TextField } from "./components/form/fields";
 function ResourceSelect({ id, profile, config, customOptions = [] }) {
   const { display_name, unlisted_choice } = config;
 
-  const { options, defaultOption } = useSelectOptions(config, customOptions);
+  const { options, defaultOption, hasDefaultChoices } = useSelectOptions(config, customOptions);
   const { profile: selectedProfile } = useContext(SpawnerFormContext);
   const FIELD_ID = `profile-option-${profile}--${id}`;
   const FIELD_ID_UNLISTED = `${FIELD_ID}--unlisted-choice`;
 
   const isActive = selectedProfile?.slug === profile;
-  const [value, setValue] = useState(defaultOption.value);
+  const [value, setValue] = useState(defaultOption?.value);
   const [unlistedChoiceValue, setUnlistedChoiceValue] = useState("");
 
   if (!options.length > 0) {
     return null;
   }
 
+
   const selectedCustomOption = customOptions.find((opt) => opt.value === value);
 
   return (
     <>
+      {hasDefaultChoices && (
       <SelectField
         id={FIELD_ID}
         label={display_name}
@@ -37,6 +39,7 @@ function ResourceSelect({ id, profile, config, customOptions = [] }) {
           }
         }
       />
+      )}
       {value === "unlisted_choice" && (
         <TextField
           id={FIELD_ID_UNLISTED}
