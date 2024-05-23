@@ -154,3 +154,12 @@ test("Multiple profiles renders", async () => {
   expect(smallImageField.tabIndex).toEqual(-1);
   expect(screen.getByLabelText("Resource Allocation").tabIndex).toEqual(-1);
 });
+
+test("select with no options should not render", () => {
+  render(
+    <SpawnerFormProvider>
+      <ProfileForm />
+    </SpawnerFormProvider>,
+  );
+  expect(screen.queryByLabelText("Image - No options")).not.toBeInTheDocument();
+});
