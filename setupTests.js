@@ -160,8 +160,7 @@ window.profileList = [
     },
   },
   {
-    description:
-      "Specify your own docker image",
+    description: "Specify your own docker image",
     display_name: "Bring your own image",
     default: true,
     profile_options: {
