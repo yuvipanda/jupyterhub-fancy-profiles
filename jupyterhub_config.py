@@ -226,6 +226,7 @@ c.KubeSpawner.profile_list = [
     {
         "description": "Specify your own docker image (must have python and jupyterhub installed in it)",
         "display_name": "Bring your own image",
+        "default": True,
         "profile_options": {
             "image": {
                 "choices": {},

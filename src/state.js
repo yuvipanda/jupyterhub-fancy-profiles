@@ -4,7 +4,8 @@ export const SpawnerFormContext = createContext();
 
 export const SpawnerFormProvider = ({ children }) => {
   const profileList = window.profileList;
-  const [selectedProfile, setProfile] = useState();
+  const defaultProfile = profileList.find(profile => profile.default === true) || profileList[0];
+  const [selectedProfile, setProfile] = useState(defaultProfile.slug);
 
   const profile = useMemo(() => {
     return profileList.find(({ slug }) => slug === selectedProfile);
