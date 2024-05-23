@@ -155,7 +155,7 @@ test("Multiple profiles renders", async () => {
   expect(screen.getByLabelText("Resource Allocation").tabIndex).toEqual(-1);
 });
 
-test('select with no options should not render', () => {
+test("select with no options should not render", () => {
   render(
     <SpawnerFormProvider>
       <ProfileForm />
