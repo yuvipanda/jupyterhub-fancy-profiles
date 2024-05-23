@@ -166,9 +166,9 @@ window.profileList = [
     profile_options: {
       image: {
         choices: {},
-        display_name: "Image",
+        display_name: "Image - No options",
         unlisted_choice: {
-          display_name: "Custom image",
+          display_name: "Docker image",
           enabled: true,
           kubespawner_override: { image: "{value}" },
           validation_message:
