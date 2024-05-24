@@ -66,7 +66,7 @@ function Form() {
               value={slug}
               onChange={handleProfileSelect}
               required
-              checked={selectedProfile?.slug === slug ? "checked" : false}
+              checked={selectedProfile?.slug === slug}
             />
             <div className="profile-select-body">
               <label
