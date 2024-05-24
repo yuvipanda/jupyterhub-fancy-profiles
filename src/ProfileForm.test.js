@@ -163,3 +163,21 @@ test("select with no options should not render", () => {
   );
   expect(screen.queryByLabelText("Image - No options")).not.toBeInTheDocument();
 });
+
+test("profile marked as default is selected by default", () => {
+  const { container } = render(
+    <SpawnerFormProvider>
+      <ProfileForm />
+    </SpawnerFormProvider>,
+  );
+  const hiddenRadio = container.querySelector('[name="profile"]');
+  expect(hiddenRadio.value).toEqual("custom");
+  const defaultRadio = screen.getByRole("radio", {
+    name: "Bring your own image Specify your own docker image",
+  });
+  expect(defaultRadio.checked).toBeTruthy();
+  const nonDefaultRadio = screen.getByRole("radio", {
+    name: "GPU Nvidia Tesla T4 GPU",
+  });
+  expect(nonDefaultRadio.checked).toBeFalsy();
+});

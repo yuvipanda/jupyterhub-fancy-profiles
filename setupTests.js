@@ -160,9 +160,9 @@ window.profileList = [
     },
   },
   {
-    description:
-      "Specify your own docker image (must have python and jupyterhub installed in it)",
+    description: "Specify your own docker image",
     display_name: "Bring your own image",
+    default: true,
     profile_options: {
       image: {
         choices: {},

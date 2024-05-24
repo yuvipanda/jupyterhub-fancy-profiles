@@ -18,7 +18,6 @@ function Form() {
     setProfile,
     profileList,
   } = useContext(SpawnerFormContext);
-
   const [formError, setFormError] = useState("");
 
   const handleSubmit = (e) => {
@@ -67,6 +66,7 @@ function Form() {
               value={slug}
               onChange={handleProfileSelect}
               required
+              checked={selectedProfile?.slug === slug}
             />
             <div className="profile-select-body">
               <label
