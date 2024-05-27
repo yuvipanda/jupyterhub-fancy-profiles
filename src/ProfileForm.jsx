@@ -68,7 +68,12 @@ function Form() {
               required
               checked={selectedProfile?.slug === slug}
             />
-            <div className="profile-select-body" onClick={()=> { setProfile(slug)}}>
+            <div
+              className="profile-select-body"
+              onClick={() => {
+                setProfile(slug);
+              }}
+            >
               <label
                 htmlFor={`profile-option-${slug}`}
                 className="profile-select-label"
