@@ -181,3 +181,22 @@ test("profile marked as default is selected by default", () => {
   });
   expect(nonDefaultRadio.checked).toBeFalsy();
 });
+
+// test("clicking on a profile option div selects it", async () => {
+//   const user = userEvent.setup();
+//   const { container } = render(
+//     <SpawnerFormProvider>
+//       <ProfileForm />
+//     </SpawnerFormProvider>,
+//   );
+//   const profileElements = container.querySelectorAll('.profile-select');
+//   console.log('profiles', profileElements.length);
+//   const firstProfile = profileElements[0];
+//   const lastProfile = profileElements[profileElements.length - 1];
+//   await user.click(firstProfile);
+//   console.log('first profile', firstProfile.classList);
+//   expect(firstProfile.classList.contains('bg-success')).toBeTruthy();
+//   expect(lastProfile.classList.contains('bg-success')).toBeFalsy();
+//   const hiddenRadio = container.querySelector('[name="profile"]');
+//   expect(hiddenRadio.value).toEqual("foobar");
+// });

@@ -58,7 +58,7 @@ function Form() {
         const { display_name, description, profile_options, slug } = profile;
 
         return (
-          <div key={slug} className="profile-select">
+          <div key={slug} className={`profile-select ${selectedProfile?.slug === slug ? 'bg-success' : ''}`}>
             <input
               type="radio"
               name="select-profile"
