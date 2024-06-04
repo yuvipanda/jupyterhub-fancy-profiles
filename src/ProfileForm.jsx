@@ -79,8 +79,8 @@ function Form() {
                 setProfile(slug);
               }}
             >
-              <label
-                htmlFor={`profile-option-${slug}`}
+              <div
+                id={`profile-option-${slug}-label`}
                 className="profile-select-label"
               >
                 <span className="profile-select-label-heading">
