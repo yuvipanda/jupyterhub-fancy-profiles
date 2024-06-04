@@ -6,9 +6,8 @@
 /* Layout */
 
 .profile-select {
-  margin-bottom: 5rem;
   display: flex;
-  padding: 2rem;
+  padding: 5rem 2rem;
   flex-direction: row;
   border-bottom: 1px solid #ccc;
 }
