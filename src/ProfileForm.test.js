@@ -136,7 +136,8 @@ test("Multiple profiles renders", async () => {
   const radio = screen.getByRole("radio", { name: "GPU Nvidia Tesla T4 GPU" });
   await user.click(radio);
 
-  expect(screen.getByLabelText("Image - GPU").tabIndex).toEqual(0);
+  const imageField = screen.getByLabelText("Image - GPU");
+  expect(imageField.tabIndex).toEqual(0);
   expect(screen.getByLabelText("Resource Allocation - GPU").tabIndex).toEqual(
     0,
   );
@@ -149,10 +150,14 @@ test("Multiple profiles renders", async () => {
   await user.click(customImageField);
   await user.click(document.body);
 
-  expect(screen.queryByText("Enter a value.")).not.toBeInTheDocument();
+  expect(screen.queryByText("Enter a value.")).toBeInTheDocument();
 
-  expect(smallImageField.tabIndex).toEqual(-1);
-  expect(screen.getByLabelText("Resource Allocation").tabIndex).toEqual(-1);
+  expect(smallImageField.tabIndex).toEqual(0);
+  expect(screen.getByLabelText("Resource Allocation").tabIndex).toEqual(0);
+  expect(imageField.tabIndex).toEqual(-1);
+  expect(screen.getByLabelText("Resource Allocation - GPU").tabIndex).toEqual(
+    -1,
+  );
 });
 
 test("select with no options should not render", () => {

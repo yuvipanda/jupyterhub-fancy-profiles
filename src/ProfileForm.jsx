@@ -58,22 +58,29 @@ function Form() {
         const { display_name, description, profile_options, slug } = profile;
 
         return (
-          <div key={slug} className="profile-select">
+          <div
+            key={slug}
+            className={`profile-select ${selectedProfile?.slug === slug ? "bg-success" : ""}`}
+          >
             {profileList.length > 1 && (
               <input
                 type="radio"
                 name="select-profile"
                 id={`profile-option-${slug}`}
-                aria-labelledby={`profile-option-${slug}-label`}
                 value={slug}
                 onChange={handleProfileSelect}
                 required
                 checked={selectedProfile?.slug === slug}
               />
             )}
-            <div className="profile-select-body">
-              <div
-                id={`profile-option-${slug}-label`}
+            <div
+              className="profile-select-body"
+              onClick={() => {
+                setProfile(slug);
+              }}
+            >
+              <label
+                htmlFor={`profile-option-${slug}`}
                 className="profile-select-label"
               >
                 <span className="profile-select-label-heading">
