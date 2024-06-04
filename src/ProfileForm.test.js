@@ -136,7 +136,8 @@ test("Multiple profiles renders", async () => {
   const radio = screen.getByRole("radio", { name: "GPU Nvidia Tesla T4 GPU" });
   await user.click(radio);
 
-  expect(screen.getByLabelText("Image - GPU").tabIndex).toEqual(0);
+  const imageField = screen.getByLabelText("Image - GPU");
+  expect(imageField.tabIndex).toEqual(0);
   expect(screen.getByLabelText("Resource Allocation - GPU").tabIndex).toEqual(
     0,
   );
@@ -149,10 +150,14 @@ test("Multiple profiles renders", async () => {
   await user.click(customImageField);
   await user.click(document.body);
 
-  expect(screen.queryByText("Enter a value.")).not.toBeInTheDocument();
+  expect(screen.queryByText("Enter a value.")).toBeInTheDocument();
 
-  expect(smallImageField.tabIndex).toEqual(-1);
-  expect(screen.getByLabelText("Resource Allocation").tabIndex).toEqual(-1);
+  expect(smallImageField.tabIndex).toEqual(0);
+  expect(screen.getByLabelText("Resource Allocation").tabIndex).toEqual(0);
+  expect(imageField.tabIndex).toEqual(-1);
+  expect(screen.getByLabelText("Resource Allocation - GPU").tabIndex).toEqual(
+    -1,
+  );
 });
 
 test("select with no options should not render", () => {
@@ -181,22 +186,3 @@ test("profile marked as default is selected by default", () => {
   });
   expect(nonDefaultRadio.checked).toBeFalsy();
 });
-
-// test("clicking on a profile option div selects it", async () => {
-//   const user = userEvent.setup();
-//   const { container } = render(
-//     <SpawnerFormProvider>
-//       <ProfileForm />
-//     </SpawnerFormProvider>,
-//   );
-//   const profileElements = container.querySelectorAll('.profile-select');
-//   console.log('profiles', profileElements.length);
-//   const firstProfile = profileElements[0];
-//   const lastProfile = profileElements[profileElements.length - 1];
-//   await user.click(firstProfile);
-//   console.log('first profile', firstProfile.classList);
-//   expect(firstProfile.classList.contains('bg-success')).toBeTruthy();
-//   expect(lastProfile.classList.contains('bg-success')).toBeFalsy();
-//   const hiddenRadio = container.querySelector('[name="profile"]');
-//   expect(hiddenRadio.value).toEqual("foobar");
-// });
