@@ -71,6 +71,7 @@ function Form() {
                 onChange={handleProfileSelect}
                 required
                 checked={selectedProfile?.slug === slug}
+                aria-labelledby={`profile-option-${slug}-label`}
               />
             )}
             <div
