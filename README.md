@@ -97,6 +97,37 @@ plain react without typescript seems the correct choice. We will _not_ make
 this into a super-heavy, complex application - just a fairly simple one that
 uses react.
 
+## Making a Release
+
+We have [automation](https://github.com/pypa/gh-action-pypi-publish/)
+set up to make releases to [PyPI](https://pypi.org/project/jupyterhub-fancy-profiles/).
+We should release early and often!
+
+1. On your local checkout, make sure you are up to date with the `main` branch
+
+   ```bash
+   git checkout main
+   git stash
+   git pull upstream main # or git pull origin main, as needed
+   ```
+
+2. Create a new git tag, with the version of the release.
+
+   ```bash
+   git tag -a v<version-number>
+   ```
+
+   Leave a simple message here. While ideally a changelog would also be nice,
+   at a minimum simply say `Version <version-number>`
+
+3. Push your tag to GitHub
+
+   ```bash
+   git push origin --tags
+   ```
+
+4. That's it! A new release should be on PyPI shortly.
+
 ## Funding
 
 Funded in part by [GESIS](http://notebooks.gesis.org) in cooperation with
