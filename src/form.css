@@ -10,13 +10,10 @@
   padding: 5rem 2rem;
   flex-direction: row;
   border-bottom: 1px solid #ccc;
+  gap: 3rem;
 }
 
-.profile-select-body {
-  margin-left: 3rem;
-}
-
-.profile-select-body label {
+.profile-select-body .profile-select-label {
   font-weight: normal;
   margin-bottom: 1rem;
 }
