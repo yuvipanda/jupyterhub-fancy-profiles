@@ -128,6 +128,30 @@ We should release early and often!
 
 4. That's it! A new release should be on PyPI shortly.
 
+## Comparisons to the BinderHub UI
+
+The BinderHub project provides a frontend that also allows end users to
+build images and launch them. How do you determine when to use that UI
+vs `jupyterhub-fancy-profiles` (with Dynamic Image Building integration)?
+
+This project is still young, and these guidelines may change over time.
+
+The _primary_ question is one of _intent_.
+
+Are you building a _persistent JupyterHub_ with many functions (persistent home
+directories, multiple profiles for images, resource requirements, strong access
+control, etc) that
+_also_ happens to need a way for users to dynamically build their own images?
+Then use `jupyterhub-fancy-profiles` with BinderHub integration.
+
+Are you building an _ephemeral JupyterHub_ where users may click a link and that
+immediately puts them in an _ephemeral_ interactive compute session with
+a particular environment and particular content? Use the BinderHub UI.
+
+A useful rubric here is to look for persistent home directory storage. If your
+users want that, you probably want to use `jupyterhub-fancy-profiles` with
+BinderHub integration. If not, the BinderHub UI is more likely to be used.
+
 ## Funding
 
 Funded in part by [GESIS](http://notebooks.gesis.org) in cooperation with
