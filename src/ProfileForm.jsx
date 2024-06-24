@@ -60,7 +60,7 @@ function Form() {
         return (
           <div
             key={slug}
-            className={`profile-select ${selectedProfile?.slug === slug ? "bg-success" : ""}`}
+            className={`profile-select ${selectedProfile?.slug === slug ? "selected-profile" : ""}`}
           >
             {profileList.length > 1 && (
               <input
