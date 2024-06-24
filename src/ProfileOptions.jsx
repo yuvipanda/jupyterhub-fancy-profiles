@@ -24,7 +24,7 @@ export function ProfileOptions({ config, profile }) {
             id={key}
             profile={profile}
             config={option}
-            customOptions={customOptions}
+            // customOptions={customOptions}
           />
         );
       })}
