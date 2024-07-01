@@ -140,9 +140,7 @@ c.KubeSpawner.profile_list = [
         "profile_options": {
             "image": {
                 "display_name": "Image",
-                "dynamic_image_building": {
-                    "enabled": True
-                },
+                "dynamic_image_building": {"enabled": True},
                 "unlisted_choice": {
                     "enabled": True,
                     "display_name": "Custom image",
@@ -234,9 +232,7 @@ c.KubeSpawner.profile_list = [
             "image": {
                 "choices": {},
                 "display_name": "Image",
-                "dynamic_image_building": {
-                    "enabled": True
-                },
+                "dynamic_image_building": {"enabled": True},
                 "unlisted_choice": {
                     "display_name": "Custom image",
                     "enabled": True,
