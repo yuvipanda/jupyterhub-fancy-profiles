@@ -88,6 +88,7 @@ export function TextField({
       <input
         type="text"
         id={id}
+        name={id}
         value={value}
         pattern={pattern}
         onChange={onChange}
