@@ -2,7 +2,6 @@ import ResourceSelect from "./ResourceSelect";
 import { ImageBuilder } from "./ImageBuilder";
 
 function hasDynamicImageBuilding(key, option) {
-  console.log("dynamic image building", key, option);
   return (
     key === "image" &&
     option.dynamic_image_building?.enabled &&
