@@ -5,4 +5,35 @@
 {# FIXME: This should use the hub base_url properly somehow #}
 <script src="/hub/fancy-profiles/static/dist/form.js" defer></script>
 
-<div id="form"></div>
+<div id="form">
+  <style>
+    .loader-wrapper {
+      text-align: center;
+      color: rgb(51, 51, 51);
+      padding: 5rem;
+    }
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid rgb(51, 51, 51);
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(360deg);
+      }
+    }
+  </style>
+  <div class="loader-wrapper">
+    <div class="loader"></div>
+    <p>Loading form...</p>
+  </div>
+</div>
