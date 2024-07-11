@@ -180,4 +180,26 @@ window.profileList = [
     },
     slug: "custom",
   },
+  {
+    description: "Dynamic Image building + unlisted choice",
+    display_name: "Build custom environment",
+    profile_options: {
+      image: {
+        choices: {},
+        display_name: "Image - dynamic image building",
+        unlisted_choice: {
+          display_name: "Docker image",
+          enabled: true,
+          kubespawner_override: { image: "{value}" },
+          validation_message:
+            "Must be a publicly available docker image, of form <image-name>:<tag>",
+          validation_regex: "^.+:.+$",
+          display_name_in_choices: "Other...",
+        },
+        dynamic_image_building: {
+          enabled: true
+        }     
+      }
+    }
+  }
 ];
