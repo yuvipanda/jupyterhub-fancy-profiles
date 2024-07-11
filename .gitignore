@@ -167,7 +167,7 @@ static/dist/
 
 #Jupytherhub configs
 bin
-jupyterhub_fancy_profiles
+jupyterhub_fancy_profiles/_version.py
 share
 jupyterhub_cookie_secret
 jupyterhub-proxy.pid
