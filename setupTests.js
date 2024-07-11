@@ -197,9 +197,9 @@ window.profileList = [
           display_name_in_choices: "Other...",
         },
         dynamic_image_building: {
-          enabled: true
-        }     
-      }
-    }
-  }
+          enabled: true,
+        },
+      },
+    },
+  },
 ];

@@ -255,15 +255,13 @@ c.KubeSpawner.profile_list = [
                 "unlisted_choice": {
                     "display_name": "Docker image",
                     "enabled": True,
-                    "kubespawner_override": { "image": "{value}" },
+                    "kubespawner_override": {"image": "{value}"},
                     "validation_message": "Must be a publicly available docker image, of form <image-name>:<tag>",
                     "validation_regex": "^.+:.+$",
                     "display_name_in_choices": "Other...",
                 },
-                "dynamic_image_building": {
-                    "enabled": True
-                }     
+                "dynamic_image_building": {"enabled": True},
             }
-        }
-    }    
+        },
+    },
 ]
