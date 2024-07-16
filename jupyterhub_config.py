@@ -140,6 +140,7 @@ c.KubeSpawner.profile_list = [
         "profile_options": {
             "image": {
                 "display_name": "Image",
+                "dynamic_image_building": {"enabled": True},
                 "unlisted_choice": {
                     "enabled": True,
                     "display_name": "Custom image",
@@ -231,6 +232,7 @@ c.KubeSpawner.profile_list = [
             "image": {
                 "choices": {},
                 "display_name": "Image",
+                "dynamic_image_building": {"enabled": True},
                 "unlisted_choice": {
                     "display_name": "Custom image",
                     "enabled": True,
@@ -242,5 +244,24 @@ c.KubeSpawner.profile_list = [
             },
         },
         "slug": "custom",
+    },
+    {
+        "description": "Dynamic Image building + unlisted choice",
+        "display_name": "Build custom environment",
+        "profile_options": {
+            "image": {
+                "choices": {},
+                "display_name": "Image - dynamic image building",
+                "unlisted_choice": {
+                    "display_name": "Docker image",
+                    "enabled": True,
+                    "kubespawner_override": {"image": "{value}"},
+                    "validation_message": "Must be a publicly available docker image, of form <image-name>:<tag>",
+                    "validation_regex": "^.+:.+$",
+                    "display_name_in_choices": "Other...",
+                },
+                "dynamic_image_building": {"enabled": True},
+            }
+        },
     },
 ]

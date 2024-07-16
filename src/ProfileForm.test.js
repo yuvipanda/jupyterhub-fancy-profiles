@@ -186,3 +186,17 @@ test("profile marked as default is selected by default", () => {
   });
   expect(nonDefaultRadio.checked).toBeFalsy();
 });
+
+test("having dynamic_image_building enabled and no other choices shows dropdown", async () => {
+  const user = userEvent.setup();
+
+  render(
+    <SpawnerFormProvider>
+      <ProfileForm />
+    </SpawnerFormProvider>,
+  );
+  const select = screen.getByLabelText("Image - dynamic image building");
+  await user.click(select);
+  expect(screen.getByText("Build your own image")).toBeInTheDocument();
+  expect(screen.getAllByText("Other...").length).toEqual(2); // There are two selects with the "Other..." label defined
+});

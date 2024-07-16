@@ -26,7 +26,7 @@ function ResourceSelect({ id, profile, config, customOptions = [] }) {
 
   return (
     <>
-      {hasDefaultChoices && (
+      {(options.length > 1 || hasDefaultChoices) && (
         <SelectField
           id={FIELD_ID}
           label={display_name}
