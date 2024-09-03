@@ -132,12 +132,12 @@ export function ImageBuilder({ name }) {
         <div className="profile-option-label-container">
           <b>Provider</b>
         </div>
-        <div className="profile-option-control-container">
-          GitHub
-        </div>
+        <div className="profile-option-control-container">GitHub</div>
       </div>
 
-      <div className={`profile-option-container ${repoError ? "has-error" : ""}`}>
+      <div
+        className={`profile-option-container ${repoError ? "has-error" : ""}`}
+      >
         <div className="profile-option-label-container">
           <label htmlFor="repo">Repository</label>
         </div>
@@ -149,18 +149,29 @@ export function ImageBuilder({ name }) {
             {...repoFieldProps}
             aria-invalid={!!repoError}
           />
-          {repoError && <div className="profile-option-control-error">{repoError}</div>}
+          {repoError && (
+            <div className="profile-option-control-error">{repoError}</div>
+          )}
         </div>
       </div>
 
       {refFieldProps.options && (
-        <div className={`profile-option-container ${repoError ? "has-error" : ""}`}>
+        <div
+          className={`profile-option-container ${repoError ? "has-error" : ""}`}
+        >
           <div className="profile-option-label-container">
             <label>Branch</label>
           </div>
           <div className="profile-option-control-container">
-            <Select aria-label="Branch" ref={branchFieldRef} {...refFieldProps} aria-invalid={!!refError} />
-            {refError && <div className="profile-option-control-error">{refError}</div>}
+            <Select
+              aria-label="Branch"
+              ref={branchFieldRef}
+              {...refFieldProps}
+              aria-invalid={!!refError}
+            />
+            {refError && (
+              <div className="profile-option-control-error">{refError}</div>
+            )}
           </div>
         </div>
       )}

@@ -7,7 +7,10 @@ function extractOrgAndRepo(value) {
   if (orgRepoMatch) {
     orgRepoString = orgRepoMatch[0];
   } else {
-    const fullUrlMatch = /^(?:https?:\/\/)?(?:www\.)?github\.com\/((?:[^/]+\/[^/]+|[^/]+\/[^/]+)?)\/?$/.exec(value);
+    const fullUrlMatch =
+      /^(?:https?:\/\/)?(?:www\.)?github\.com\/((?:[^/]+\/[^/]+|[^/]+\/[^/]+)?)\/?$/.exec(
+        value,
+      );
     if (fullUrlMatch) {
       orgRepoString = fullUrlMatch[1];
     }
@@ -26,15 +29,18 @@ export default function useRepositoryField() {
     const orgRepoString = extractOrgAndRepo(value);
 
     if (!orgRepoString) {
-      return "Provide the repository as the format 'organization/repository'."
+      return "Provide the repository as the format 'organization/repository'.";
     }
 
-    const repoExists = await fetch(`https://api.github.com/repos/${orgRepoString}`, {
-      method: "HEAD"
-    }).then(r => r.ok)
+    const repoExists = await fetch(
+      `https://api.github.com/repos/${orgRepoString}`,
+      {
+        method: "HEAD",
+      },
+    ).then((r) => r.ok);
 
     if (!repoExists) {
-      return "The repository doesn't exist or is not public."
+      return "The repository doesn't exist or is not public.";
     }
   };
 
@@ -46,11 +52,11 @@ export default function useRepositoryField() {
     setRepoId();
     const err = await validate();
     if (err) {
-      setError(err)
+      setError(err);
     } else {
       setRepoId(extractOrgAndRepo(value));
     }
-  }, [value])
+  }, [value]);
 
   return {
     repo: value,
@@ -59,7 +65,7 @@ export default function useRepositoryField() {
     repoFieldProps: {
       value,
       onChange,
-      onBlur
-    }
-  }
+      onBlur,
+    },
+  };
 }
