@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Select from "react-select";
+import useRepositoryField from "./hooks/useRepositoryField";
+import useRefField from "./hooks/useRefField";
 
 async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   const { BinderRepository } = await import("@jupyterhub/binderhub-client");
@@ -86,19 +89,28 @@ function ImageLogs({ setTerm, setFitAddon }) {
     </div>
   );
 }
-export function ImageBuilder({ name }) {
-  const [repo, setRepo] = useState("");
-  const [customImage, setCustomImage] = useState("");
-  const [error, setError] = useState("");
 
-  // FIXME: Allow users to actually configure this
-  const [ref, _] = useState("HEAD"); // eslint-disable-line no-unused-vars
+export function ImageBuilder({ name }) {
+  const { repo, repoId, repoFieldProps, repoError } = useRepositoryField();
+  const { ref, refError, refFieldProps } = useRefField(repoId);
+  const repoFieldRef = useRef();
+  const branchFieldRef = useRef();
+
+  const [customImage, setCustomImage] = useState("");
+
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
 
   const handleBuildStart = async () => {
     if (!repo) {
-      setError("Provide a Github repository.");
+      repoFieldRef.current.focus();
+      repoFieldRef.current.blur();
+      return;
+    }
+
+    if (!ref) {
+      branchFieldRef.current.focus();
+      branchFieldRef.current.blur();
       return;
     }
 
@@ -116,28 +128,53 @@ export function ImageBuilder({ name }) {
   // don't generate the hidden input that posts the built image out.
   return (
     <>
-      <div className={`profile-option-container ${error ? "has-error" : ""}`}>
+      <div className="profile-option-container">
         <div className="profile-option-label-container">
-          <label htmlFor="github-repo">GitHub Repository</label>
+          <b>Provider</b>
+        </div>
+        <div className="profile-option-control-container">
+          GitHub
+        </div>
+      </div>
+
+      <div className={`profile-option-container ${repoError ? "has-error" : ""}`}>
+        <div className="profile-option-label-container">
+          <label htmlFor="repo">Repository</label>
         </div>
         <div className="profile-option-control-container">
           <input
-            id="github-repo"
+            id="repo"
             type="text"
-            value={repo}
-            onChange={(e) => setRepo(e.target.value)}
+            ref={repoFieldRef}
+            {...repoFieldProps}
+            aria-invalid={!!repoError}
           />
-          {error && <div className="profile-option-control-error">{error}</div>}
-          <button
-            type="button"
-            className="btn btn-jupyter pull-right"
-            onClick={handleBuildStart}
-          >
-            Build image
-          </button>
+          {repoError && <div className="profile-option-control-error">{repoError}</div>}
         </div>
-        <input name={name} type="hidden" value={customImage} />
       </div>
+
+      {refFieldProps.options && (
+        <div className={`profile-option-container ${repoError ? "has-error" : ""}`}>
+          <div className="profile-option-label-container">
+            <label>Branch</label>
+          </div>
+          <div className="profile-option-control-container">
+            <Select aria-label="Branch" ref={branchFieldRef} {...refFieldProps} aria-invalid={!!refError} />
+            {refError && <div className="profile-option-control-error">{refError}</div>}
+          </div>
+        </div>
+      )}
+
+      <div className="right-button">
+        <button
+          type="button"
+          className="btn btn-jupyter"
+          onClick={handleBuildStart}
+        >
+          Build image
+        </button>
+      </div>
+      <input name={name} type="hidden" value={customImage} />
       <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
     </>
   );

@@ -97,6 +97,11 @@
   margin-top: 0.5rem;
 }
 
+.right-button {
+  text-align: right;
+  margin-bottom: 2rem;
+}
+
 /* react-select styling */
 .react-select-item-container.react-select-item-menu-display.react-select-item-selected
   .react-select-item-description {
