@@ -114,7 +114,7 @@ export function ImageBuilder({ name }) {
       return;
     }
 
-    await buildImage(repo, ref, term, fitAddon, (imageName) => {
+    await buildImage(repoId, ref, term, fitAddon, (imageName) => {
       setCustomImage(imageName);
       term.write(
         "\nImage has been built! Click the start button to launch your server",
