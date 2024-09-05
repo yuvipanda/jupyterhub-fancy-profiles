@@ -1,5 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 
+function fetchRef(repository, refType) {
+  return fetch(`https://api.github.com/repos/${repository}/${refType}`)
+    .then((r) => {
+      if (r.ok) return r.json();
+    })
+}
+
 export default function useRefField(repository) {
   const [value, setValue] = useState("");
   const [options, setOptions] = useState();
@@ -13,17 +20,17 @@ export default function useRefField(repository) {
   useEffect(() => {
     setOptions();
     if (repository) {
-      fetch(`https://api.github.com/repos/${repository}/branches`)
-        .then((r) => {
-          if (r.ok) return r.json();
-        })
-        .then((r) => {
-          const branchNames = r.map(({ name }) => ({
+      Promise.all([
+        fetchRef(repository, "branches"),
+        fetchRef(repository, "tags"),
+      ])
+        .then((results) => {
+          const refOptions = results.flat().map(({ name }) => ({
             label: name,
             value: name,
           }));
-          setOptions(branchNames);
-        });
+          setOptions(refOptions);
+        })
     }
   }, [repository]);
 
@@ -35,7 +42,7 @@ export default function useRefField(repository) {
   const onBlur = () => {
     setError();
     if (!value) {
-      setError("Select a branch.");
+      setError("Select a git ref.");
     }
   };
 

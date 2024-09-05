@@ -160,11 +160,11 @@ export function ImageBuilder({ name }) {
           className={`profile-option-container ${repoError ? "has-error" : ""}`}
         >
           <div className="profile-option-label-container">
-            <label>Branch</label>
+            <label>Git Ref</label>
           </div>
           <div className="profile-option-control-container">
             <Select
-              aria-label="Branch"
+              aria-label="Git Ref"
               ref={branchFieldRef}
               {...refFieldProps}
               aria-invalid={!!refError}
