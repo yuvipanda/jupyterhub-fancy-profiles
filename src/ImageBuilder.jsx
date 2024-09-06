@@ -91,8 +91,8 @@ function ImageLogs({ setTerm, setFitAddon }) {
 }
 
 export function ImageBuilder({ name }) {
-  const { repo, repoId, repoFieldProps, repoError } = useRepositoryField();
-  const { ref, refError, refFieldProps } = useRefField(repoId);
+  const { repo, repoId, repoFieldProps, repoError, repoIsValidating} = useRepositoryField();
+  const { ref, refError, refFieldProps, refIsLoading } = useRefField(repoId);
   const repoFieldRef = useRef();
   const branchFieldRef = useRef();
 
@@ -149,32 +149,37 @@ export function ImageBuilder({ name }) {
             {...repoFieldProps}
             aria-invalid={!!repoError}
           />
+          {repoIsValidating && (
+            <div className="profile-option-control-info">Validating repository...</div>
+          )}
           {repoError && (
             <div className="profile-option-control-error">{repoError}</div>
           )}
         </div>
       </div>
 
-      {refFieldProps.options && (
-        <div
-          className={`profile-option-container ${repoError ? "has-error" : ""}`}
-        >
-          <div className="profile-option-label-container">
-            <label>Git Ref</label>
-          </div>
-          <div className="profile-option-control-container">
-            <Select
-              aria-label="Git Ref"
-              ref={branchFieldRef}
-              {...refFieldProps}
-              aria-invalid={!!refError}
-            />
-            {refError && (
-              <div className="profile-option-control-error">{refError}</div>
-            )}
-          </div>
+      <div
+        className={`profile-option-container ${repoError ? "has-error" : ""}`}
+      >
+        <div className="profile-option-label-container">
+          <label>Git Ref</label>
         </div>
-      )}
+        <div className="profile-option-control-container">
+          <Select
+            aria-label="Git Ref"
+            ref={branchFieldRef}
+            {...refFieldProps}
+            aria-invalid={!!refError}
+            isDisabled={!refFieldProps.options}
+          />
+          {refIsLoading && !refIsLoading && (
+            <div className="profile-option-control-info">Loading Git ref options...</div>
+          )}
+          {refError && (
+            <div className="profile-option-control-error">{refError}</div>
+          )}
+        </div>
+      </div>
 
       <div className="right-button">
         <button

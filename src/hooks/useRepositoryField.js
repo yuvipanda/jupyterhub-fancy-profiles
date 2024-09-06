@@ -23,8 +23,10 @@ export default function useRepositoryField() {
   const [value, setValue] = useState("");
   const [error, setError] = useState();
   const [repoId, setRepoId] = useState();
+  const [isValidating, setIsValidating] = useState(false);
 
   const validate = async () => {
+    setIsValidating(true)
     setError();
     const orgRepoString = extractOrgAndRepo(value);
 
@@ -37,7 +39,9 @@ export default function useRepositoryField() {
       {
         method: "HEAD",
       },
-    ).then((r) => r.ok);
+    )
+      .then((r) => r.ok)
+      .finally(() => setIsValidating(false));
 
     if (!repoExists) {
       return "The repository doesn't exist or is not public.";
@@ -62,6 +66,7 @@ export default function useRepositoryField() {
     repo: value,
     repoError: error,
     repoId,
+    repoIsValidating: isValidating,
     repoFieldProps: {
       value,
       onChange,

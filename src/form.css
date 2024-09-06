@@ -75,6 +75,10 @@
   border-radius: 4px;
 }
 
+.profile-option-control-info {
+  margin-top: 0.5rem;
+}
+
 .profile-option-container.has-error label {
   color: red;
 }

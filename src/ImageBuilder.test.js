@@ -202,7 +202,7 @@ test("invalid org/repo string (not matching pattern)", async () => {
       "Provide the repository as the format 'organization/repository'.",
     ),
   );
-  expect(screen.queryByLabelText("Git Ref")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Git Ref")).toHaveAttribute("disabled");
 });
 
 test("invalid org/repo string (wrong base URL)", async () => {
@@ -232,7 +232,7 @@ test("invalid org/repo string (wrong base URL)", async () => {
       "Provide the repository as the format 'organization/repository'.",
     ),
   );
-  expect(screen.queryByLabelText("Git Ref")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Git Ref")).toHaveAttribute("disabled");
 });
 
 test("repo not found", async () => {
@@ -258,7 +258,7 @@ test("repo not found", async () => {
   await user.type(repoField, "https://github.com/org/repo");
   await user.click(document.body);
 
-  expect(screen.queryByLabelText("Git Ref")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Git Ref")).toHaveAttribute("disabled");
 });
 
 test("no org/repo provided", async () => {

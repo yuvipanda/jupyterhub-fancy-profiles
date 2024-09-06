@@ -11,6 +11,7 @@ export default function useRefField(repository) {
   const [value, setValue] = useState("");
   const [options, setOptions] = useState();
   const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState();
 
   const selectedOption = useMemo(() => {
     if (!value || !options) return;
@@ -18,6 +19,7 @@ export default function useRefField(repository) {
   }, [value]);
 
   useEffect(() => {
+    setIsLoading(true);
     setOptions();
     if (repository) {
       Promise.all([
@@ -31,6 +33,7 @@ export default function useRefField(repository) {
           }));
           setOptions(refOptions);
         })
+        .finally(() => setIsLoading(false))
     }
   }, [repository]);
 
@@ -49,6 +52,7 @@ export default function useRefField(repository) {
   return {
     ref: value,
     refError: error,
+    refIsLoading: isLoading,
     refFieldProps: {
       value: selectedOption,
       options,
