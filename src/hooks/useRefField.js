@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 
 function fetchRef(repository, refType) {
-  return fetch(`https://api.github.com/repos/${repository}/${refType}`)
-    .then((r) => {
+  return fetch(`https://api.github.com/repos/${repository}/${refType}`).then(
+    (r) => {
       if (r.ok) return r.json();
-    })
+    },
+  );
 }
 
 export default function useRefField(repository) {
@@ -25,8 +26,7 @@ export default function useRefField(repository) {
       Promise.all([
         fetchRef(repository, "branches"),
         fetchRef(repository, "tags"),
-      ])
-        .then((results) => {
+      ]).then((results) => {
           const refOptions = results.flat().map(({ name }) => ({
             label: name,
             value: name,
