@@ -26,14 +26,15 @@ export default function useRefField(repository) {
       Promise.all([
         fetchRef(repository, "branches"),
         fetchRef(repository, "tags"),
-      ]).then((results) => {
+      ])
+        .then((results) => {
           const refOptions = results.flat().map(({ name }) => ({
             label: name,
             value: name,
           }));
           setOptions(refOptions);
         })
-        .finally(() => setIsLoading(false))
+        .finally(() => setIsLoading(false));
     }
   }, [repository]);
 

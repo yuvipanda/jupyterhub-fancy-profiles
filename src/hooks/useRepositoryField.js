@@ -26,7 +26,7 @@ export default function useRepositoryField() {
   const [isValidating, setIsValidating] = useState(false);
 
   const validate = async () => {
-    setIsValidating(true)
+    setIsValidating(true);
     setError();
     const orgRepoString = extractOrgAndRepo(value);
 

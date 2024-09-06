@@ -91,7 +91,8 @@ function ImageLogs({ setTerm, setFitAddon }) {
 }
 
 export function ImageBuilder({ name }) {
-  const { repo, repoId, repoFieldProps, repoError, repoIsValidating} = useRepositoryField();
+  const { repo, repoId, repoFieldProps, repoError, repoIsValidating } =
+    useRepositoryField();
   const { ref, refError, refFieldProps, refIsLoading } = useRefField(repoId);
   const repoFieldRef = useRef();
   const branchFieldRef = useRef();
@@ -150,7 +151,9 @@ export function ImageBuilder({ name }) {
             aria-invalid={!!repoError}
           />
           {repoIsValidating && (
-            <div className="profile-option-control-info">Validating repository...</div>
+            <div className="profile-option-control-info">
+              Validating repository...
+            </div>
           )}
           {repoError && (
             <div className="profile-option-control-error">{repoError}</div>
@@ -173,7 +176,9 @@ export function ImageBuilder({ name }) {
             isDisabled={!refFieldProps.options}
           />
           {refIsLoading && !refIsLoading && (
-            <div className="profile-option-control-info">Loading Git ref options...</div>
+            <div className="profile-option-control-info">
+              Loading Git ref options...
+            </div>
           )}
           {refError && (
             <div className="profile-option-control-error">{refError}</div>
