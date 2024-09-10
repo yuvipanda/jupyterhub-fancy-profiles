@@ -1,13 +1,6 @@
 import ResourceSelect from "./ResourceSelect";
 import { ImageBuilder } from "./ImageBuilder";
-
-function hasDynamicImageBuilding(key, option) {
-  return (
-    key === "image" &&
-    option.dynamic_image_building?.enabled &&
-    option.unlisted_choice?.enabled
-  );
-}
+import { hasDynamicImageBuilding } from "./utils"
 
 export function ProfileOptions({ config, profile }) {
   return (

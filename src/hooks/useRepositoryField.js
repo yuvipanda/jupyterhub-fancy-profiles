@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function extractOrgAndRepo(value) {
   let orgRepoString;
@@ -19,11 +19,18 @@ function extractOrgAndRepo(value) {
   return orgRepoString;
 }
 
-export default function useRepositoryField() {
-  const [value, setValue] = useState("");
+export default function useRepositoryField(defaultValue) {
+  const [value, setValue] = useState(defaultValue);
   const [error, setError] = useState();
   const [repoId, setRepoId] = useState();
   const [isValidating, setIsValidating] = useState(false);
+
+  useEffect(() => {
+    if (defaultValue) {
+      // Automatically validate the value if the defaultValue is set
+      onBlur();
+    }
+  }, [defaultValue]);
 
   const validate = async () => {
     setIsValidating(true);

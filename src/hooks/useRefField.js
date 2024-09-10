@@ -8,8 +8,8 @@ function fetchRef(repository, refType) {
   );
 }
 
-export default function useRefField(repository) {
-  const [value, setValue] = useState("");
+export default function useRefField(repository, defaultValue) {
+  const [value, setValue] = useState(defaultValue);
   const [options, setOptions] = useState();
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState();
@@ -17,7 +17,7 @@ export default function useRefField(repository) {
   const selectedOption = useMemo(() => {
     if (!value || !options) return;
     return options.find((option) => option.value === value);
-  }, [value]);
+  }, [value, options]);
 
   useEffect(() => {
     setIsLoading(true);
