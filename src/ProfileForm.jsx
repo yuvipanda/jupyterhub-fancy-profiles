@@ -17,7 +17,7 @@ function Form() {
     profile: selectedProfile,
     setProfile,
     profileList,
-    paramsError
+    paramsError,
   } = useContext(SpawnerFormContext);
   const [formError, setFormError] = useState("");
 

@@ -1,6 +1,6 @@
 import ResourceSelect from "./ResourceSelect";
 import { ImageBuilder } from "./ImageBuilder";
-import { hasDynamicImageBuilding } from "./utils"
+import { hasDynamicImageBuilding } from "./utils";
 
 export function ProfileOptions({ config, profile }) {
   return (

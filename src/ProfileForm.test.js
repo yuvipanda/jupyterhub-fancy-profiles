@@ -134,7 +134,9 @@ describe("Profile form", () => {
       </SpawnerFormProvider>,
     );
 
-    const radio = screen.getByRole("radio", { name: "GPU Nvidia Tesla T4 GPU" });
+    const radio = screen.getByRole("radio", {
+      name: "GPU Nvidia Tesla T4 GPU",
+    });
     await user.click(radio);
 
     const imageField = screen.getByLabelText("Image - GPU");
@@ -167,7 +169,9 @@ describe("Profile form", () => {
         <ProfileForm />
       </SpawnerFormProvider>,
     );
-    expect(screen.queryByLabelText("Image - No options")).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Image - No options"),
+    ).not.toBeInTheDocument();
   });
 
   test("profile marked as default is selected by default", () => {
@@ -201,18 +205,18 @@ describe("Profile form", () => {
     expect(screen.getByText("Build your own image")).toBeInTheDocument();
     expect(screen.getAllByText("Other...").length).toEqual(2); // There are two selects with the "Other..." label defined
   });
-})
+});
 
 describe("Profile form with URL Params", () => {
   beforeEach(() => {
     const location = {
       ...window.location,
-      search: '?binderProvider=gh&binderRepo=org/repo&ref=v1.0',
+      search: "?binderProvider=gh&binderRepo=org/repo&ref=v1.0",
     };
-    Object.defineProperty(window, 'location', {
+    Object.defineProperty(window, "location", {
       writable: true,
       value: location,
-    })
+    });
   });
 
   test("preselects values", async () => {
@@ -233,9 +237,11 @@ describe("Profile form with URL Params", () => {
     expect(radio.checked).toBeTruthy();
 
     expect(screen.getByLabelText("Repository").value).toEqual("org/repo");
-    await waitFor(() => expect(fetch.mock.calls[2][0]).toEqual(
-      "https://api.github.com/repos/org/repo/tags",
-    ));
+    await waitFor(() =>
+      expect(fetch.mock.calls[2][0]).toEqual(
+        "https://api.github.com/repos/org/repo/tags",
+      ),
+    );
 
     await waitFor(() => expect(screen.getByText("v1.0")).toBeInTheDocument());
   });

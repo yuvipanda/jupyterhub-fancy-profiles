@@ -50,7 +50,9 @@ export function SelectField({
   const required = !!validate.required;
   const error = validateField(value, validate, touched);
 
-  const selectedOption = options.find(({ value: optionVal }) => optionVal === value);
+  const selectedOption = options.find(
+    ({ value: optionVal }) => optionVal === value,
+  );
 
   return (
     <Field id={id} label={label} error={error}>

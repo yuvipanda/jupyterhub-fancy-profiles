@@ -16,7 +16,9 @@ function ResourceSelect({ id, profile, config, customOptions = [] }) {
   const FIELD_ID_UNLISTED = `${FIELD_ID}--unlisted-choice`;
 
   const isActive = selectedProfile?.slug === profile;
-  const [value, setValue] = useState(setCustomOption ? "--extra-selectable-item" : defaultOption?.value);
+  const [value, setValue] = useState(
+    setCustomOption ? "--extra-selectable-item" : defaultOption?.value,
+  );
   const [unlistedChoiceValue, setUnlistedChoiceValue] = useState("");
 
   if (!options.length > 0) {

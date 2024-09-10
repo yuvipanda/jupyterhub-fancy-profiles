@@ -92,10 +92,17 @@ function ImageLogs({ setTerm, setFitAddon }) {
 }
 
 export function ImageBuilder({ name }) {
-  const { binderRepo, ref: repoRef, setCustomOption } = useContext(SpawnerFormContext);
+  const {
+    binderRepo,
+    ref: repoRef,
+    setCustomOption,
+  } = useContext(SpawnerFormContext);
   const { repo, repoId, repoFieldProps, repoError, repoIsValidating } =
     useRepositoryField(binderRepo);
-  const { ref, refError, refFieldProps, refIsLoading } = useRefField(repoId, repoRef);
+  const { ref, refError, refFieldProps, refIsLoading } = useRefField(
+    repoId,
+    repoRef,
+  );
   const repoFieldRef = useRef();
   const branchFieldRef = useRef();
 

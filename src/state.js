@@ -1,12 +1,12 @@
 import { createContext, useEffect, useMemo, useState } from "react";
-import { hasDynamicImageBuilding } from "./utils"
+import { hasDynamicImageBuilding } from "./utils";
 
 export const SpawnerFormContext = createContext();
 
 function isDynamicImageProfile(profile) {
   const { profile_options } = profile;
-  return Object.entries(profile_options).some(
-    ([key, option]) => hasDynamicImageBuilding(key, option)
+  return Object.entries(profile_options).some(([key, option]) =>
+    hasDynamicImageBuilding(key, option),
   );
 }
 
@@ -26,10 +26,12 @@ export const SpawnerFormProvider = ({ children }) => {
   const { binderProvider, binderRepo, ref } = params;
 
   const paramsError = useMemo(() => {
-    if(binderProvider && binderRepo && ref) {
-      const profilesWithDynamicImageBuilding = profileList.filter(isDynamicImageProfile);
+    if (binderProvider && binderRepo && ref) {
+      const profilesWithDynamicImageBuilding = profileList.filter(
+        isDynamicImageProfile,
+      );
       if (profilesWithDynamicImageBuilding.length > 1) {
-        return "Unable to pre-select dynamic image building."
+        return "Unable to pre-select dynamic image building.";
       }
     }
   }, [binderProvider, binderRepo, ref]);
@@ -37,7 +39,7 @@ export const SpawnerFormProvider = ({ children }) => {
   const setCustomOption = binderProvider && binderRepo && ref && !paramsError;
 
   useEffect(() => {
-    if(setCustomOption) {
+    if (setCustomOption) {
       const dynamicImageProfile = profileList.find(isDynamicImageProfile);
       setProfile(dynamicImageProfile.slug);
     }
@@ -51,7 +53,7 @@ export const SpawnerFormProvider = ({ children }) => {
     binderRepo,
     ref,
     paramsError,
-    setCustomOption
+    setCustomOption,
   };
 
   return (
