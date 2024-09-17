@@ -97,6 +97,11 @@
   margin-bottom: 1rem;
 }
 
+.profile-form-warning {
+  color: #eab308;
+  margin-bottom: 1rem;
+}
+
 .btn-jupyter {
   margin-top: 0.5rem;
 }

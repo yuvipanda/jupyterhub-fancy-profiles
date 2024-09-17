@@ -17,6 +17,7 @@ function Form() {
     profile: selectedProfile,
     setProfile,
     profileList,
+    paramsError,
   } = useContext(SpawnerFormContext);
   const [formError, setFormError] = useState("");
 
@@ -46,6 +47,7 @@ function Form() {
       aria-description="First, select the profile; second, configure the options for the selected profile."
     >
       {formError && <div className="profile-form-error">{formError}</div>}
+      {paramsError && <div className="profile-form-warning">{paramsError}</div>}
       <input
         type="radio"
         className="hidden"

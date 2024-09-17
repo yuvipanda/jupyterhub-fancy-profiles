@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import Select from "react-select";
+import { SpawnerFormContext } from "./state";
 import useRepositoryField from "./hooks/useRepositoryField";
 import useRefField from "./hooks/useRefField";
 
@@ -91,9 +92,17 @@ function ImageLogs({ setTerm, setFitAddon }) {
 }
 
 export function ImageBuilder({ name }) {
+  const {
+    binderRepo,
+    ref: repoRef,
+    setCustomOption,
+  } = useContext(SpawnerFormContext);
   const { repo, repoId, repoFieldProps, repoError, repoIsValidating } =
-    useRepositoryField();
-  const { ref, refError, refFieldProps, refIsLoading } = useRefField(repoId);
+    useRepositoryField(binderRepo);
+  const { ref, refError, refFieldProps, refIsLoading } = useRefField(
+    repoId,
+    repoRef,
+  );
   const repoFieldRef = useRef();
   const branchFieldRef = useRef();
 
@@ -101,6 +110,13 @@ export function ImageBuilder({ name }) {
 
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
+
+  useEffect(() => {
+    if (setCustomOption) {
+      repoFieldRef.current.setAttribute("value", binderRepo);
+      branchFieldRef.current.value = repoRef;
+    }
+  }, [binderRepo, repoRef, setCustomOption]);
 
   const handleBuildStart = async () => {
     if (!repo) {
