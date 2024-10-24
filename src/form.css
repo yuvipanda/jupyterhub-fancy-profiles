@@ -43,7 +43,7 @@
 
 .profile-option-label-container {
   grid-column-start: 1;
-  align-self: start;
+  align-self: center;
 }
 
 .profile-option-control-container {
