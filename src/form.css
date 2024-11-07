@@ -18,12 +18,6 @@
   margin-bottom: 1rem;
 }
 
-.profile-select-label-heading {
-  display: block;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
 .profile-select-radio {
   display: flex;
   gap: 1rem;
