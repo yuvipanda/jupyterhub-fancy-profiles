@@ -146,20 +146,17 @@ export function ImageBuilder({ name }) {
   return (
     <>
       <div className="profile-option-container">
-        <div className="profile-option-label-container">
-          <b>Provider</b>
-        </div>
+        <div className="profile-option-label-container">Provider</div>
         <div className="profile-option-control-container">GitHub</div>
       </div>
 
-      <div
-        className={`profile-option-container ${repoError ? "has-error" : ""}`}
-      >
+      <div className="profile-option-container">
         <div className="profile-option-label-container">
-          <label htmlFor="repo">Repository</label>
+          <label htmlFor="repo" className="form-label">Repository</label>
         </div>
         <div className="profile-option-control-container">
           <input
+            className={`form-control ${repoError ? "is-invalid" : ""}`}
             id="repo"
             type="text"
             ref={repoFieldRef}
@@ -172,16 +169,14 @@ export function ImageBuilder({ name }) {
             </div>
           )}
           {repoError && (
-            <div className="profile-option-control-error">{repoError}</div>
+            <div className="invalid-feedback">{repoError}</div>
           )}
         </div>
       </div>
 
-      <div
-        className={`profile-option-container ${repoError ? "has-error" : ""}`}
-      >
+      <div className="profile-option-container">
         <div className="profile-option-label-container">
-          <label>Git Ref</label>
+          <div className="form-label">Git Ref</div>
         </div>
         <div className="profile-option-control-container">
           <Select
@@ -197,7 +192,7 @@ export function ImageBuilder({ name }) {
             </div>
           )}
           {refError && (
-            <div className="profile-option-control-error">{refError}</div>
+            <div className="is-invalid">{refError}</div>
           )}
         </div>
       </div>
