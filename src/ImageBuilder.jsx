@@ -152,7 +152,9 @@ export function ImageBuilder({ name }) {
 
       <div className="profile-option-container">
         <div className="profile-option-label-container">
-          <label htmlFor="repo" className="form-label">Repository</label>
+          <label htmlFor="repo" className="form-label">
+            Repository
+          </label>
         </div>
         <div className="profile-option-control-container">
           <input
@@ -168,9 +170,7 @@ export function ImageBuilder({ name }) {
               Validating repository...
             </div>
           )}
-          {repoError && (
-            <div className="invalid-feedback">{repoError}</div>
-          )}
+          {repoError && <div className="invalid-feedback">{repoError}</div>}
         </div>
       </div>
 
@@ -191,9 +191,7 @@ export function ImageBuilder({ name }) {
               Loading Git ref options...
             </div>
           )}
-          {refError && (
-            <div className="is-invalid">{refError}</div>
-          )}
+          {refError && <div className="is-invalid">{refError}</div>}
         </div>
       </div>
 

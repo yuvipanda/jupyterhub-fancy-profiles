@@ -23,7 +23,9 @@ function Field({ id, label, children, error }) {
   return (
     <div className="profile-option-container">
       <div className="profile-option-label-container">
-        <label htmlFor={id} className="form-label">{label}</label>
+        <label htmlFor={id} className="form-label">
+          {label}
+        </label>
       </div>
       <div className="profile-option-control-container">
         {children}
