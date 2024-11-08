@@ -67,7 +67,6 @@ repos:
           # Duplicated from package.json's devDependencies, otherwise pre-commit.ci
           # does not like it
           - eslint@9.14.0
-          - eslint-plugin-react@7.37.2
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:
