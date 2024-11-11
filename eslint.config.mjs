@@ -1,4 +1,4 @@
-import react from "eslint-plugin-react";
+import react from "eslint-plugin-react/index.js";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
