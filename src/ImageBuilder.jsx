@@ -53,7 +53,8 @@ async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   }
 }
 
-function ImageLogs({ setTerm, setFitAddon }) {
+function ImageLogs({ setTerm, setFitAddon, name }) {
+  const terminalId = `${name}--terminal`;
   useEffect(() => {
     async function setup() {
       const { Terminal } = await import("xterm");
@@ -68,7 +69,7 @@ function ImageLogs({ setTerm, setFitAddon }) {
       });
       const fitAddon = new FitAddon();
       term.loadAddon(fitAddon);
-      term.open(document.getElementById("terminal"));
+      term.open(document.getElementById(terminalId));
       fitAddon.fit();
       setTerm(term);
       setFitAddon(fitAddon);
@@ -84,7 +85,7 @@ function ImageLogs({ setTerm, setFitAddon }) {
       </div>
       <div className="profile-option-control-container">
         <div className="terminal-container">
-          <div id="terminal"></div>
+          <div id={terminalId}></div>
         </div>
       </div>
     </div>
@@ -212,7 +213,7 @@ export function ImageBuilder({ name }) {
         </button>
       </div>
       <input name={name} type="hidden" value={customImage} />
-      <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} />
+      <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} name={name} />
     </>
   );
 }
