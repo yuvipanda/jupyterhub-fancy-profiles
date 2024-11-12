@@ -4,7 +4,7 @@ import { SpawnerFormContext } from "./state";
 import useRepositoryField from "./hooks/useRepositoryField";
 import useRefField from "./hooks/useRefField";
 
-async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
+async function buildImage(repo, ref, term, fitAddon) {
   const { BinderRepository } = await import("@jupyterhub/binderhub-client");
   const providerSpec = "gh/" + repo + "/" + ref;
   // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
@@ -22,35 +22,39 @@ async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   term.write("\x1b[2K\r");
   term.resize(66, 16);
   fitAddon.fit();
-  for await (const data of image.fetch()) {
-    // Write message to the log terminal if there is a message
-    if (data.message !== undefined) {
-      // Write out all messages to the terminal!
-      term.write(data.message);
-      // Resize our terminal to make sure it fits messages appropriately
-      fitAddon.fit();
-    } else {
-      console.log(data);
-    }
-
-    switch (data.phase) {
-      case "failed": {
-        image.close();
-        break;
-      }
-      case "ready": {
-        // Close the EventStream when the image has been built
-        image.close();
-        onImageBuilt(data.imageName);
-        break;
-      }
-      default: {
-        console.log("Unknown phase in response from server");
+  return new Promise(async (resolve, reject) => {
+    for await (const data of image.fetch()) {
+      // Write message to the log terminal if there is a message
+      if (data.message !== undefined) {
+        // Write out all messages to the terminal!
+        term.write(data.message);
+        // Resize our terminal to make sure it fits messages appropriately
+        fitAddon.fit();
+      } else {
         console.log(data);
-        break;
+      }
+
+      switch (data.phase) {
+        case "failed": {
+          image.close();
+          reject();
+          break;
+        }
+        case "ready": {
+          // Close the EventStream when the image has been built
+          image.close();
+          resolve(data.imageName);
+          break;
+        }
+        default: {
+          console.log("Unknown phase in response from server");
+          console.log(data);
+          reject();
+          break;
+        }
       }
     }
-  }
+  });
 }
 
 function ImageLogs({ setTerm, setFitAddon, name }) {
@@ -112,6 +116,8 @@ export function ImageBuilder({ name }) {
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
 
+  const [isBuildingImage, setIsBuildingImage] = useState(false);
+
   useEffect(() => {
     if (setCustomOption) {
       repoFieldRef.current.setAttribute("value", binderRepo);
@@ -132,12 +138,16 @@ export function ImageBuilder({ name }) {
       return;
     }
 
-    await buildImage(repoId, ref, term, fitAddon, (imageName) => {
-      setCustomImage(imageName);
-      term.write(
-        "\nImage has been built! Click the start button to launch your server",
-      );
-    });
+    setIsBuildingImage(true);
+    buildImage(repoId, ref, term, fitAddon)
+      .then((imageName) => {
+        setCustomImage(imageName);
+        term.write(
+          "\nImage has been built! Click the start button to launch your server",
+        );
+      })
+      .catch(() => console.log(`Error building image.`))
+      .finally(() => setIsBuildingImage(false));
   };
 
   // We render everything, but only toggle visibility based on wether we are being
@@ -208,6 +218,7 @@ export function ImageBuilder({ name }) {
           type="button"
           className="btn btn-jupyter"
           onClick={handleBuildStart}
+          disabled={isBuildingImage}
         >
           Build image
         </button>
