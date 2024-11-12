@@ -55,22 +55,6 @@ repos:
     hooks:
       - id: flake8
 
-  # Lint: JS code
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: "v9.14.0" # Use the sha / tag you want to point at
-    hooks:
-      - id: eslint
-        files: \.jsx?$
-        types: [file]
-        exclude: jupyterhub_fancy_profiles/static
-        additional_dependencies:
-          # Duplicated from package.json's devDependencies, otherwise pre-commit.ci
-          # does not like it
-          - eslint@9.14.0
-          - eslint-plugin-prettier@5.2.1
-          - eslint-plugin-react@7.37.2
-          - eslint-plugin-unused-imports@4.1.4
-
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:
   autoupdate_schedule: monthly
