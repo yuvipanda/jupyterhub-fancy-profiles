@@ -8,7 +8,8 @@
   "scripts": {
     "webpack": "webpack",
     "webpack:watch": "webpack --watch",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint 'src/**/*.js' 'src/**/*.jsx'"
   },
   "dependencies": {
     "@jupyterhub/binderhub-client": "0.4.0",

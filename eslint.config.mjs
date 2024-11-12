@@ -1,4 +1,4 @@
-import react from "eslint-plugin-react/index.js";
+import react from "eslint-plugin-react";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -26,14 +26,6 @@ export default [
   },
   ...compat.extends("eslint:recommended", "plugin:react/recommended"),
   {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-
-      ecmaVersion: 5,
-      sourceType: "commonjs",
-    },
     plugins: {
       react,
     },
