@@ -62,7 +62,12 @@ function Form() {
         return (
           <div
             key={slug}
-            className={`profile-select ${selectedProfile?.slug === slug ? "selected-profile" : ""}`}
+            className={`profile-select ${
+              selectedProfile?.slug === slug ? "selected-profile" : ""
+            }`}
+            onClick={() => {
+              setProfile(slug);
+            }}
           >
             {profileList.length > 1 && (
               <input
@@ -76,12 +81,7 @@ function Form() {
                 aria-labelledby={`profile-option-${slug}-label`}
               />
             )}
-            <div
-              className="profile-select-body"
-              onClick={() => {
-                setProfile(slug);
-              }}
-            >
+            <div className="profile-select-body">
               <div
                 id={`profile-option-${slug}-label`}
                 className="profile-select-label"
