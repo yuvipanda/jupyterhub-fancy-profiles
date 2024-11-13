@@ -22,38 +22,35 @@ async function buildImage(repo, ref, term, fitAddon) {
   term.write("\x1b[2K\r");
   term.resize(66, 16);
   fitAddon.fit();
-  return new Promise(async (resolve, reject) => {
-    for await (const data of image.fetch()) {
-      // Write message to the log terminal if there is a message
-      if (data.message !== undefined) {
-        // Write out all messages to the terminal!
-        term.write(data.message);
-        // Resize our terminal to make sure it fits messages appropriately
-        fitAddon.fit();
-      } else {
-        console.log(data);
-      }
 
-      switch (data.phase) {
-        case "failed": {
-          image.close();
-          reject();
-          break;
-        }
-        case "ready": {
-          // Close the EventStream when the image has been built
-          image.close();
-          resolve(data.imageName);
-          break;
-        }
-        default: {
-          console.log("Unknown phase in response from server");
-          console.log(data);
-          break;
-        }
+  for await (const data of image.fetch()) {
+    // Write message to the log terminal if there is a message
+    if (data.message !== undefined) {
+      // Write out all messages to the terminal!
+      term.write(data.message);
+      // Resize our terminal to make sure it fits messages appropriately
+      fitAddon.fit();
+    } else {
+      console.log(data);
+    }
+
+    switch (data.phase) {
+      case "failed": {
+        image.close();
+        return Promise.reject();
+      }
+      case "ready": {
+        // Close the EventStream when the image has been built
+        image.close();
+        return Promise.resolve(data.imageName);
+      }
+      default: {
+        console.log("Unknown phase in response from server");
+        console.log(data);
+        break;
       }
     }
-  });
+  }
 }
 
 function ImageLogs({ setTerm, setFitAddon, name }) {
