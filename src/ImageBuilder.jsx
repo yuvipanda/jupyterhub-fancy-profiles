@@ -4,7 +4,7 @@ import { SpawnerFormContext } from "./state";
 import useRepositoryField from "./hooks/useRepositoryField";
 import useRefField from "./hooks/useRefField";
 
-async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
+async function buildImage(repo, ref, term, fitAddon) {
   const { BinderRepository } = await import("@jupyterhub/binderhub-client");
   const providerSpec = "gh/" + repo + "/" + ref;
   // FIXME: Assume the binder api is available in the same hostname, under /services/binder/
@@ -22,6 +22,7 @@ async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
   term.write("\x1b[2K\r");
   term.resize(66, 16);
   fitAddon.fit();
+
   for await (const data of image.fetch()) {
     // Write message to the log terminal if there is a message
     if (data.message !== undefined) {
@@ -36,13 +37,12 @@ async function buildImage(repo, ref, term, fitAddon, onImageBuilt) {
     switch (data.phase) {
       case "failed": {
         image.close();
-        break;
+        return Promise.reject();
       }
       case "ready": {
         // Close the EventStream when the image has been built
         image.close();
-        onImageBuilt(data.imageName);
-        break;
+        return Promise.resolve(data.imageName);
       }
       default: {
         console.log("Unknown phase in response from server");
@@ -106,6 +106,8 @@ export function ImageBuilder({ name, isActive }) {
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
 
+  const [isBuildingImage, setIsBuildingImage] = useState(false);
+
   useEffect(() => {
     if (!isActive) setCustomImageError("");
   }, [isActive]);
@@ -130,12 +132,16 @@ export function ImageBuilder({ name, isActive }) {
       return;
     }
 
-    await buildImage(repoId, ref, term, fitAddon, (imageName) => {
-      setCustomImage(imageName);
-      term.write(
-        "\nImage has been built! Click the start button to launch your server",
-      );
-    });
+    setIsBuildingImage(true);
+    buildImage(repoId, ref, term, fitAddon)
+      .then((imageName) => {
+        setCustomImage(imageName);
+        term.write(
+          "\nImage has been built! Click the start button to launch your server",
+        );
+      })
+      .catch(() => console.log(`Error building image.`))
+      .finally(() => setIsBuildingImage(false));
   };
 
   // We render everything, but only toggle visibility based on wether we are being
@@ -206,6 +212,7 @@ export function ImageBuilder({ name, isActive }) {
           type="button"
           className="btn btn-jupyter"
           onClick={handleBuildStart}
+          disabled={isBuildingImage}
         >
           Build image
         </button>
