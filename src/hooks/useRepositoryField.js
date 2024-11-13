@@ -20,7 +20,7 @@ function extractOrgAndRepo(value) {
 }
 
 export default function useRepositoryField(defaultValue) {
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(defaultValue || "");
   const [error, setError] = useState();
   const [repoId, setRepoId] = useState();
   const [isValidating, setIsValidating] = useState(false);

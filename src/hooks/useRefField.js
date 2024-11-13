@@ -9,7 +9,7 @@ function fetchRef(repository, refType) {
 }
 
 export default function useRefField(repository, defaultValue) {
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(defaultValue || "");
   const [options, setOptions] = useState();
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState();
