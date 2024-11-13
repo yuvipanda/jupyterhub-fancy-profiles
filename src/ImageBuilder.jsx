@@ -49,7 +49,6 @@ async function buildImage(repo, ref, term, fitAddon) {
         default: {
           console.log("Unknown phase in response from server");
           console.log(data);
-          reject();
           break;
         }
       }
