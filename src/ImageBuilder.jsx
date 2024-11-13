@@ -79,20 +79,13 @@ function ImageLogs({ setTerm, setFitAddon, name }) {
   }, []);
 
   return (
-    <div className="profile-option-container">
-      <div className="profile-option-label-container">
-        <b>Build Logs</b>
-      </div>
-      <div className="profile-option-control-container">
-        <div className="terminal-container">
-          <div id={terminalId}></div>
-        </div>
-      </div>
+    <div className="terminal-container">
+      <div id={terminalId}></div>
     </div>
   );
 }
 
-export function ImageBuilder({ name }) {
+export function ImageBuilder({ name, isActive }) {
   const {
     binderRepo,
     ref: repoRef,
@@ -108,9 +101,14 @@ export function ImageBuilder({ name }) {
   const branchFieldRef = useRef();
 
   const [customImage, setCustomImage] = useState("");
+  const [customImageError, setCustomImageError] = useState(null);
 
   const [term, setTerm] = useState(null);
   const [fitAddon, setFitAddon] = useState(null);
+
+  useEffect(() => {
+    if (!isActive) setCustomImageError("");
+  }, [isActive]);
 
   useEffect(() => {
     if (setCustomOption) {
@@ -212,8 +210,32 @@ export function ImageBuilder({ name }) {
           Build image
         </button>
       </div>
-      <input name={name} type="hidden" value={customImage} />
-      <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} name={name} />
+      <input
+        type="text"
+        name={name}
+        value={customImage}
+        aria-invalid={isActive && !customImage}
+        required={isActive}
+        aria-hidden="true"
+        style={{ display: "none" }}
+        onInvalid={() =>
+          setCustomImageError("Wait for the image build to complete.")
+        }
+        onChange={() => {}} // Hack to prevent a console error, while at the same time allowing for this field to be validatable, ie. not making it read-only
+      />
+      <div className="profile-option-container">
+        <div className="profile-option-label-container">
+          <b>Build Logs</b>
+        </div>
+        <div className="profile-option-control-container">
+          <ImageLogs setFitAddon={setFitAddon} setTerm={setTerm} name={name} />
+          {customImageError && (
+            <div className="profile-option-control-error">
+              {customImageError}
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 }
