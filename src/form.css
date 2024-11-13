@@ -7,7 +7,7 @@
 
 .profile-select {
   display: flex;
-  padding: 5rem 2rem;
+  padding: 2rem 2rem;
   flex-direction: row;
   border-bottom: 1px solid #ccc;
   gap: 3rem;
