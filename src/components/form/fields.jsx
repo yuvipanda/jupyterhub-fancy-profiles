@@ -27,10 +27,8 @@ function Field({ id, label, hint, children, error }) {
       </div>
       <div className="profile-option-control-container">
         {children}
-        {hint && !error && (
-          <div className="profile-option-control-hint">{hint}</div>
-        )}
         {error && <div className="profile-option-control-error">{error}</div>}
+        {hint && <div className="profile-option-control-hint">{hint}</div>}
       </div>
     </div>
   );
