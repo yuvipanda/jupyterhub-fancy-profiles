@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import Select from "react-select";
+import { TextField } from "./components/form/fields";
 import { SpawnerFormContext } from "./state";
 import useRepositoryField from "./hooks/useRepositoryField";
-import useRefField from "./hooks/useRefField";
 
 async function buildImage(repo, ref, term, fitAddon) {
   const { BinderRepository } = await import("@jupyterhub/binderhub-client");
@@ -93,12 +92,9 @@ export function ImageBuilder({ name, isActive }) {
     ref: repoRef,
     setCustomOption,
   } = useContext(SpawnerFormContext);
-  const { repo, repoId, repoFieldProps, repoError, repoIsValidating } =
+  const { repo, repoId, repoFieldProps, repoError } =
     useRepositoryField(binderRepo);
-  const { ref, refError, refFieldProps, refIsLoading } = useRefField(
-    repoId,
-    repoRef,
-  );
+  const [ref, setRef] = useState(repoRef || "HEAD");
   const repoFieldRef = useRef();
   const branchFieldRef = useRef();
 
@@ -117,7 +113,6 @@ export function ImageBuilder({ name, isActive }) {
   useEffect(() => {
     if (setCustomOption) {
       repoFieldRef.current.setAttribute("value", binderRepo);
-      branchFieldRef.current.value = repoRef;
     }
   }, [binderRepo, repoRef, setCustomOption]);
 
@@ -173,41 +168,25 @@ export function ImageBuilder({ name, isActive }) {
             {...repoFieldProps}
             aria-invalid={!!repoError}
           />
-          {repoIsValidating && (
-            <div className="profile-option-control-info">
-              Validating repository...
-            </div>
-          )}
           {repoError && (
             <div className="profile-option-control-error">{repoError}</div>
           )}
         </div>
       </div>
 
-      <div
-        className={`profile-option-container ${repoError ? "has-error" : ""}`}
-      >
-        <div className="profile-option-label-container">
-          <label>Git Ref</label>
-        </div>
-        <div className="profile-option-control-container">
-          <Select
-            aria-label="Git Ref"
-            ref={branchFieldRef}
-            {...refFieldProps}
-            aria-invalid={!!refError}
-            isDisabled={!refFieldProps.options}
-          />
-          {refIsLoading && !refIsLoading && (
-            <div className="profile-option-control-info">
-              Loading Git ref options...
-            </div>
-          )}
-          {refError && (
-            <div className="profile-option-control-error">{refError}</div>
-          )}
-        </div>
-      </div>
+      <TextField
+        ref={branchFieldRef}
+        id={`${name}--ref`}
+        label="Git Ref"
+        value={ref}
+        validate={
+          isActive && {
+            required: "Enter a git ref.",
+          }
+        }
+        onChange={(e) => setRef(e.target.value)}
+        tabIndex={isActive ? "0" : "-1"}
+      />
 
       <div className="right-button">
         <button

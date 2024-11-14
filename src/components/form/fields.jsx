@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 
 import { CustomizedSelect } from "./CustomSelect";
 
@@ -73,14 +73,10 @@ export function SelectField({
   );
 }
 
-export function TextField({
-  id,
-  label,
-  value,
-  validate = {},
-  onChange,
-  tabIndex,
-}) {
+function _TextField(
+  { id, label, value, validate = {}, onChange, tabIndex },
+  ref,
+) {
   const [touched, setTouched] = useState(false);
   const onBlur = () => setTouched(true);
 
@@ -91,6 +87,7 @@ export function TextField({
   return (
     <Field id={id} label={label} error={touched && error}>
       <input
+        ref={ref}
         type="text"
         id={id}
         name={id}
@@ -106,3 +103,5 @@ export function TextField({
     </Field>
   );
 }
+
+export const TextField = forwardRef(_TextField);

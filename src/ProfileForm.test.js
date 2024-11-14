@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach } from "@jest/globals";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import ProfileForm from "./ProfileForm";
@@ -220,11 +220,6 @@ describe("Profile form with URL Params", () => {
   });
 
   test("preselects values", async () => {
-    fetch
-      .mockResponseOnce("")
-      .mockResponseOnce(JSON.stringify([{ name: "main" }, { name: "develop" }]))
-      .mockResponseOnce(JSON.stringify([{ name: "v1.0" }]));
-
     render(
       <SpawnerFormProvider>
         <ProfileForm />
@@ -237,12 +232,6 @@ describe("Profile form with URL Params", () => {
     expect(radio.checked).toBeTruthy();
 
     expect(screen.getByLabelText("Repository").value).toEqual("org/repo");
-    await waitFor(() =>
-      expect(fetch.mock.calls[2][0]).toEqual(
-        "https://api.github.com/repos/org/repo/tags",
-      ),
-    );
-
-    await waitFor(() => expect(screen.getByText("v1.0")).toBeInTheDocument());
+    expect(screen.getByLabelText("Git Ref").value).toEqual("v1.0");
   });
 });
