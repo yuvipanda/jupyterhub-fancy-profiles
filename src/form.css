@@ -18,12 +18,6 @@
   margin-bottom: 1rem;
 }
 
-.profile-select-label-heading {
-  display: block;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
 .profile-select-radio {
   display: flex;
   gap: 1rem;
@@ -66,30 +60,20 @@
   padding: 16px;
 }
 .profile-option-control-container input[type="text"] {
-  width: 100%;
   /* 8px here, even though we only use 4px for .react-select-item-container.
        Achieves similar visual effect.
     */
   padding: 8px;
-  border: 1px solid gray;
   border-radius: 4px;
 }
 
+.profile-option-control-container input[type="text"]:not(.is-invalid) {
+  border: 1px solid gray;
+}
+
 .profile-option-control-info {
-  margin-top: 0.5rem;
-}
-
-.profile-option-container.has-error label {
-  color: red;
-}
-
-.profile-option-container.has-error input {
-  border-color: red;
-}
-
-.profile-option-control-error {
-  color: red;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
 }
 
 .profile-form-error {

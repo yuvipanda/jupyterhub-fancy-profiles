@@ -38,6 +38,7 @@ export default function useRepositoryField(defaultValue) {
     const orgRepoString = extractOrgAndRepo(value);
 
     if (!orgRepoString) {
+      setIsValidating(false);
       return "Provide the repository as the format 'organization/repository'.";
     }
 

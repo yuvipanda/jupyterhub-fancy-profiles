@@ -21,14 +21,16 @@ function validateField(value, validateConfig, touched) {
 
 function Field({ id, label, children, error }) {
   return (
-    <div className={`profile-option-container ${error ? "has-error" : ""}`}>
+    <div className="profile-option-container">
       <div className="profile-option-label-container">
-        <label htmlFor={id}>{label}</label>
+        <label htmlFor={id} className="form-label">
+          {label}
+        </label>
       </div>
       <div className="profile-option-control-container">
         {children}
 
-        {error && <div className="profile-option-control-error">{error}</div>}
+        {error && <div className="invalid-feedback">{error}</div>}
       </div>
     </div>
   );
@@ -91,6 +93,7 @@ export function TextField({
   return (
     <Field id={id} label={label} error={touched && error}>
       <input
+        className={`form-control ${error ? "is-invalid" : ""}`}
         type="text"
         id={id}
         name={id}
