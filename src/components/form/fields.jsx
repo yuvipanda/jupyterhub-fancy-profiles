@@ -19,7 +19,7 @@ function validateField(value, validateConfig, touched) {
   return;
 }
 
-function Field({ id, label, children, error }) {
+function Field({ id, label, hint, children, error }) {
   return (
     <div className={`profile-option-container ${error ? "has-error" : ""}`}>
       <div className="profile-option-label-container">
@@ -27,8 +27,8 @@ function Field({ id, label, children, error }) {
       </div>
       <div className="profile-option-control-container">
         {children}
-
         {error && <div className="profile-option-control-error">{error}</div>}
+        {hint && <div className="profile-option-control-hint">{hint}</div>}
       </div>
     </div>
   );
@@ -37,6 +37,7 @@ function Field({ id, label, children, error }) {
 export function SelectField({
   id,
   label,
+  hint,
   options,
   defaultOption,
   onChange,
@@ -55,7 +56,7 @@ export function SelectField({
   );
 
   return (
-    <Field id={id} label={label} error={error}>
+    <Field id={id} label={label} hint={hint} error={error}>
       <CustomizedSelect
         options={options}
         id={id}
@@ -74,7 +75,7 @@ export function SelectField({
 }
 
 function _TextField(
-  { id, label, value, validate = {}, onChange, tabIndex },
+  { id, label, value, hint, validate = {}, onChange, tabIndex },
   ref,
 ) {
   const [touched, setTouched] = useState(false);
@@ -85,7 +86,7 @@ function _TextField(
   const error = validateField(value, validate, touched);
 
   return (
-    <Field id={id} label={label} error={touched && error}>
+    <Field id={id} label={label} hint={hint} error={touched && error}>
       <input
         ref={ref}
         type="text"
