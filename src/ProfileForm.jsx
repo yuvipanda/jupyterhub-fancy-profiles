@@ -92,7 +92,9 @@ function Form() {
                 <span>{description}</span>
               </div>
 
-              <ProfileOptions profile={slug} config={profile_options} />
+              {profile_options && (
+                <ProfileOptions profile={slug} config={profile_options} />
+              )}
             </div>
           </div>
         );
