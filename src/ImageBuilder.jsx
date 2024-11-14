@@ -93,7 +93,7 @@ export function ImageBuilder({ name, isActive }) {
     ref: repoRef,
     setCustomOption,
   } = useContext(SpawnerFormContext);
-  const { repo, repoId, repoFieldProps, repoError, repoIsValidating } =
+  const { repo, repoId, repoFieldProps, repoError } =
     useRepositoryField(binderRepo);
   const { ref, refError, refFieldProps, refIsLoading } = useRefField(
     repoId,
@@ -173,11 +173,6 @@ export function ImageBuilder({ name, isActive }) {
             {...repoFieldProps}
             aria-invalid={!!repoError}
           />
-          {repoIsValidating && (
-            <div className="profile-option-control-info">
-              Validating repository...
-            </div>
-          )}
           {repoError && (
             <div className="profile-option-control-error">{repoError}</div>
           )}
