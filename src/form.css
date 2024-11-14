@@ -40,7 +40,7 @@
 
 .profile-option-container {
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
+  grid-template-columns: 10rem minmax(0, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
   width: 100%;
