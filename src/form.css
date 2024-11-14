@@ -90,13 +90,13 @@
 .profile-option-control-hint {
   color: #555;
   margin-top: 0.3rem;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .profile-option-control-error {
   color: red;
   margin-top: 0.3rem;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .profile-form-error {
