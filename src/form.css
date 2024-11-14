@@ -13,6 +13,10 @@
   gap: 3rem;
 }
 
+.profile-select-body {
+  flex: 1;
+}
+
 .profile-select-body .profile-select-label {
   font-weight: normal;
   margin-bottom: 1rem;
@@ -36,9 +40,10 @@
 
 .profile-option-container {
   display: grid;
-  grid-template-columns: 1fr 6fr;
+  grid-template-columns: 10rem minmax(0, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 .profile-option-label-container {
