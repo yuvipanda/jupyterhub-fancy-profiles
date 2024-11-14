@@ -66,6 +66,8 @@ function ImageLogs({ setTerm, setFitAddon, name }) {
         // available in our form!
         cols: 66,
         rows: 1,
+        // Increase scrollback since image builds can sometimes produce a ton of output
+        scrollback: 10000,
       });
       const fitAddon = new FitAddon();
       term.loadAddon(fitAddon);
