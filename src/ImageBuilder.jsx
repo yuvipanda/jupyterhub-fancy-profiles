@@ -178,6 +178,7 @@ export function ImageBuilder({ name, isActive }) {
         ref={branchFieldRef}
         id={`${name}--ref`}
         label="Git Ref"
+        hint="Branch, Tag or Commit to use. HEAD will use the default branch"
         value={ref}
         validate={
           isActive && {
