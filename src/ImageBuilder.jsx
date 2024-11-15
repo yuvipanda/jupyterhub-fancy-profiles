@@ -91,7 +91,7 @@ function ImageLogs({ setTerm, setFitAddon, name }) {
 
     return () => {
       if (observer) observer.disconnect();
-    }
+    };
   }, []);
 
   return (
@@ -173,7 +173,9 @@ export function ImageBuilder({ name, isActive }) {
         className={`row mb-4 align-items-center ${repoError ? "has-error" : ""}`}
       >
         <div className="col-sm-12 col-xl-3">
-          <label htmlFor="repo" className="form-label">Repository</label>
+          <label htmlFor="repo" className="form-label">
+            Repository
+          </label>
         </div>
         <div className="col-sm-12 col-xl-9">
           <input

@@ -23,7 +23,9 @@ function Field({ id, label, hint, children, error }) {
   return (
     <div className={`row mb-4 align-items-center ${error ? "has-error" : ""}`}>
       <div className="col-sm-12 col-xl-3">
-        <label className="form-label" htmlFor={id}>{label}</label>
+        <label className="form-label" htmlFor={id}>
+          {label}
+        </label>
       </div>
       <div className="col-sm-12 col-xl-9">
         {children}
